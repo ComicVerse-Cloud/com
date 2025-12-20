@@ -25,24 +25,6 @@
         ::-webkit-scrollbar-track { background: #111; }
         ::-webkit-scrollbar-thumb { background: var(--orange-cr); border-radius: 4px; }
 
-        /* --- Botón Usuario Top Right --- */
-        .user-top-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            z-index: 40;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease;
-        }
-        .user-top-btn:hover {
-            border-color: var(--orange-cr);
-            box-shadow: 0 0 25px rgba(244, 117, 33, 0.4);
-            transform: translateY(-2px);
-        }
-
         /* --- Efecto 3D Portada Grid --- */
         .comic-card-container { perspective: 1000px; }
         .comic-card {
@@ -154,19 +136,24 @@
             border: 1px solid rgba(255,255,255,0.1);
             box-shadow: 0 0 100px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,255,255,0.05);
         }
+
+        /* --- ESPACIOS PUBLICITARIOS (ADS) --- */
+        .ad-slot {
+            background-color: #111;
+            border: 1px dashed #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin: 20px 0;
+            color: #444;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body class="relative min-h-screen">
-
-    <!-- BOTÓN PERFIL USUARIO (Conexión a Usuario.html) -->
-    <button onclick="parent.cargarPagina('Usuario.html', null)" class="user-top-btn hidden md:flex items-center gap-3 px-4 py-2 rounded-md group">
-        <div class="flex flex-col text-right">
-            <span class="text-[9px] text-gray-400 uppercase font-black tracking-[0.2em] group-hover:text-[#F47521] transition">Conectado</span>
-            <span class="text-xs font-black text-white uppercase tracking-widest group-hover:text-white transition flex items-center gap-2">
-                USUARIO <i class="fa-solid fa-circle-user text-[#F47521] text-lg"></i>
-            </span>
-        </div>
-    </button>
 
     <div class="p-4 md:p-8">
         <!-- Título de Sección -->
@@ -236,6 +223,22 @@
             </div>
 
         </div>
+
+        <!-- --- ESPACIO PUBLICITARIO 1 (BANNER HORIZONTAL) --- -->
+        <div class="ad-slot w-full h-24 rounded-lg mt-12">
+            <!-- AQUÍ VA EL SCRIPT DE GOOGLE ADSENSE -->
+            <!-- 
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script>
+            -->
+            <span class="text-gray-600 animate-pulse">Espacio Publicitario (Banner Principal)</span>
+        </div>
     </div>
 
     <!-- PANEL MODAL DE DETALLES -->
@@ -252,13 +255,10 @@
                 <img id="modal-img" src="" class="w-full h-full object-cover opacity-90 mask-image-gradient">
                 <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent md:bg-gradient-to-r"></div>
                 
-                <!-- Puntuación Flotante -->
-                <div class="absolute top-4 left-4 bg-black/80 backdrop-blur border border-[#F47521] px-4 py-2 rounded-lg shadow-[0_0_20px_rgba(244,117,33,0.3)]">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-star text-yellow-400 text-xl animate-pulse"></i>
-                        <span id="modal-score" class="text-2xl font-black text-white">0.0</span>
-                    </div>
-                    <div class="text-[10px] text-gray-400 text-center uppercase tracking-wider">Valoración</div>
+                <!-- Puntuación Flotante (SOLO ESCRITORIO) -->
+                <div class="hidden md:flex absolute top-4 left-4 bg-black/80 backdrop-blur border border-[#F47521] px-4 py-2 rounded-lg shadow-[0_0_20px_rgba(244,117,33,0.3)] items-center gap-2">
+                    <i class="fa-solid fa-star text-yellow-400 text-xl animate-pulse"></i>
+                    <span id="modal-score-desktop" class="text-2xl font-black text-white">0.0</span>
                 </div>
             </div>
 
@@ -287,18 +287,31 @@
                     </p>
                 </div>
 
-                <!-- Sistema de Votación (Firebase UI) -->
-                <div class="mb-8 bg-white/5 rounded-xl p-4 border border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div class="text-sm font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-heart text-red-500"></i> ¿Te gusta este cómic?
+                <!-- Sistema de Votación (REDISEÑADO PARA MÓVIL) -->
+                <div class="mb-8 bg-white/5 rounded-xl p-4 border border-white/5 flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-heart text-red-500"></i> Valorar Obra
+                        </div>
+                        <!-- Botones Like/Dislike -->
+                        <div class="flex gap-3">
+                            <button id="btn-like" onclick="votar('like')" class="flex items-center gap-2 bg-green-900/30 hover:bg-green-600 text-green-400 hover:text-white px-4 py-2 rounded-lg transition border border-green-500/30 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fa-solid fa-thumbs-up"></i> <span id="count-likes">0</span>
+                            </button>
+                            <button id="btn-dislike" onclick="votar('dislike')" class="flex items-center gap-2 bg-red-900/30 hover:bg-red-600 text-red-400 hover:text-white px-4 py-2 rounded-lg transition border border-red-500/30 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fa-solid fa-thumbs-down"></i> <span id="count-dislikes">0</span>
+                            </button>
+                        </div>
                     </div>
-                    <div class="flex gap-4">
-                        <button onclick="votar('like')" class="flex items-center gap-2 bg-green-900/30 hover:bg-green-600 text-green-400 hover:text-white px-4 py-2 rounded-lg transition border border-green-500/30 active:scale-95">
-                            <i class="fa-solid fa-thumbs-up"></i> <span id="count-likes">0</span>
-                        </button>
-                        <button onclick="votar('dislike')" class="flex items-center gap-2 bg-red-900/30 hover:bg-red-600 text-red-400 hover:text-white px-4 py-2 rounded-lg transition border border-red-500/30 active:scale-95">
-                            <i class="fa-solid fa-thumbs-down"></i> <span id="count-dislikes">0</span>
-                        </button>
+                    
+                    <!-- CALIFICACIÓN VISIBLE (Debajo de los botones, clave para móvil) -->
+                    <div class="flex items-center justify-center gap-3 bg-black/40 p-3 rounded-lg border border-white/5">
+                        <span class="text-gray-400 text-xs uppercase tracking-widest">Calificación Global:</span>
+                        <div class="flex items-center gap-2">
+                            <i id="star-icon-mobile" class="fa-solid fa-star text-yellow-400 text-lg"></i>
+                            <span id="modal-score-mobile" class="text-xl font-black text-white">0.0</span>
+                            <span class="text-xs text-gray-500">/ 5.0</span>
+                        </div>
                     </div>
                 </div>
 
@@ -307,20 +320,20 @@
                     <h3 class="text-[#F47521] font-bold uppercase tracking-[0.2em] mb-4 text-xs flex items-center gap-2">
                         <span class="w-4 h-0.5 bg-[#F47521]"></span> Adelantos 3D
                     </h3>
-                    <!-- Contenedor Slider -->
-                    <div class="slider-3d-container custom-scroll" id="modal-previews">
-                        <!-- Las imágenes se inyectan aquí -->
-                    </div>
+                    <div class="slider-3d-container custom-scroll" id="modal-previews"></div>
+                </div>
+
+                <!-- --- ESPACIO PUBLICITARIO 2 (DENTRO DEL MODAL) --- -->
+                <div class="ad-slot w-full h-16 rounded-lg mb-4 border-dashed border-gray-700 bg-black/50">
+                    <!-- SCRIPT DE PUBLICIDAD SECUNDARIA -->
+                    <span class="text-gray-600 text-xs animate-pulse">Anuncio Patrocinado</span>
                 </div>
 
                 <!-- Footer del Modal (Botones) -->
                 <div class="mt-auto pt-4 border-t border-white/10 flex flex-col md:flex-row gap-4">
-                    <!-- Botón Cerrar/Volver grande -->
                     <button onclick="cerrarPanel()" class="flex-1 md:flex-none bg-gray-800 hover:bg-gray-700 text-white font-bold uppercase tracking-widest py-4 px-6 rounded-lg transition flex items-center justify-center gap-2 border border-white/10">
                         <i class="fa-solid fa-arrow-left"></i> Volver
                     </button>
-                    
-                    <!-- Botón Leer -->
                     <a id="modal-link" href="#" class="flex-1 text-center bg-gradient-to-r from-[#F47521] to-red-600 hover:from-white hover:to-gray-200 hover:text-black text-white font-black uppercase tracking-[0.2em] py-4 rounded-lg shadow-[0_0_30px_rgba(244,117,33,0.4)] hover:shadow-[0_0_50px_rgba(255,255,255,0.6)] transition-all transform hover:scale-[1.02] duration-300">
                         <i class="fa-solid fa-book-open mr-2"></i> Leer Ahora
                     </a>
@@ -335,7 +348,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
-        // Configuración Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBf9ATqgErKQKpzKpFXsUu4BHmFcNSLzOE",
             authDomain: "comic-a54bf.firebaseapp.com",
@@ -348,7 +360,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- BASE DE DATOS LOCAL DE CÓMICS ---
+        // --- BASE DE DATOS LOCAL ---
         const comicsData = {
             'avalond': {
                 titulo: "Academia De Magia Avalond",
@@ -381,17 +393,13 @@
 
         let currentComicId = null;
 
-        // --- FUNCIONES UI ---
-        
         window.abrirPanel = async function(id) {
             currentComicId = id;
             const data = comicsData[id];
             const modal = document.getElementById('detalle-modal');
             
-            // Cargar datos estáticos
-            const imgEl = document.getElementById('modal-img');
-            imgEl.src = data.imgPortada;
-            imgEl.onerror = function(){ this.src='https://placehold.co/400x600/111/F47521?text=No+Image'; };
+            document.getElementById('modal-img').src = data.imgPortada;
+            document.getElementById('modal-img').onerror = function(){ this.src='https://placehold.co/400x600/111/F47521?text=No+Image'; };
             
             document.getElementById('modal-titulo').innerText = data.titulo;
             document.getElementById('modal-autor').innerHTML = `<i class="fa-solid fa-pen-nib text-[#F47521]"></i> ${data.autor}`;
@@ -401,14 +409,12 @@
             document.getElementById('modal-sinopsis').innerText = data.sinopsis;
             document.getElementById('modal-link').href = data.link;
 
-            // Tags
             const tagsContainer = document.getElementById('modal-tags');
             tagsContainer.innerHTML = '';
             data.tags.forEach(tag => {
                 tagsContainer.innerHTML += `<span class="magic-tag text-white px-3 py-1 text-xs font-bold uppercase tracking-wider">${tag}</span>`;
             });
 
-            // Adelantos
             const previewsContainer = document.getElementById('modal-previews');
             previewsContainer.innerHTML = '';
             data.previews.forEach((img, i) => {
@@ -419,14 +425,11 @@
                 `;
             });
 
-            // Resetear UI de votación mientras carga
-            document.getElementById('modal-score').innerText = "...";
-            document.getElementById('count-likes').innerText = "-";
-            document.getElementById('count-dislikes').innerText = "-";
+            // Resetear UI
+            actualizarTextoScore("0.0", 0, 0);
+            resetearBotones();
 
             modal.classList.remove('hidden');
-
-            // Cargar datos reales de Firebase
             await cargarValoracion(id);
         };
 
@@ -434,7 +437,7 @@
             document.getElementById('detalle-modal').classList.add('hidden');
         };
 
-        // --- LÓGICA DE VOTACIÓN MEJORADA ---
+        // --- LÓGICA DE VOTACIÓN BLINDADA ---
         
         async function cargarValoracion(id) {
             try {
@@ -445,54 +448,84 @@
                     const data = docSnap.data();
                     actualizarUIEstrellas(data.likes || 0, data.dislikes || 0);
                 } else {
-                    // Si no existe, crear doc inicial (0,0) para que aparezca
                     await setDoc(docRef, { likes: 0, dislikes: 0 });
                     actualizarUIEstrellas(0, 0);
                 }
+                
+                // Chequear si ya votó para bloquear botones visualmente
+                checkVotoPrevio(id);
+
             } catch (error) {
                 console.error("Error Firebase:", error);
             }
         }
 
+        function checkVotoPrevio(id) {
+            const storageKey = `vote_${id}`;
+            if (localStorage.getItem(storageKey)) {
+                deshabilitarBotones(true);
+            } else {
+                deshabilitarBotones(false);
+            }
+        }
+
+        function deshabilitarBotones(estado) {
+            const btnLike = document.getElementById('btn-like');
+            const btnDislike = document.getElementById('btn-dislike');
+            
+            btnLike.disabled = estado;
+            btnDislike.disabled = estado;
+            
+            if (estado) {
+                btnLike.classList.add('opacity-50', 'cursor-not-allowed');
+                btnDislike.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                btnLike.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnDislike.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+        
+        function resetearBotones() {
+            deshabilitarBotones(false);
+        }
+
         window.votar = async function(tipo) {
             if (!currentComicId) return;
 
-            // 1. CHEQUEO ANTI-SPAM (LocalStorage)
+            // 1. CHEQUEO ANTI-SPAM LOCAL
             const storageKey = `vote_${currentComicId}`;
             if (localStorage.getItem(storageKey)) {
                 alert("¡Ya has votado en este cómic!");
                 return;
             }
 
+            // 2. BLOQUEO INMEDIATO (UX)
+            deshabilitarBotones(true);
+
             const docRef = doc(db, "ratings", currentComicId);
             
             try {
-                // 2. INCREMENTAR EN FIREBASE
-                // Usamos setDoc con merge para asegurar que el documento exista antes de incrementar
-                // Si existe, solo actualiza el campo. Si no, lo crea.
-                // Nota: Para incrementar de forma atómica y segura si no existe,
-                // primero intentamos update, si falla, hacemos set.
-                
+                // 3. INCREMENTAR EN FIREBASE
                 try {
                     await updateDoc(docRef, {
                         [tipo + 's']: increment(1)
                     });
                 } catch (e) {
-                    // Si falla (documento no existe), creamos uno nuevo
                     let newData = { likes: 0, dislikes: 0 };
                     newData[tipo + 's'] = 1;
                     await setDoc(docRef, newData);
                 }
                 
-                // 3. GUARDAR HUELLA LOCAL
+                // 4. GUARDAR HUELLA LOCAL
                 localStorage.setItem(storageKey, 'true');
 
-                // 4. ACTUALIZAR UI
+                // 5. ACTUALIZAR UI
                 await cargarValoracion(currentComicId);
                 
             } catch (error) {
                 console.error("Error al votar:", error);
-                alert("Hubo un error al registrar tu voto. Intenta de nuevo.");
+                alert("Error al votar. Reintentar.");
+                deshabilitarBotones(false); // Reactivar si falló
             }
         };
 
@@ -501,27 +534,32 @@
             let score = 0;
             
             if (total > 0) {
-                // Algoritmo: % de likes sobre el total * 5
                 const percentage = likes / total;
                 score = (percentage * 5).toFixed(1);
             }
+            actualizarTextoScore(score, likes, dislikes);
+        }
 
-            document.getElementById('modal-score').innerText = score;
+        function actualizarTextoScore(score, likes, dislikes) {
+            // Actualizar ambos scores (Desktop y Mobile)
+            const scoreEls = [document.getElementById('modal-score-desktop'), document.getElementById('modal-score-mobile')];
+            scoreEls.forEach(el => { if(el) el.innerText = score; });
+
             document.getElementById('count-likes').innerText = likes;
             document.getElementById('count-dislikes').innerText = dislikes;
             
-            // Color dinámico estrellas
-            const starIcon = document.querySelector('.fa-star');
-            if(score >= 4.5) starIcon.className = "fa-solid fa-star text-yellow-400 text-xl animate-pulse";
-            else if(score >= 3) starIcon.className = "fa-solid fa-star text-orange-400 text-xl";
-            else starIcon.className = "fa-solid fa-star text-gray-500 text-xl";
+            // Color dinámico
+            const starClass = score >= 4.5 ? "text-yellow-400 animate-pulse" : (score >= 3 ? "text-orange-400" : "text-gray-500");
+            const starIcons = [document.querySelector('.fa-star'), document.getElementById('star-icon-mobile')];
+            
+            starIcons.forEach(icon => {
+                if(icon) icon.className = `fa-solid fa-star text-lg ${starClass}`;
+            });
         }
 
-        // Cerrar con click fuera
         document.getElementById('detalle-modal').addEventListener('click', function(e) {
             if (e.target === this) cerrarPanel();
         });
-
     </script>
 </body>
 </html>
