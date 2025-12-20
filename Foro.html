@@ -27,54 +27,85 @@
         ::-webkit-scrollbar-track { background: #111; }
         ::-webkit-scrollbar-thumb { background: var(--orange-cr); border-radius: 4px; }
 
+        /* --- ESTILOS DE MARCOS (Importados para visualización) --- */
+        .avatar-container { position: relative; display: inline-block; padding: 4px; border-radius: 50%; }
+        .frame-gold { background: linear-gradient(45deg, #FFD700, #FDB931); box-shadow: 0 0 10px #FFD700; animation: spin 4s linear infinite; }
+        .frame-neon { background: linear-gradient(90deg, #00f2ff, #001eff); box-shadow: 0 0 10px #00f2ff; animation: pulse-blue 2s infinite; }
+        .frame-fire { background: linear-gradient(0deg, #ff0000, #ffae00); box-shadow: 0 0 10px #ff4500; animation: shake 3s infinite; }
+        .frame-glitch { border: 2px solid #00ff00; box-shadow: 2px 2px #ff00de; }
+        /* ... se pueden añadir más del usuario.html si se requiere ... */
+        
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulse-blue { 50% { box-shadow: 0 0 20px #00f2ff; } }
+        
         /* --- Estilos Foro --- */
         .forum-card {
-            background: #111; border: 1px solid #222; border-radius: 8px; padding: 16px;
+            background: #111; border: 1px solid #222; border-radius: 12px; padding: 20px;
             transition: all 0.3s; position: relative; overflow: hidden;
         }
-        .forum-card:hover { border-color: var(--orange-cr); box-shadow: 0 0 15px rgba(244, 117, 33, 0.1); transform: translateY(-2px); }
+        .forum-card:hover { border-color: var(--orange-cr); box-shadow: 0 0 20px rgba(244, 117, 33, 0.15); transform: translateY(-3px); }
         
         .tag-badge {
-            font-size: 0.6rem; font-weight: 900; text-transform: uppercase; padding: 2px 6px;
-            border-radius: 4px; background: #222; color: #aaa; border: 1px solid #333; margin-right: 5px;
+            font-size: 0.65rem; font-weight: 800; text-transform: uppercase; padding: 4px 10px;
+            border-radius: 20px; background: #1a1a1a; color: #888; border: 1px solid #333; margin-right: 6px;
+            transition: 0.3s; cursor: pointer;
         }
+        .tag-badge:hover, .tag-badge.active { background: var(--orange-cr); color: black; border-color: var(--orange-cr); box-shadow: 0 0 10px var(--orange-cr); }
 
-        /* --- Estilos Chat Global --- */
+        /* --- Estilos Chat Global (MEJORADO) --- */
         .chat-container {
-            background: var(--chat-bg); border: 1px solid #333; border-radius: 12px;
-            height: 500px; display: flex; flex-direction: column; overflow: hidden;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5); position: relative;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+            border: 2px solid #333; border-radius: 16px;
+            height: 600px; display: flex; flex-direction: column; overflow: hidden;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8); position: relative;
         }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column-reverse; gap: 10px; }
+        /* Header Chat */
+        .chat-header-bar {
+            background: linear-gradient(90deg, #F47521, #d65a00); padding: 15px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 10;
+        }
         
-        .message { display: flex; gap: 10px; max-width: 80%; animation: fadeIn 0.3s; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column-reverse; gap: 15px; }
+        
+        .message { display: flex; gap: 12px; max-width: 85%; animation: fadeIn 0.3s; align-items: flex-end; }
         .message.self { align-self: flex-end; flex-direction: row-reverse; }
+        
+        .message-avatar-box { flex-shrink: 0; }
+        .message-avatar { width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #222; }
+        
         .message-content {
-            background: #222; padding: 8px 12px; border-radius: 12px; border-top-left-radius: 0;
-            font-size: 0.9rem; color: #ddd; word-break: break-word; border: 1px solid #333;
+            background: #222; padding: 10px 15px; border-radius: 18px; border-bottom-left-radius: 2px;
+            font-size: 0.95rem; color: #ddd; word-break: break-word; border: 1px solid #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
         .message.self .message-content {
-            background: linear-gradient(135deg, #F47521, #d65a00); color: black; font-weight: 500;
-            border-radius: 12px; border-top-right-radius: 0; border: none;
+            background: linear-gradient(135deg, #F47521, #ff9100); color: black; font-weight: 600;
+            border-radius: 18px; border-bottom-right-radius: 2px; border: none;
+            box-shadow: 0 0 15px rgba(244, 117, 33, 0.3);
         }
-        .message-header { font-size: 0.7rem; color: #666; margin-bottom: 2px; display: flex; align-items: center; gap: 5px; }
-        .message.self .message-header { justify-content: flex-end; color: #aaa; }
         
-        .avatar-sm { width: 32px; height: 32px; object-fit: cover; border-radius: 50%; border: 1px solid #444; }
+        .message-meta { font-size: 0.7rem; color: #666; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+        .message.self .message-meta { justify-content: flex-end; color: #888; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- Modal Generic --- */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 50; }
+        /* --- Modal Panel Personalizado --- */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 60; }
+        .modal-box { background: #111; border: 1px solid #F47521; border-radius: 12px; padding: 2rem; width: 90%; max-width: 500px; position: relative; box-shadow: 0 0 50px rgba(244,117,33,0.3); }
+        
         .hidden-section { display: none !important; }
-        .input-dark { background: #1a1a1a; border: 1px solid #333; color: white; padding: 10px; width: 100%; border-radius: 6px; outline: none; transition: 0.3s; }
-        .input-dark:focus { border-color: var(--orange-cr); box-shadow: 0 0 10px rgba(244,117,33,0.2); }
+        .input-dark { background: #0a0a0a; border: 1px solid #333; color: white; padding: 12px; width: 100%; border-radius: 8px; outline: none; transition: 0.3s; }
+        .input-dark:focus { border-color: var(--orange-cr); box-shadow: 0 0 15px rgba(244,117,33,0.2); }
 
-        /* --- Botón Admin Delete --- */
-        .btn-delete {
-            opacity: 0; transition: opacity 0.2s; color: #ef4444; cursor: pointer;
-        }
-        .forum-card:hover .btn-delete, .message:hover .btn-delete { opacity: 1; }
+        /* --- Botones --- */
+        .btn-action { cursor: pointer; transition: 0.2s; }
+        .btn-action:hover { color: #F47521; transform: scale(1.1); }
+        .btn-delete { color: #ef4444; opacity: 0.5; transition: 0.2s; }
+        .btn-delete:hover { opacity: 1; transform: scale(1.2); }
+
+        /* --- Hilo Extendido --- */
+        .comment-box { border-left: 2px solid #333; padding-left: 15px; margin-top: 10px; margin-left: 10px; }
     </style>
 </head>
 <body class="pb-20">
@@ -83,67 +114,87 @@
         
         <!-- HEADER LOGIN STATUS -->
         <div id="login-status-bar" class="flex justify-end mb-4">
-            <button onclick="parent.cargarPagina('Usuario.html', null)" class="text-xs text-gray-500 hover:text-[#F47521] uppercase font-bold flex items-center gap-2">
-                <i class="fa-solid fa-circle-user"></i> <span id="current-username">Invitado (Iniciar Sesión)</span>
+            <button onclick="parent.cargarPagina('Usuario.html', null)" class="text-xs text-gray-500 hover:text-[#F47521] uppercase font-bold flex items-center gap-2 group">
+                <div class="w-2 h-2 rounded-full bg-red-500 group-hover:bg-green-500 transition"></div>
+                <span id="current-username">Invitado (Iniciar Sesión)</span>
             </button>
         </div>
 
         <!-- ======================= -->
         <!-- SECCIÓN 1: FORO COMPLETO -->
         <!-- ======================= -->
-        <div class="mb-16">
-            <div class="flex items-center justify-between gap-3 mb-8 border-b border-gray-800 pb-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-2 h-10 bg-[#F47521] shadow-[0_0_15px_#F47521]"></div>
-                    <h1 class="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-white drop-shadow-lg">
-                        Foro <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F47521] to-yellow-500">Global</span>
-                    </h1>
+        <div class="mb-20">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10 border-b border-gray-800 pb-6">
+                <div class="flex items-center gap-4">
+                    <div class="w-2 h-12 bg-gradient-to-b from-[#F47521] to-yellow-500 shadow-[0_0_20px_#F47521]"></div>
+                    <div>
+                        <h1 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white drop-shadow-xl">
+                            Foro <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F47521] to-yellow-400">Global</span>
+                        </h1>
+                        <p class="text-gray-500 text-sm mt-1">Debate, comparte y conecta con la comunidad.</p>
+                    </div>
                 </div>
-                <button onclick="openThreadModal()" class="bg-[#F47521] hover:bg-white hover:text-black text-black font-black uppercase py-2 px-4 rounded text-sm transition-all shadow-lg">
-                    <i class="fa-solid fa-plus"></i> Nuevo Hilo
+                <button onclick="openThreadModal()" class="bg-gradient-to-r from-[#F47521] to-red-600 hover:from-white hover:to-gray-200 hover:text-black text-white font-black uppercase py-3 px-8 rounded-lg text-sm transition-all shadow-[0_0_20px_rgba(244,117,33,0.4)] transform hover:scale-105 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-nib"></i> Crear Hilo
                 </button>
             </div>
 
-            <!-- FILTROS / ETIQUETAS -->
-            <div class="flex flex-wrap gap-2 mb-6" id="forum-filters">
-                <button class="tag-badge hover:bg-[#F47521] hover:text-black hover:border-[#F47521] transition">Todo</button>
-                <button class="tag-badge text-blue-400 border-blue-900 hover:bg-blue-600 hover:text-white">Teoría</button>
-                <button class="tag-badge text-red-400 border-red-900 hover:bg-red-600 hover:text-white">Spoilers</button>
-                <button class="tag-badge text-pink-400 border-pink-900 hover:bg-pink-600 hover:text-white">FanArt</button>
-                <button class="tag-badge text-yellow-400 border-yellow-900 hover:bg-yellow-600 hover:text-black">Noticias</button>
-                <button class="tag-badge text-green-400 border-green-900 hover:bg-green-600 hover:text-white">Reseña</button>
+            <!-- BUSQUEDA Y FILTROS -->
+            <div class="flex flex-col md:flex-row gap-4 mb-8 bg-[#111] p-4 rounded-xl border border-white/5">
+                <div class="relative flex-1">
+                    <i class="fa-solid fa-search absolute left-4 top-3.5 text-gray-500"></i>
+                    <input type="text" id="search-threads" placeholder="Buscar hilos..." class="input-dark pl-10" onkeyup="filtrarHilos()">
+                </div>
+                <div class="flex flex-wrap gap-2 items-center" id="forum-filters">
+                    <span class="text-xs text-gray-500 uppercase font-bold mr-2">Filtrar:</span>
+                    <button class="tag-badge active" onclick="filtrarCategoria('Todo', this)">Todo</button>
+                    <button class="tag-badge" onclick="filtrarCategoria('Teoría', this)">Teoría</button>
+                    <button class="tag-badge" onclick="filtrarCategoria('Spoilers', this)">Spoilers</button>
+                    <button class="tag-badge" onclick="filtrarCategoria('FanArt', this)">FanArt</button>
+                    <button class="tag-badge" onclick="filtrarCategoria('Noticias', this)">Noticias</button>
+                    <button class="tag-badge" onclick="filtrarCategoria('Debate', this)">Debate</button>
+                </div>
             </div>
 
-            <!-- LISTA DE HILOS (Dynamic) -->
-            <div id="threads-container" class="space-y-4 min-h-[200px]">
-                <div class="text-center text-gray-600 py-10">Cargando discusiones...</div>
+            <!-- LISTA DE HILOS -->
+            <div id="threads-container" class="grid grid-cols-1 gap-4 min-h-[200px]">
+                <div class="text-center text-gray-600 py-10 flex flex-col items-center">
+                    <i class="fa-solid fa-spinner fa-spin text-3xl mb-4 text-[#F47521]"></i>
+                    Cargando discusiones...
+                </div>
             </div>
         </div>
 
         <!-- ======================= -->
-        <!-- SECCIÓN 2: CHAT GLOBAL -->
+        <!-- SECCIÓN 2: CHAT GLOBAL (PERSONALIZADO) -->
         <!-- ======================= -->
-        <div class="border-t border-gray-800 pt-12">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="w-2 h-10 bg-green-500 shadow-[0_0_15px_#22c55e]"></div>
-                <h2 class="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-white drop-shadow-lg">
-                    Chat <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">En Vivo</span>
-                </h2>
-                <span class="ml-auto flex items-center gap-2 text-xs font-bold text-green-500 animate-pulse">
-                    <span class="w-2 h-2 bg-green-500 rounded-full"></span> ONLINE 24/7
-                </span>
-            </div>
-
+        <div class="border-t border-gray-800 pt-16">
             <div class="chat-container">
+                <!-- Header Personalizado -->
+                <div class="chat-header-bar">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-comments text-black text-2xl"></i>
+                        <h2 class="text-2xl font-black italic uppercase tracking-tighter text-black">
+                            Chat <span class="text-white drop-shadow-md">En Vivo</span>
+                        </h2>
+                    </div>
+                    <div class="flex items-center gap-2 bg-black/20 px-3 py-1 rounded-full">
+                        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                        <span class="text-xs font-bold text-black uppercase">Limpieza Automática (1h)</span>
+                    </div>
+                </div>
+
                 <div id="chat-messages" class="chat-messages custom-scroll">
                     <!-- Mensajes JS -->
-                    <div class="text-center text-gray-700 mt-10">Conectando al servidor...</div>
+                    <div class="text-center text-gray-500 mt-10">Conectando...</div>
                 </div>
                 
                 <!-- Input Chat -->
-                <form id="chat-form" class="p-4 bg-[#111] border-t border-gray-800 flex gap-2">
-                    <input type="text" id="chat-input" class="input-dark flex-1" placeholder="Escribe un mensaje..." maxlength="200" autocomplete="off">
-                    <button type="submit" class="bg-[#F47521] hover:bg-white text-black font-bold p-3 rounded-lg transition">
+                <form id="chat-form" class="p-4 bg-black border-t border-[#F47521]/30 flex gap-3 relative z-20">
+                    <div class="relative flex-1">
+                        <input type="text" id="chat-input" class="w-full bg-[#1a1a1a] border border-[#333] text-white p-3 pl-4 rounded-full outline-none focus:border-[#F47521] focus:ring-1 focus:ring-[#F47521] transition" placeholder="Escribe algo a la comunidad..." maxlength="200" autocomplete="off">
+                    </div>
+                    <button type="submit" class="bg-[#F47521] hover:bg-white text-black font-bold p-3 w-12 h-12 rounded-full transition shadow-lg flex items-center justify-center">
                         <i class="fa-solid fa-paper-plane"></i>
                     </button>
                 </form>
@@ -152,38 +203,89 @@
 
     </div>
 
+    <!-- --- MODALES --- -->
+
     <!-- MODAL CREAR HILO -->
     <div id="thread-modal" class="hidden-section modal-overlay">
-        <div class="bg-[#111] border border-[#F47521] w-full max-w-2xl p-6 rounded-xl relative shadow-[0_0_50px_rgba(244,117,33,0.2)] animate-[fadeIn_0.3s_ease-out]">
-            <button onclick="closeThreadModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <h3 class="text-2xl font-black text-white uppercase mb-6">Nuevo Hilo</h3>
+        <div class="bg-[#111] border-2 border-[#F47521] w-full max-w-2xl p-8 rounded-2xl relative shadow-[0_0_60px_rgba(244,117,33,0.3)] animate-[fadeIn_0.3s_ease-out]">
+            <button onclick="closeThreadModal()" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            <h3 class="text-3xl font-black text-white uppercase mb-6 flex items-center gap-3">
+                <i class="fa-solid fa-pen-to-square text-[#F47521]"></i> Nuevo Hilo
+            </h3>
             
-            <form id="create-thread-form" class="space-y-4">
+            <form id="create-thread-form" class="space-y-5">
                 <div>
-                    <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Título</label>
-                    <input type="text" id="thread-title" class="input-dark" placeholder="Asunto interesante..." required maxlength="80">
+                    <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Título del Hilo</label>
+                    <input type="text" id="thread-title" class="input-dark text-lg font-bold" placeholder="Escribe un título llamativo..." required maxlength="80">
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Etiqueta</label>
-                    <select id="thread-tag" class="input-dark cursor-pointer">
+                    <label class="block text-xs text-gray-500 uppercase font-bold mb-2 tracking-widest">Categoría</label>
+                    <select id="thread-tag" class="input-dark cursor-pointer text-gray-300">
                         <option value="General">General</option>
                         <option value="Teoría">Teoría</option>
                         <option value="Spoilers">Spoilers</option>
                         <option value="FanArt">FanArt</option>
                         <option value="Noticias">Noticias</option>
                         <option value="Ayuda">Ayuda</option>
-                        <option value="Off-Topic">Off-Topic</option>
                         <option value="Reseña">Reseña</option>
-                        <option value="Recomendación">Recomendación</option>
                         <option value="Debate">Debate</option>
-                        <option value="Evento">Evento</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Contenido</label>
-                    <textarea id="thread-content" class="input-dark h-32 resize-none" placeholder="Escribe tu post..." required></textarea>
+                    <label class="block text-xs text-gray-500 uppercase font-bold mb-2 tracking-widest">Contenido</label>
+                    <textarea id="thread-content" class="input-dark h-40 resize-none" placeholder="Expresa tus ideas..." required></textarea>
                 </div>
-                <button type="submit" class="w-full bg-[#F47521] text-black font-black uppercase py-3 rounded hover:bg-white transition">Publicar</button>
+                <button type="submit" class="w-full bg-gradient-to-r from-[#F47521] to-red-600 text-white font-black uppercase py-4 rounded-lg hover:shadow-[0_0_20px_rgba(244,117,33,0.5)] transition transform hover:scale-[1.01]">Publicar Discusión</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE BORRAR (SEGURIDAD) -->
+    <div id="delete-modal" class="hidden-section modal-overlay">
+        <div class="modal-box border-red-600 shadow-red-900/50 text-center">
+            <i class="fa-solid fa-trash-can text-5xl text-red-600 mb-4 animate-bounce"></i>
+            <h3 class="text-2xl font-black text-white uppercase mb-2">Zona de Peligro</h3>
+            <p class="text-gray-400 mb-6 text-sm">Esta acción es irreversible. Ingresa la clave de administrador para proceder.</p>
+            <input type="password" id="delete-key" class="input-dark text-center text-red-500 font-bold tracking-[0.5em] text-xl mb-6 border-red-900 focus:border-red-500" placeholder="CLAVE">
+            <div class="flex gap-3">
+                <button onclick="confirmDelete()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded uppercase">Eliminar</button>
+                <button onclick="closeDeleteModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 rounded uppercase">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE HILO (VER Y COMENTAR) -->
+    <div id="view-thread-modal" class="hidden-section modal-overlay">
+        <div class="bg-[#111] border border-gray-700 w-full max-w-4xl h-[90vh] rounded-xl flex flex-col relative shadow-2xl animate-[fadeIn_0.3s_ease-out]">
+            <!-- Header -->
+            <div class="p-6 border-b border-gray-800 bg-[#151515] rounded-t-xl flex justify-between items-start">
+                <div>
+                    <div id="view-thread-tags" class="mb-2"></div>
+                    <h2 id="view-thread-title" class="text-2xl md:text-3xl font-bold text-white mb-2">Titulo</h2>
+                    <div class="flex items-center gap-3 text-xs text-gray-500">
+                        <span id="view-thread-author" class="text-[#F47521] font-bold">Autor</span>
+                        <span id="view-thread-date">Fecha</span>
+                    </div>
+                </div>
+                <button onclick="closeViewModal()" class="text-gray-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            </div>
+            
+            <!-- Contenido Principal scrollable -->
+            <div class="flex-1 overflow-y-auto p-6 custom-scroll">
+                <p id="view-thread-content" class="text-gray-300 text-lg leading-relaxed mb-8 whitespace-pre-wrap"></p>
+                
+                <div class="border-t border-gray-800 pt-6">
+                    <h4 class="text-white font-bold uppercase mb-4 flex items-center gap-2"><i class="fa-solid fa-comments text-[#F47521]"></i> Comentarios</h4>
+                    <div id="comments-list" class="space-y-4">
+                        <!-- Comentarios JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer (Input Comentario) -->
+            <form id="comment-form" class="p-4 bg-black border-t border-gray-800 flex gap-3 rounded-b-xl">
+                <input type="text" id="comment-input" class="input-dark flex-1" placeholder="Escribe un comentario..." required>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 rounded-lg transition">Enviar</button>
             </form>
         </div>
     </div>
@@ -191,7 +293,7 @@
     <!-- LOGICA FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, addDoc, deleteDoc, collection, query, orderBy, limit, onSnapshot, serverTimestamp, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, addDoc, deleteDoc, collection, query, orderBy, limit, onSnapshot, serverTimestamp, updateDoc, increment, where } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -208,73 +310,99 @@
         const auth = getAuth(app);
 
         let currentUser = null;
-        let userAvatar = "https://via.placeholder.com/40"; // Default
+        let userData = {
+            username: "Invitado",
+            avatar: "https://via.placeholder.com/150",
+            frame: ""
+        };
 
-        // 1. VERIFICAR AUTH
+        // --- AUTH ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                // Obtener datos extra (Avatar) de la colección users
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    const data = userDoc.data();
-                    userAvatar = data.photoURL || user.photoURL || "https://via.placeholder.com/40";
-                    document.getElementById('current-username').innerText = data.username || user.displayName;
+                // Buscar datos completos (incluyendo frame)
+                const docRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    userData.username = data.username || user.displayName;
+                    userData.avatar = data.photoURL || user.photoURL || generateRandomAvatar();
+                    userData.frame = data.frame || ""; // Guardar el marco
+                    document.getElementById('current-username').innerText = userData.username;
                 } else {
-                    document.getElementById('current-username').innerText = user.displayName;
+                    userData.username = user.displayName;
+                    userData.avatar = user.photoURL || generateRandomAvatar();
                 }
             } else {
                 currentUser = null;
-                document.getElementById('current-username').innerText = "Invitado (Click para Login)";
+                document.getElementById('current-username').innerText = "Invitado (Iniciar Sesión)";
             }
         });
 
-        // 2. CHAT GLOBAL (Logic)
+        function generateRandomAvatar() {
+            const num = Math.floor(Math.random() * 1000);
+            return `https://api.dicebear.com/7.x/avataaars/svg?seed=${num}`;
+        }
+
+        // --- CHAT GLOBAL (Golden Hour Logic) ---
         const chatForm = document.getElementById('chat-form');
         const chatInput = document.getElementById('chat-input');
         const chatContainer = document.getElementById('chat-messages');
 
-        // Enviar Mensaje
-        chatForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!currentUser) return alertRequiredLogin();
-            
-            const text = chatInput.value.trim();
-            if (!text) return;
+        // Filtrar mensajes de más de 1 hora
+        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000); 
 
-            try {
-                await addDoc(collection(db, "global_chat"), {
-                    text: text,
-                    uid: currentUser.uid,
-                    username: document.getElementById('current-username').innerText, // Usar nombre visible
-                    avatar: userAvatar,
-                    createdAt: serverTimestamp()
-                });
-                chatInput.value = "";
-            } catch (err) {
-                console.error("Error chat:", err);
-            }
-        });
+        // Consulta: Ordenar por fecha. El filtrado de "hora" lo haremos en cliente para simplificar índices
+        const qChat = query(collection(db, "global_chat"), orderBy("createdAt", "desc"), limit(60));
 
-        // Escuchar Mensajes
-        const qChat = query(collection(db, "global_chat"), orderBy("createdAt", "desc"), limit(50));
         onSnapshot(qChat, (snapshot) => {
             chatContainer.innerHTML = "";
-            snapshot.forEach((doc) => {
+            const messages = [];
+            
+            snapshot.forEach(doc => {
                 const msg = doc.data();
-                const isSelf = currentUser && msg.uid === currentUser.uid;
-                const time = msg.createdAt ? new Date(msg.createdAt.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '...';
-                
-                // Botón eliminar (Admin)
-                const deleteBtn = `<i class="fa-solid fa-trash btn-delete ml-2 text-[10px]" onclick="adminDelete('${doc.id}', 'global_chat')"></i>`;
+                msg.id = doc.id;
+                // Si el mensaje tiene fecha y es reciente (o si es muy nuevo y fecha aun es null por latencia)
+                if (msg.createdAt) {
+                    const msgDate = msg.createdAt.toDate();
+                    // Filtro de 1 hora en cliente
+                    if (msgDate > new Date(Date.now() - 3600000)) { 
+                        messages.push(msg);
+                    }
+                } else {
+                    // Mensajes acabados de enviar (serverTimestamp pending) se muestran
+                    messages.push(msg);
+                }
+            });
 
-                const msgHTML = `
+            // Invertir para mostrar correctamente (query es desc, chat es bottom-up)
+            // messages.reverse(); // CSS flex-direction: column-reverse handles visual order
+
+            if (messages.length === 0) {
+                chatContainer.innerHTML = '<div class="text-center text-gray-600 mt-10">El chat está limpio. Di hola.</div>';
+            }
+
+            messages.forEach((msg) => {
+                const isSelf = currentUser && msg.uid === currentUser.uid;
+                const time = msg.createdAt ? new Date(msg.createdAt.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Enviando...';
+                
+                // MARCO: Si el mensaje tiene marco guardado, aplicarlo
+                const frameClass = msg.frame ? msg.frame : '';
+                
+                const deleteBtn = `<button onclick="requestDelete('${msg.id}', 'global_chat')" class="btn-delete ml-2 text-[10px]"><i class="fa-solid fa-trash"></i></button>`;
+
+                const html = `
                     <div class="message ${isSelf ? 'self' : ''}">
-                        <img src="${msg.avatar}" class="avatar-sm">
-                        <div class="flex flex-col ${isSelf ? 'items-end' : 'items-start'}">
-                            <div class="message-header">
-                                <span class="font-bold text-[#F47521]">${msg.username}</span>
-                                <span class="text-[10px] opacity-50">${time}</span>
+                        <div class="message-avatar-box">
+                            <div class="avatar-container ${frameClass}" style="padding:2px;">
+                                <img src="${msg.avatar || generateRandomAvatar()}" class="avatar-sm">
+                            </div>
+                        </div>
+                        <div class="flex flex-col ${isSelf ? 'items-end' : 'items-start'} max-w-full">
+                            <div class="message-meta">
+                                <span class="font-bold ${isSelf ? 'text-[#F47521]' : 'text-gray-400'}">${msg.username}</span>
+                                <span class="opacity-50">${time}</span>
                                 ${deleteBtn}
                             </div>
                             <div class="message-content">
@@ -283,25 +411,219 @@
                         </div>
                     </div>
                 `;
-                chatContainer.insertAdjacentHTML('beforeend', msgHTML); // Inverse order visual fix
+                chatContainer.insertAdjacentHTML('beforeend', html);
             });
         });
 
-        // 3. FORO (Logic)
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) return alertRequiredLogin();
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            try {
+                await addDoc(collection(db, "global_chat"), {
+                    text,
+                    uid: currentUser.uid,
+                    username: userData.username,
+                    avatar: userData.avatar,
+                    frame: userData.frame, // GUARDAR EL MARCO CON EL MENSAJE
+                    createdAt: serverTimestamp()
+                });
+                chatInput.value = "";
+            } catch (err) { console.error(err); }
+        });
+
+
+        // --- FORO: LISTADO DE HILOS ---
+        const threadsContainer = document.getElementById('threads-container');
+        const qThreads = query(collection(db, "forum_threads"), orderBy("createdAt", "desc"), limit(20));
+        let allThreads = [];
+
+        onSnapshot(qThreads, (snapshot) => {
+            allThreads = [];
+            snapshot.forEach(doc => {
+                allThreads.push({ id: doc.id, ...doc.data() });
+            });
+            renderThreads(allThreads);
+        });
+
+        window.renderThreads = (threads) => {
+            threadsContainer.innerHTML = "";
+            if(threads.length === 0) {
+                threadsContainer.innerHTML = '<div class="text-center text-gray-600">No hay discusiones.</div>';
+                return;
+            }
+
+            threads.forEach(data => {
+                const date = data.createdAt ? new Date(data.createdAt.toDate()).toLocaleDateString() : 'Reciente';
+                let tagColor = "border-gray-600 text-gray-400";
+                if(data.tag === 'Teoría') tagColor = "border-blue-500 text-blue-400";
+                if(data.tag === 'Spoilers') tagColor = "border-red-500 text-red-400";
+                if(data.tag === 'FanArt') tagColor = "border-pink-500 text-pink-400";
+                if(data.tag === 'Noticias') tagColor = "border-yellow-500 text-yellow-400";
+                if(data.tag === 'Debate') tagColor = "border-green-500 text-green-400";
+
+                // Avatar Frame in Thread
+                const frameClass = data.frame ? data.frame : '';
+
+                const html = `
+                    <div class="forum-card cursor-pointer" onclick="openViewModal('${data.id}')">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex items-center gap-3">
+                                <div class="avatar-container ${frameClass}" style="padding:2px;">
+                                    <img src="${data.avatar || generateRandomAvatar()}" class="w-10 h-10 rounded-full border border-gray-600 object-cover">
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-white leading-tight hover:text-[#F47521] transition">${data.title}</h3>
+                                    <p class="text-xs text-gray-500">por <span class="text-[#F47521]">${data.author}</span> • ${date}</p>
+                                </div>
+                            </div>
+                            <!-- Botón borrar no propaga click al padre -->
+                            <button onclick="event.stopPropagation(); requestDelete('${data.id}', 'forum_threads')" class="btn-delete p-2"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                        
+                        <p class="text-gray-300 text-sm mb-4 pl-14 line-clamp-2">${data.content}</p>
+
+                        <div class="pl-14 flex items-center gap-4">
+                            <span class="tag-badge ${tagColor}">${data.tag}</span>
+                            <div class="flex items-center gap-1 text-xs text-gray-500">
+                                <i class="fa-solid fa-heart text-red-500"></i> ${data.likes || 0}
+                            </div>
+                            <div class="flex items-center gap-1 text-xs text-gray-500">
+                                <i class="fa-solid fa-comment text-blue-500"></i> ${data.commentCount || 0}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                threadsContainer.insertAdjacentHTML('beforeend', html);
+            });
+        };
+
+        window.filtrarCategoria = (cat, btn) => {
+            // UI Toggle
+            document.querySelectorAll('#forum-filters .tag-badge').forEach(b => b.classList.remove('active', 'bg-[#F47521]', 'text-black'));
+            if(btn) btn.classList.add('active', 'bg-[#F47521]', 'text-black');
+
+            if (cat === 'Todo') {
+                renderThreads(allThreads);
+            } else {
+                const filtered = allThreads.filter(t => t.tag === cat);
+                renderThreads(filtered);
+            }
+        };
+
+        window.filtrarHilos = () => {
+            const term = document.getElementById('search-threads').value.toLowerCase();
+            const filtered = allThreads.filter(t => t.title.toLowerCase().includes(term) || t.content.toLowerCase().includes(term));
+            renderThreads(filtered);
+        };
+
+        // --- SISTEMA DE COMENTARIOS Y VISTA DE HILO ---
+        let currentThreadId = null;
+
+        window.openViewModal = async (id) => {
+            currentThreadId = id;
+            const thread = allThreads.find(t => t.id === id);
+            if (!thread) return;
+
+            document.getElementById('view-thread-title').innerText = thread.title;
+            document.getElementById('view-thread-content').innerText = thread.content;
+            document.getElementById('view-thread-author').innerText = thread.author;
+            document.getElementById('view-thread-date').innerText = new Date(thread.createdAt.toDate()).toLocaleString();
+            
+            // Like Button en Modal
+            // Check if liked
+            const hasLiked = localStorage.getItem(`like_${id}`);
+            const likeColor = hasLiked ? 'text-red-500' : 'text-gray-500 hover:text-red-500';
+            
+            document.getElementById('view-thread-tags').innerHTML = `
+                <span class="tag-badge bg-[#222] border-white/20">${thread.tag}</span>
+                <button onclick="likeThread('${id}')" class="ml-4 ${likeColor} transition font-bold"><i class="fa-solid fa-heart"></i> <span id="modal-likes">${thread.likes || 0}</span></button>
+            `;
+
+            // Cargar comentarios
+            const commentsRef = collection(db, "forum_threads", id, "comments");
+            const qComm = query(commentsRef, orderBy("createdAt", "asc"));
+            
+            // Listener en tiempo real para comentarios
+            onSnapshot(qComm, (snap) => {
+                const list = document.getElementById('comments-list');
+                list.innerHTML = "";
+                if(snap.empty) list.innerHTML = '<div class="text-gray-600 text-sm">Sé el primero en responder.</div>';
+                
+                snap.forEach(doc => {
+                    const c = doc.data();
+                    const cFrame = c.frame || '';
+                    const html = `
+                        <div class="flex gap-3 animate-[fadeIn_0.2s]">
+                            <div class="avatar-container ${cFrame} flex-shrink-0" style="padding:2px; width:fit-content; height:fit-content;">
+                                <img src="${c.avatar}" class="w-8 h-8 rounded-full border border-gray-600">
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-baseline">
+                                    <span class="text-sm font-bold text-[#F47521]">${c.username}</span>
+                                    <button onclick="requestDeleteComment('${id}', '${doc.id}')" class="btn-delete text-xs"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                                <p class="text-gray-400 text-sm mt-1 bg-[#1a1a1a] p-2 rounded-lg border border-white/5">${c.text}</p>
+                            </div>
+                        </div>
+                    `;
+                    list.insertAdjacentHTML('beforeend', html);
+                });
+            });
+
+            document.getElementById('view-thread-modal').classList.remove('hidden-section');
+        };
+
+        window.closeViewModal = () => document.getElementById('view-thread-modal').classList.add('hidden-section');
+
+        // Enviar Comentario
+        document.getElementById('comment-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(!currentUser) return alertRequiredLogin();
+            const text = document.getElementById('comment-input').value;
+            
+            try {
+                await addDoc(collection(db, "forum_threads", currentThreadId, "comments"), {
+                    text,
+                    uid: currentUser.uid,
+                    username: userData.username,
+                    avatar: userData.avatar,
+                    frame: userData.frame,
+                    createdAt: serverTimestamp()
+                });
+                // Actualizar contador
+                await updateDoc(doc(db, "forum_threads", currentThreadId), { commentCount: increment(1) });
+                document.getElementById('comment-input').value = "";
+            } catch(err) { console.error(err); }
+        });
+
+        // Likes (1 por usuario local)
+        window.likeThread = async (id) => {
+            if(!currentUser) return alertRequiredLogin();
+            if(localStorage.getItem(`like_${id}`)) {
+                alert("Ya diste like a esto.");
+                return;
+            }
+            const ref = doc(db, "forum_threads", id);
+            await updateDoc(ref, { likes: increment(1) });
+            localStorage.setItem(`like_${id}`, 'true');
+            // Update UI modal if open
+            const count = document.getElementById('modal-likes');
+            if(count) count.innerText = parseInt(count.innerText) + 1;
+        };
+
+
+        // --- CREAR HILO ---
         const threadModal = document.getElementById('thread-modal');
         const threadForm = document.getElementById('create-thread-form');
         
-        window.openThreadModal = () => {
-            if(!currentUser) return alertRequiredLogin();
-            threadModal.classList.remove('hidden-section');
-        };
+        window.openThreadModal = () => { if(!currentUser) return alertRequiredLogin(); threadModal.classList.remove('hidden-section'); };
         window.closeThreadModal = () => threadModal.classList.add('hidden-section');
 
-        // Crear Hilo
         threadForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if(!currentUser) return alertRequiredLogin();
-
             const title = document.getElementById('thread-title').value;
             const content = document.getElementById('thread-content').value;
             const tag = document.getElementById('thread-tag').value;
@@ -310,105 +632,64 @@
                 await addDoc(collection(db, "forum_threads"), {
                     title, content, tag,
                     uid: currentUser.uid,
-                    author: document.getElementById('current-username').innerText,
-                    avatar: userAvatar,
+                    author: userData.username,
+                    avatar: userData.avatar,
+                    frame: userData.frame,
                     likes: 0,
+                    commentCount: 0,
                     createdAt: serverTimestamp()
                 });
                 closeThreadModal();
                 threadForm.reset();
-            } catch (err) {
-                console.error("Error foro:", err);
-            }
+            } catch (err) { console.error(err); }
         });
 
-        // Listar Hilos
-        const threadsContainer = document.getElementById('threads-container');
-        const qThreads = query(collection(db, "forum_threads"), orderBy("createdAt", "desc"), limit(20));
 
-        onSnapshot(qThreads, (snapshot) => {
-            threadsContainer.innerHTML = "";
-            if(snapshot.empty) {
-                threadsContainer.innerHTML = '<div class="text-center text-gray-600">No hay discusiones aún. Sé el primero.</div>';
-                return;
-            }
+        // --- BORRAR (PANEL SEGURO) ---
+        let deleteTargetId = null;
+        let deleteCollection = null;
+        let deleteSubId = null; // Para comentarios
 
-            snapshot.forEach((docSnap) => {
-                const data = docSnap.data();
-                const id = docSnap.id;
-                const date = data.createdAt ? new Date(data.createdAt.toDate()).toLocaleDateString() : 'Reciente';
-
-                // Definir color de etiqueta
-                let tagColor = "border-gray-600 text-gray-400";
-                if(data.tag === 'Teoría') tagColor = "border-blue-500 text-blue-400";
-                if(data.tag === 'Spoilers') tagColor = "border-red-500 text-red-400";
-                if(data.tag === 'FanArt') tagColor = "border-pink-500 text-pink-400";
-                if(data.tag === 'Noticias') tagColor = "border-yellow-500 text-yellow-400";
-
-                const html = `
-                    <div class="forum-card">
-                        <div class="flex justify-between items-start mb-2">
-                            <div class="flex items-center gap-3">
-                                <img src="${data.avatar}" class="w-10 h-10 rounded-full border border-gray-600 object-cover">
-                                <div>
-                                    <h3 class="text-lg font-bold text-white leading-tight">${data.title}</h3>
-                                    <p class="text-xs text-gray-500">por <span class="text-[#F47521]">${data.author}</span> • ${date}</p>
-                                </div>
-                            </div>
-                            <button onclick="adminDelete('${id}', 'forum_threads')" class="btn-delete"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                        
-                        <p class="text-gray-300 text-sm mb-4 pl-14 line-clamp-3">${data.content}</p>
-
-                        <div class="pl-14 flex items-center gap-4">
-                            <span class="tag-badge ${tagColor}">${data.tag}</span>
-                            <button onclick="likeThread('${id}')" class="text-xs text-gray-500 hover:text-red-500 transition flex items-center gap-1">
-                                <i class="fa-regular fa-heart"></i> ${data.likes || 0}
-                            </button>
-                            <button class="text-xs text-gray-500 hover:text-white transition flex items-center gap-1">
-                                <i class="fa-regular fa-comment"></i> Responder
-                            </button>
-                        </div>
-                    </div>
-                `;
-                threadsContainer.insertAdjacentHTML('beforeend', html);
-            });
-        });
-
-        // --- FUNCIONES GLOBALES ---
-
-        window.alertRequiredLogin = () => {
-            if(confirm("🔒 Debes iniciar sesión para participar en la comunidad.\n\n¿Ir al Login?")) {
-                if(window.parent && window.parent.cargarPagina) {
-                    window.parent.cargarPagina('Usuario.html', null);
-                } else {
-                    window.location.href = 'Usuario.html';
-                }
-            }
+        window.requestDelete = (id, collection) => {
+            deleteTargetId = id; deleteCollection = collection; deleteSubId = null;
+            openDeleteModal();
         };
 
-        window.likeThread = async (id) => {
-            if(!currentUser) return alertRequiredLogin();
-            // Simple like increment (sin check local para simplificar demo)
-            const ref = doc(db, "forum_threads", id);
-            await updateDoc(ref, { likes: increment(1) });
+        window.requestDeleteComment = (threadId, commentId) => {
+            deleteTargetId = threadId; deleteCollection = "forum_threads"; deleteSubId = commentId;
+            openDeleteModal();
         };
 
-        // ADMIN DELETE (#Lau3700#)
-        window.adminDelete = async (id, collectionName) => {
-            // Prevenir clicks accidentales
-            if(!confirm("¿Borrar este elemento?")) return;
-            
-            const pass = prompt("🔐 ADMIN ACCESS REQUIRED\nIngrese Clave de Moderador:");
-            if (pass === "#Lau3700#") {
+        function openDeleteModal() {
+            document.getElementById('delete-modal').classList.remove('hidden-section');
+            document.getElementById('delete-key').value = "";
+        }
+        window.closeDeleteModal = () => document.getElementById('delete-modal').classList.add('hidden-section');
+
+        window.confirmDelete = async () => {
+            const key = document.getElementById('delete-key').value;
+            if (key === "#Lau3700#") {
                 try {
-                    await deleteDoc(doc(db, collectionName, id));
-                    alert("Elemento eliminado por la administración.");
-                } catch (e) {
-                    alert("Error: " + e.message);
-                }
+                    if (deleteSubId) {
+                        // Borrar Comentario
+                        await deleteDoc(doc(db, "forum_threads", deleteTargetId, "comments", deleteSubId));
+                        await updateDoc(doc(db, "forum_threads", deleteTargetId), { commentCount: increment(-1) });
+                    } else {
+                        // Borrar Hilo o Chat
+                        await deleteDoc(doc(db, deleteCollection, deleteTargetId));
+                    }
+                    closeDeleteModal();
+                } catch (e) { alert("Error: " + e.message); }
             } else {
-                if(pass !== null) alert("Clave Incorrecta. Acceso Denegado.");
+                alert("CLAVE INCORRECTA");
+            }
+        };
+
+        // GLOBAL
+        window.alertRequiredLogin = () => {
+            if(confirm("🔒 Debes iniciar sesión.\n\n¿Ir al Login?")) {
+                if(window.parent && window.parent.cargarPagina) window.parent.cargarPagina('Usuario.html', null);
+                else window.location.href = 'Usuario.html';
             }
         };
 
