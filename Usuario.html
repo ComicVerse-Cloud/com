@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comics Fans</title>
-    
+    <title>Perfil Usuario - ComicVerse</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --orange-cr: #F47521; 
+            --orange-cr: #F47521;
             --dark-bg: #000000;
-            --magic-glow: 0 0 10px rgba(244, 117, 33, 0.5), 0 0 20px rgba(255, 100, 0, 0.3);
+            --neon-glow: 0 0 10px rgba(244, 117, 33, 0.5), 0 0 20px rgba(244, 117, 33, 0.3);
         }
         body {
             background-color: var(--dark-bg);
@@ -21,388 +20,256 @@
             overflow-x: hidden;
         }
 
-        /* --- PRELOADER --- */
-        #preloader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #000; z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease;
-        }
-        .loader-bar-container {
-            width: 200px; height: 4px; background: #222; border-radius: 2px; overflow: hidden; position: relative;
-            box-shadow: 0 0 10px rgba(244, 117, 33, 0.2);
-        }
-        .loader-bar {
-            width: 50%; height: 100%; background: var(--orange-cr); position: absolute; left: -50%;
-            animation: load 1.5s infinite ease-in-out;
-            box-shadow: 0 0 15px var(--orange-cr);
-        }
-        @keyframes load { 0% { left: -50%; } 100% { left: 100%; } }
-        .loading-text {
-            color: var(--orange-cr); margin-top: 15px; font-family: monospace; font-size: 12px;
-            letter-spacing: 2px; animation: pulse 1s infinite; text-transform: uppercase;
-        }
+        /* --- Animaciones --- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-enter { animation: fadeIn 0.5s ease-out forwards; }
 
-        /* --- Scrollbar --- */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #111; }
-        ::-webkit-scrollbar-thumb { background: var(--orange-cr); border-radius: 4px; }
-
-        /* --- Efecto 3D Portada --- */
-        .comic-card-container { perspective: 1000px; }
-        .comic-card {
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-            transform-style: preserve-3d;
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        /* --- Tarjeta 3D (Flip Card) --- */
+        .card-scene { perspective: 1000px; width: 100%; height: 250px; cursor: grab; }
+        .card-obj {
+            width: 100%; height: 100%; position: relative;
+            transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+            border-radius: 16px;
         }
-        .comic-card-container:hover .comic-card {
-            transform: rotateY(10deg) rotateX(5deg) scale(1.05);
-            box-shadow: -5px 5px 20px rgba(244, 117, 33, 0.4);
-            z-index: 10;
-            border: 2px solid var(--orange-cr);
+        .card-obj.is-flipped { transform: rotateY(180deg); }
+        .card-face {
+            position: absolute; width: 100%; height: 100%;
+            -webkit-backface-visibility: hidden; backface-visibility: hidden;
+            border-radius: 16px; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
         }
-
-        /* --- Etiquetas de Estado --- */
-        .status-badge {
-            position: absolute; top: 10px; right: 10px; font-size: 0.65rem; font-weight: 900;
-            text-transform: uppercase; padding: 4px 8px; border-radius: 4px; z-index: 20;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5); letter-spacing: 1px;
+        /* Cara Frontal (Info) */
+        .card-front { 
+            background: linear-gradient(135deg, #1a1a1a, #0d0d0d); 
+            border-bottom: 4px solid var(--orange-cr);
         }
-        .status-emision { background: linear-gradient(90deg, #22c55e, #166534); color: white; border: 1px solid #4ade80; }
-        .status-final { background: linear-gradient(90deg, #a855f7, #6b21a8); color: white; border: 1px solid #d8b4fe; }
-        .status-tba { background: linear-gradient(90deg, #64748b, #334155); color: white; border: 1px solid #94a3b8; }
-
-        /* --- Estilo Mágico Tags (Visualización) --- */
-        .magic-tag {
-            background: linear-gradient(135deg, rgba(20,20,20,0.9), rgba(40,40,50,0.9));
-            border: 1px solid transparent; position: relative; background-clip: padding-box;
-            border-radius: 4px; box-shadow: var(--magic-glow); transition: all 0.3s;
-        }
-        .magic-tag::before {
-            content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: -1; margin: -1px; border-radius: inherit;
-            background: linear-gradient(to right, #F47521, #fbbf24);
-        }
-        .magic-tag:hover { transform: scale(1.05); text-shadow: 0 0 8px white; }
-
-        /* --- Slider 3D Adelantos --- */
-        .slider-3d-container {
-            display: flex; overflow-x: auto; gap: 20px; padding: 40px 20px; perspective: 1000px; scroll-behavior: smooth;
-        }
-        .slide-3d {
-            min-width: 300px; height: 200px; position: relative; transition: all 0.5s ease;
-            border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transform: rotateY(20deg) scale(0.9); opacity: 0.7; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);
-        }
-        .slide-3d:hover, .slide-3d:focus {
-            transform: rotateY(0deg) scale(1.1); opacity: 1; z-index: 10;
-            box-shadow: 0 0 30px rgba(244, 117, 33, 0.6); border: 1px solid var(--orange-cr);
-        }
-
-        /* --- Modals Panel --- */
-        #detalle-modal, #pitch-modal, #auth-modal { backdrop-filter: blur(15px); background-color: rgba(0, 0, 0, 0.85); }
-        .panel-glass {
-            background: linear-gradient(145deg, rgba(20,20,20,0.98), rgba(10,10,10,0.99));
-            border: 1px solid rgba(244, 117, 33, 0.3);
-            box-shadow: 0 0 100px rgba(0,0,0,0.8), inset 0 0 20px rgba(244, 117, 33, 0.05);
-        }
-
-        /* --- Input Styles Ranking --- */
-        .input-dark {
-            background: rgba(10,10,10,0.8); border: 1px solid #333; color: white; padding: 12px; width: 100%;
-            border-radius: 8px; transition: all 0.3s; font-family: monospace;
-        }
-        .input-dark:focus {
-            border-color: var(--orange-cr); outline: none; box-shadow: 0 0 15px rgba(244, 117, 33, 0.2); background: rgba(20,20,20,1);
+        /* Cara Trasera (Membresía) */
+        .card-back { 
+            background: linear-gradient(135deg, #000000, #1a1a1a); 
+            transform: rotateY(180deg); 
+            position: relative; overflow: hidden;
         }
         
-        /* Rank Medal Styles */
-        .rank-1 { border: 2px solid #fbbf24; background: linear-gradient(90deg, rgba(251,191,36,0.1), transparent); }
-        .rank-2 { border: 2px solid #94a3b8; background: linear-gradient(90deg, rgba(148,163,184,0.1), transparent); }
-        .rank-3 { border: 2px solid #b45309; background: linear-gradient(90deg, rgba(180,83,9,0.1), transparent); }
+        /* Estilos Premium vs Basico */
+        .status-premium {
+            border: 2px solid #fbbf24;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+        }
+        .status-premium::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(251,191,36,0.1) 0%, transparent 70%);
+            animation: rotateBg 10s linear infinite; pointer-events: none;
+        }
+        .status-basic { border: 2px solid #525252; }
 
-        /* --- Etiquetas Seleccionables --- */
-        .genre-tag {
-            padding: 6px 12px; border: 1px solid #333; border-radius: 20px; font-size: 0.75rem; cursor: pointer;
-            transition: all 0.3s ease; text-transform: uppercase; font-weight: bold; background: #111; color: #777;
+        @keyframes rotateBg { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- Badges / Títulos --- */
+        .badge-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .badge {
+            font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+            padding: 4px 10px; border-radius: 20px; border: 1px solid #333;
+            background: #111; color: #777; transition: all 0.3s;
         }
-        .genre-tag:hover { border-color: #fff; color: #fff; }
-        .genre-tag.selected {
-            background: var(--orange-cr); color: black; border-color: var(--orange-cr);
-            box-shadow: 0 0 10px var(--orange-cr); transform: scale(1.05);
+        .badge.active {
+            border-color: var(--orange-cr); color: white; background: rgba(244, 117, 33, 0.1);
+            box-shadow: 0 0 10px rgba(244, 117, 33, 0.3);
         }
+
+        /* --- Inputs --- */
+        .input-cr {
+            width: 100%; padding: 12px; background: #111; border: 1px solid #333;
+            color: white; border-radius: 4px; outline: none; transition: 0.3s;
+        }
+        .input-cr:focus { border-color: var(--orange-cr); }
+
+        /* --- Ocultar secciones --- */
+        .hidden-section { display: none; }
     </style>
 </head>
-<body class="relative min-h-screen pb-20">
+<body class="min-h-screen flex items-center justify-center p-4">
 
-    <!-- PRELOADER -->
-    <div id="preloader">
-        <div class="loader-bar-container">
-            <div class="loader-bar"></div>
+    <!-- ======================= -->
+    <!-- 1. SECCIÓN DE LOGIN/AUTH -->
+    <!-- ======================= -->
+    <div id="auth-container" class="w-full max-w-md animate-enter">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-black italic tracking-tighter mb-2">COMIC<span class="text-[#F47521]">VERSE</span></h1>
+            <p class="text-gray-400 text-sm">Identifícate para acceder al Multiverso</p>
         </div>
-        <div class="loading-text">CARGANDO COMUNIDAD...</div>
+
+        <div class="bg-[#1a1a1a] p-8 rounded-xl border border-white/10 shadow-2xl relative overflow-hidden">
+            <!-- Pestañas -->
+            <div class="flex mb-6 border-b border-white/10">
+                <button onclick="switchTab('login')" id="tab-login" class="flex-1 pb-2 font-bold text-[#F47521] border-b-2 border-[#F47521]">LOGIN</button>
+                <button onclick="switchTab('register')" id="tab-register" class="flex-1 pb-2 font-bold text-gray-500 hover:text-white transition">REGISTRO</button>
+            </div>
+
+            <!-- Formulario Login -->
+            <form id="login-form" class="space-y-4">
+                <input type="email" id="login-email" placeholder="Correo Electrónico" class="input-cr" required>
+                <input type="password" id="login-pass" placeholder="Contraseña" class="input-cr" required>
+                <button type="submit" class="w-full bg-[#F47521] hover:bg-orange-600 text-black font-black uppercase py-3 rounded transition hover:scale-[1.02]">
+                    Ingresar
+                </button>
+            </form>
+
+            <!-- Formulario Registro (Oculto por defecto) -->
+            <form id="register-form" class="space-y-4 hidden-section">
+                <input type="text" id="reg-username" placeholder="Nombre de Usuario (Único)" class="input-cr" required>
+                <input type="email" id="reg-email" placeholder="Correo Electrónico" class="input-cr" required>
+                <input type="password" id="reg-pass" placeholder="Contraseña (Mín 6 caracteres)" class="input-cr" required>
+                <button type="submit" class="w-full bg-white hover:bg-gray-200 text-black font-black uppercase py-3 rounded transition hover:scale-[1.02]">
+                    Crear Cuenta
+                </button>
+            </form>
+
+            <div class="my-6 flex items-center justify-between text-gray-500 text-xs uppercase">
+                <span class="w-1/3 h-px bg-white/10"></span>
+                <span>O conecta con</span>
+                <span class="w-1/3 h-px bg-white/10"></span>
+            </div>
+
+            <button onclick="googleLogin()" class="w-full bg-black border border-white/20 hover:border-white text-white font-bold py-3 rounded flex items-center justify-center gap-3 transition">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5">
+                Google
+            </button>
+        </div>
     </div>
 
-    <div class="p-4 md:p-8">
-        <!-- Título de Sección -->
-        <div class="flex items-center gap-3 mb-8 border-b border-gray-800 pb-4">
-            <div class="w-2 h-10 bg-[#F47521] shadow-[0_0_15px_#F47521]"></div>
-            <h1 class="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-white drop-shadow-lg">
-                Cómics <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F47521] to-yellow-500">Fans</span>
-            </h1>
+    <!-- ======================= -->
+    <!-- 2. SECCIÓN DE PERFIL -->
+    <!-- ======================= -->
+    <div id="profile-container" class="w-full max-w-4xl hidden-section animate-enter">
+        
+        <!-- Header Perfil -->
+        <div class="flex justify-between items-end mb-6">
+            <div>
+                <h2 class="text-3xl font-black italic uppercase">Mi <span class="text-[#F47521]">Perfil</span></h2>
+                <p class="text-xs text-gray-500 font-mono" id="profile-id">ID: Cargando...</p>
+            </div>
+            <button onclick="cerrarSesion()" class="text-red-500 text-xs font-bold uppercase hover:underline">
+                <i class="fa-solid fa-power-off"></i> Cerrar Sesión
+            </button>
         </div>
 
-        <!-- GRID DE PORTADAS (5 ESPACIOS) -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8 mb-20">
-            <!-- 1. VIRUS KHARN -->
-            <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('kharn')">
-                <div class="comic-card h-72 bg-gray-900">
-                    <div class="status-badge status-emision animate-pulse">EN EMISIÓN</div>
-                    <img src="Kharn.png" onerror="this.src='https://placehold.co/300x450/111/F47521?text=Virus+Kharn'" class="w-full h-full object-cover">
-                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
-                        <h3 class="font-bold text-white text-lg leading-tight group-hover:text-[#F47521] transition drop-shadow-md">Virus Kharn: Extinción</h3>
-                    </div>
-                </div>
-            </div>
-            <!-- 2-5. PROXIMAMENTE -->
-            <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox1')">
-                <div class="comic-card h-72 bg-gray-900">
-                    <div class="status-badge status-tba">PRONTO</div>
-                    <img src="Próximamente1-1.png" onerror="this.src='https://placehold.co/300x450/111/333?text=WIP'" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500">
-                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
-                        <h3 class="font-bold text-gray-400 text-lg leading-tight group-hover:text-white transition">Próximamente</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox2')">
-                <div class="comic-card h-72 bg-gray-900">
-                    <div class="status-badge status-tba">PRONTO</div>
-                    <img src="Próximamente2-2.png" onerror="this.src='https://placehold.co/300x450/111/333?text=WIP'" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500">
-                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
-                        <h3 class="font-bold text-gray-400 text-lg leading-tight group-hover:text-white transition">Próximamente</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox3')">
-                <div class="comic-card h-72 bg-gray-900">
-                    <div class="status-badge status-tba">PRONTO</div>
-                    <img src="Próximamente3-3.png" onerror="this.src='https://placehold.co/300x450/111/333?text=WIP'" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500">
-                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
-                        <h3 class="font-bold text-gray-400 text-lg leading-tight group-hover:text-white transition">Próximamente</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox4')">
-                <div class="comic-card h-72 bg-gray-900">
-                    <div class="status-badge status-tba">PRONTO</div>
-                    <img src="Próximamente4-4.png" onerror="this.src='https://placehold.co/300x450/111/333?text=WIP'" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500">
-                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
-                        <h3 class="font-bold text-gray-400 text-lg leading-tight group-hover:text-white transition">Próximamente</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- --- SECCIÓN NUEVA: SISTEMA DE VOTACIÓN / RANKING --- -->
-        <div class="border-t border-gray-800 pt-12">
-            <!-- Título Profesional Unificado -->
-            <div class="flex items-center gap-3 mb-8 border-b border-gray-800 pb-4">
-                <div class="w-2 h-10 bg-[#F47521] shadow-[0_0_15px_#F47521]"></div>
-                <h2 class="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-white drop-shadow-lg">
-                    Clasificación <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-[#F47521]">Global</span>
-                </h2>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            <p class="text-gray-400 mb-10 max-w-3xl text-lg font-light leading-relaxed">
-                El poder está en tus manos. Sube tu idea y compite. La comunidad decidirá qué historia merece ser producida y oficializada en <span class="text-[#F47521] font-bold">ComicVerse</span>.
-            </p>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <!-- COLUMNA IZQUIERDA: Tarjeta 3D y Datos -->
+            <div class="md:col-span-1 space-y-6">
                 
-                <!-- Columna 1: Formulario de Subida (Estilo Tech) -->
-                <div class="bg-[#0f0f0f] p-8 rounded-2xl border border-[#F47521]/30 shadow-[0_0_30px_rgba(244,117,33,0.1)] relative overflow-hidden group">
-                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#F47521] to-transparent opacity-50 animate-pulse"></div>
-                    
-                    <h3 class="text-2xl font-black text-white mb-6 uppercase flex items-center gap-2">
-                        <i class="fa-solid fa-cloud-arrow-up text-[#F47521]"></i> Postular Idea
-                    </h3>
-                    <form id="pitchForm" class="space-y-5">
-                        <div>
-                            <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Título del Proyecto</label>
-                            <input type="text" id="pitchTitle" class="input-dark" placeholder="Ej: El Guerrero Galáctico" required maxlength="50">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Autor / Artista</label>
-                            <input type="text" id="pitchAuthor" class="input-dark" placeholder="Tu alias" required maxlength="30">
-                        </div>
-                        
-                        <!-- SELECTOR DE GÉNEROS (NUEVO) -->
-                        <div>
-                            <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Géneros (Máx 5)</label>
-                            <div class="flex flex-wrap gap-2" id="genre-selector">
-                                <!-- Se llenará con JS -->
+                <!-- Tarjeta 3D Giratoria -->
+                <div class="card-scene" onclick="this.querySelector('.card-obj').classList.toggle('is-flipped')">
+                    <div class="card-obj" id="membership-card">
+                        <!-- Frente -->
+                        <div class="card-face card-front">
+                            <div class="relative mb-4">
+                                <img id="display-avatar" src="https://via.placeholder.com/150" class="w-24 h-24 rounded-full border-2 border-white object-cover">
+                                <button onclick="toggleEditMode()" class="absolute bottom-0 right-0 bg-[#F47521] text-black w-8 h-8 rounded-full flex items-center justify-center hover:scale-110 transition shadow-lg">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
                             </div>
-                            <input type="hidden" id="pitchTags" required>
+                            <h3 id="display-username" class="text-xl font-bold text-white">Usuario</h3>
+                            <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest"><i class="fa-solid fa-rotate mr-1"></i> Toca para ver Membresía</p>
                         </div>
+                        <!-- Atrás -->
+                        <div class="card-face card-back status-basic" id="card-back-style">
+                            <i id="badge-icon" class="fa-solid fa-user text-4xl mb-2 text-gray-500"></i>
+                            <h3 id="membership-type" class="text-2xl font-black uppercase text-gray-400">Básico</h3>
+                            <p class="text-[10px] text-gray-500 mt-2 px-4 text-center">Mejora a Premium para desbloquear contenido exclusivo.</p>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Bio -->
+                <div class="bg-[#111] p-4 rounded-lg border border-white/5">
+                    <h4 class="text-[#F47521] text-xs font-bold uppercase mb-2">Biografía</h4>
+                    <p id="display-bio" class="text-sm text-gray-300 italic">Sin biografía.</p>
+                    <!-- Editor Oculto -->
+                    <div id="editor-area" class="hidden mt-4 pt-4 border-t border-white/10">
+                        <input type="text" id="edit-photo" placeholder="URL Foto Perfil" class="input-cr mb-2 text-xs">
+                        <textarea id="edit-bio" placeholder="Escribe tu bio..." class="input-cr h-20 text-xs mb-2"></textarea>
+                        <button onclick="guardarPerfil()" class="w-full bg-green-600 hover:bg-green-500 text-white text-xs font-bold py-2 rounded">GUARDAR CAMBIOS</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- COLUMNA DERECHA: Títulos y Admin -->
+            <div class="md:col-span-2 space-y-6">
+                
+                <!-- Títulos de Comunidad -->
+                <div class="bg-[#1a1a1a] p-6 rounded-xl border border-white/10">
+                    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-medal text-yellow-500"></i> Títulos Obtenidos
+                    </h3>
+                    <div class="badge-grid" id="titles-container">
+                        <!-- Se llenan con JS -->
+                        <span class="badge">Creador</span>
+                        <span class="badge">Crítico</span>
+                        <span class="badge">Votante</span>
+                        <span class="badge">VIP</span>
+                        <span class="badge">Beta Tester</span>
+                        <span class="badge">Donador</span>
+                        <span class="badge">Leyenda</span>
+                        <span class="badge">Otaku</span>
+                        <span class="badge">Artista</span>
+                        <span class="badge">Moderador</span>
+                        <span class="badge">Explorador</span>
+                        <span class="badge">Coleccionista</span>
+                        <span class="badge">Maestro</span>
+                        <span class="badge">Fan #1</span>
+                        <span class="badge">Guionista</span>
+                        <span class="badge">Traductor</span>
+                        <span class="badge">Editor</span>
+                        <span class="badge">Héroe</span>
+                        <span class="badge">Villano</span>
+                        <span class="badge">Dios</span>
+                    </div>
+                </div>
+
+                <!-- Panel de Administrador (Secreto) -->
+                <div class="bg-black p-6 rounded-xl border border-red-900/30">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-bold text-red-500 uppercase tracking-widest"><i class="fa-solid fa-user-secret"></i> Zona Admin</h3>
+                        <input type="password" id="admin-key" placeholder="Clave de Acceso" class="bg-[#111] border border-red-900/50 text-red-500 text-xs px-2 py-1 rounded w-32 text-center" onkeyup="checkAdmin()">
+                    </div>
+
+                    <div id="admin-controls" class="hidden-section space-y-4 border-t border-red-900/20 pt-4">
+                        <p class="text-xs text-gray-500">Editando al usuario actual (Tú)</p>
+                        
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Caps. Aprox</label>
-                                <input type="number" id="pitchCaps" class="input-dark" placeholder="Ej: 12" required>
+                                <label class="block text-xs text-gray-400 mb-1">Membresía</label>
+                                <button onclick="setPremium(true)" class="w-full bg-yellow-600/20 text-yellow-500 border border-yellow-600/50 text-xs font-bold py-2 rounded mb-2 hover:bg-yellow-600 hover:text-black">Hacer Premium</button>
+                                <button onclick="setPremium(false)" class="w-full bg-gray-800 text-gray-400 border border-gray-600 text-xs font-bold py-2 rounded hover:bg-white hover:text-black">Hacer Básico</button>
                             </div>
                             <div>
-                                <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Temporadas</label>
-                                <input type="number" id="pitchSeasons" class="input-dark" placeholder="Ej: 1" required>
+                                <label class="block text-xs text-gray-400 mb-1">Asignar Título</label>
+                                <select id="admin-title-select" class="w-full bg-[#111] text-white text-xs p-2 rounded border border-gray-700 mb-2">
+                                    <option value="Creador">Creador</option>
+                                    <option value="Crítico">Crítico</option>
+                                    <option value="Votante">Votante</option>
+                                    <option value="Leyenda">Leyenda</option>
+                                    <option value="Dios">Dios</option>
+                                    <!-- Agregar más si se quiere -->
+                                </select>
+                                <button onclick="addTitleToUser()" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2 rounded">Asignar</button>
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Sinopsis (Máx 500 car.)</label>
-                            <textarea id="pitchDesc" class="input-dark h-32 resize-none" placeholder="Engancha a la audiencia..." required maxlength="500"></textarea>
-                        </div>
-                        <button type="submit" class="w-full bg-gradient-to-r from-[#F47521] to-red-600 hover:from-white hover:to-gray-200 hover:text-black text-white font-black py-4 rounded-lg transition-all shadow-[0_0_20px_rgba(244,117,33,0.4)] uppercase tracking-widest transform hover:scale-[1.02]">
-                            ENVIAR AL SISTEMA
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Columna 2 y 3: Ranking en Vivo (Estilo Leaderboard) -->
-                <div class="lg:col-span-2">
-                    <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
-                        <h3 class="text-xl font-bold text-white uppercase flex items-center gap-3">
-                            <i class="fa-solid fa-chart-simple text-[#F47521]"></i> Top Propuestas
-                        </h3>
-                        <span class="text-xs bg-red-600 px-3 py-1 rounded-full text-white font-bold animate-pulse flex items-center gap-2">
-                            <span class="w-2 h-2 bg-white rounded-full"></span> EN VIVO
-                        </span>
-                    </div>
-                    
-                    <!-- Contenedor del Ranking -->
-                    <div id="rankingList" class="space-y-3 max-h-[800px] overflow-y-auto custom-scroll pr-2">
-                        <div class="text-center text-gray-600 py-20 flex flex-col items-center">
-                            <i class="fa-solid fa-circle-notch fa-spin text-4xl text-[#F47521] mb-4"></i>
-                            <p class="uppercase tracking-widest text-sm">Sincronizando Base de Datos...</p>
-                        </div>
                     </div>
                 </div>
 
             </div>
         </div>
-
     </div>
 
-    <!-- PANEL MODAL DETALLE CÓMICS -->
-    <div id="detalle-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-0 md:p-4 overflow-y-auto md:overflow-visible">
-        <div class="panel-glass w-full max-w-6xl min-h-[90vh] md:min-h-0 md:h-auto rounded-none md:rounded-2xl flex flex-col md:flex-row relative animate-[fadeIn_0.4s_ease-out]">
-            <button onclick="cerrarPanel()" class="absolute top-4 right-4 text-white z-50 bg-black/60 backdrop-blur rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#F47521] transition shadow-lg border border-white/10"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <div class="w-full md:w-[400px] shrink-0 relative bg-black">
-                <img id="modal-img" src="" class="w-full h-full object-cover opacity-90 mask-image-gradient">
-                <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent md:bg-gradient-to-r"></div>
-            </div>
-            <div class="flex-1 p-6 md:p-10 flex flex-col">
-                <div class="mb-6">
-                    <div class="flex flex-wrap gap-2 mb-3" id="modal-tags"></div>
-                    <h2 id="modal-titulo" class="text-4xl md:text-6xl font-black uppercase italic text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400 mb-2 drop-shadow-lg">TITULO</h2>
-                    <div class="flex flex-wrap items-center gap-6 text-sm text-gray-400 border-b border-white/10 pb-4">
-                        <span id="modal-autor" class="flex items-center gap-2"><i class="fa-solid fa-pen-nib text-[#F47521]"></i> Autor</span>
-                        <span id="modal-fecha" class="flex items-center gap-2"><i class="fa-regular fa-calendar text-[#F47521]"></i> Fecha</span>
-                        <span id="modal-caps" class="flex items-center gap-2"><i class="fa-solid fa-layer-group text-[#F47521]"></i> Caps</span>
-                        <span id="modal-status" class="bg-[#F47521] text-black px-2 py-0.5 rounded font-bold text-xs uppercase">Estado</span>
-                    </div>
-                </div>
-                <div class="mb-8">
-                    <h3 class="text-[#F47521] font-bold uppercase tracking-[0.2em] mb-3 text-xs flex items-center gap-2"><span class="w-4 h-0.5 bg-[#F47521]"></span> Sinopsis</h3>
-                    <p id="modal-sinopsis" class="text-gray-300 leading-relaxed text-lg font-light">Descripción...</p>
-                </div>
-                <div class="mb-8 relative group">
-                    <h3 class="text-[#F47521] font-bold uppercase tracking-[0.2em] mb-4 text-xs flex items-center gap-2"><span class="w-4 h-0.5 bg-[#F47521]"></span> Adelantos 3D</h3>
-                    <div class="slider-3d-container custom-scroll" id="modal-previews"></div>
-                </div>
-                <div class="mt-auto pt-4 border-t border-white/10 flex flex-col md:flex-row gap-4">
-                    <button onclick="cerrarPanel()" class="flex-1 md:flex-none bg-gray-800 hover:bg-gray-700 text-white font-bold uppercase tracking-widest py-4 px-6 rounded-lg transition flex items-center justify-center gap-2 border border-white/10"><i class="fa-solid fa-arrow-left"></i> Volver</button>
-                    <a id="modal-link" href="#" class="flex-1 text-center bg-gradient-to-r from-[#F47521] to-red-600 hover:from-white hover:to-gray-200 hover:text-black text-white font-black uppercase tracking-[0.2em] py-4 rounded-lg shadow-[0_0_30px_rgba(244,117,33,0.4)] hover:shadow-[0_0_50px_rgba(255,255,255,0.6)] transition-all transform hover:scale-[1.02] duration-300"><i class="fa-solid fa-book-open mr-2"></i> Leer Ahora</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL ESPECÍFICO PARA PITCHES (IDEAS) - MEJORADO -->
-    <div id="pitch-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
-        <div class="panel-glass w-full max-w-3xl h-auto rounded-xl p-8 relative animate-[fadeIn_0.3s_ease-out] border border-[#F47521]/50 shadow-[0_0_50px_rgba(244,117,33,0.2)]">
-            <button onclick="cerrarPitch()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-black/50 p-2 rounded-full hover:bg-[#F47521] transition"><i class="fa-solid fa-xmark text-xl"></i></button>
-            
-            <div class="flex flex-col items-center mb-8">
-                <span class="bg-[#F47521]/20 text-[#F47521] px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-[#F47521]/50 mb-4 animate-pulse">Propuesta de la Comunidad</span>
-                <h2 id="pitch-modal-title" class="text-3xl md:text-5xl font-black text-white text-center uppercase italic drop-shadow-lg">TITULO PROYECTO</h2>
-                <div class="h-1 w-24 bg-[#F47521] mt-4 rounded-full"></div>
-            </div>
-            
-            <div class="flex justify-between items-center bg-black/40 p-4 rounded-lg border border-white/10 mb-6">
-                <div class="text-center px-4 border-r border-white/10 w-1/3">
-                    <p class="text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Creador</p>
-                    <p id="pitch-modal-author" class="text-[#F47521] font-bold text-lg">Autor</p>
-                </div>
-                <div class="text-center px-4 border-r border-white/10 w-1/3">
-                    <p class="text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Capítulos</p>
-                    <p id="pitch-modal-caps" class="text-white font-bold text-lg">0</p>
-                </div>
-                <div class="text-center px-4 w-1/3">
-                    <p class="text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Temporadas</p>
-                    <p id="pitch-modal-seasons" class="text-white font-bold text-lg">0</p>
-                </div>
-            </div>
-
-            <div class="mb-6 text-center">
-                <div id="pitch-modal-tags" class="flex flex-wrap justify-center gap-2"></div>
-            </div>
-
-            <div class="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg border-l-4 border-[#F47521] mb-8 shadow-inner">
-                <h3 class="text-[#F47521] font-bold uppercase tracking-widest text-xs mb-3 flex items-center gap-2"><i class="fa-solid fa-align-left"></i> Sinopsis Completa</h3>
-                <p id="pitch-modal-desc" class="text-gray-300 leading-relaxed text-lg font-light italic">Descripción...</p>
-            </div>
-
-            <div class="text-center">
-                <button onclick="cerrarPitch()" class="bg-white hover:bg-gray-200 text-black font-black uppercase tracking-widest py-3 px-12 rounded-full transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
-                    Entendido
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL DE LOGIN PERSONALIZADO -->
-    <div id="auth-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
-        <div class="bg-[#111] border-2 border-[#F47521] w-full max-w-md p-8 rounded-xl relative shadow-[0_0_50px_rgba(244,117,33,0.5)] text-center animate-[fadeIn_0.2s_ease-out]">
-            <i class="fa-solid fa-lock text-5xl text-[#F47521] mb-6 block"></i>
-            <h3 class="text-2xl font-black text-white uppercase mb-2">Acceso Requerido</h3>
-            <p class="text-gray-400 mb-8">Debes iniciar sesión en <span class="text-[#F47521] font-bold">ComicVerse</span> para postular tu idea al ranking global.</p>
-            
-            <div class="flex flex-col gap-3">
-                <button onclick="irALogin()" class="w-full bg-[#F47521] hover:bg-white hover:text-black text-black font-black uppercase py-3 rounded transition-all">
-                    Conectar Cuenta
-                </button>
-                <button onclick="cerrarAuth()" class="w-full bg-transparent border border-gray-600 text-gray-400 hover:text-white hover:border-white font-bold uppercase py-3 rounded transition-all">
-                    Cancelar
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- LOGICA Y DATOS -->
+    <!-- LOGICA FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-
-        // Preloader
-        window.addEventListener('load', () => {
-            const preloader = document.getElementById('preloader');
-            if(preloader) { preloader.style.opacity = '0'; setTimeout(() => preloader.style.display = 'none', 500); }
-        });
-        setTimeout(() => {
-            const preloader = document.getElementById('preloader');
-            if(preloader && preloader.style.display !== 'none') { preloader.style.opacity = '0'; setTimeout(() => preloader.style.display = 'none', 500); }
-        }, 3000);
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBf9ATqgErKQKpzKpFXsUu4BHmFcNSLzOE",
@@ -414,280 +281,245 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
         const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
 
-        // Estado de usuario
-        let currentUser = null;
-        onAuthStateChanged(auth, (user) => {
-            currentUser = user;
-        });
+        let currentUserUid = null;
 
-        // --- SELECTOR DE GÉNEROS (20 OPCIONES) ---
-        const genres = [
-            "Acción", "Aventura", "Comedia", "Drama", "Fantasía", 
-            "Magia", "Terror", "Misterio", "Psicológico", "Romance", 
-            "Sci-Fi", "Recuentos de la vida", "Sobrenatural", "Thriller", "Deportes", 
-            "Histórico", "Mecha", "Musical", "Isekai", "Superhéroes"
-        ];
-        
-        const genreContainer = document.getElementById('genre-selector');
-        const selectedGenres = new Set();
+        // --- MANEJO DE ESTADO (LOGIN vs PERFIL) ---
+        onAuthStateChanged(auth, async (user) => {
+            const authContainer = document.getElementById('auth-container');
+            const profileContainer = document.getElementById('profile-container');
 
-        genres.forEach(genre => {
-            const tag = document.createElement('span');
-            tag.className = 'genre-tag';
-            tag.innerText = genre;
-            tag.onclick = () => toggleGenre(tag, genre);
-            genreContainer.appendChild(tag);
-        });
-
-        function toggleGenre(element, genre) {
-            if (selectedGenres.has(genre)) {
-                selectedGenres.delete(genre);
-                element.classList.remove('selected');
+            if (user) {
+                // Usuario logueado
+                currentUserUid = user.uid;
+                authContainer.classList.add('hidden-section');
+                profileContainer.classList.remove('hidden-section');
+                await cargarDatosPerfil(user);
             } else {
-                if (selectedGenres.size >= 5) {
-                    alert("Máximo 5 géneros permitidos.");
-                    return;
-                }
-                selectedGenres.add(genre);
-                element.classList.add('selected');
+                // No hay usuario
+                currentUserUid = null;
+                authContainer.classList.remove('hidden-section');
+                profileContainer.classList.add('hidden-section');
             }
-            document.getElementById('pitchTags').value = Array.from(selectedGenres).join(', ');
+        });
+
+        // --- FUNCIONES DE AUTENTICACIÓN ---
+        
+        window.switchTab = (tab) => {
+            const loginForm = document.getElementById('login-form');
+            const regForm = document.getElementById('register-form');
+            const tabLogin = document.getElementById('tab-login');
+            const tabReg = document.getElementById('tab-register');
+
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden-section');
+                regForm.classList.add('hidden-section');
+                tabLogin.className = "flex-1 pb-2 font-bold text-[#F47521] border-b-2 border-[#F47521]";
+                tabReg.className = "flex-1 pb-2 font-bold text-gray-500 hover:text-white transition";
+            } else {
+                loginForm.classList.add('hidden-section');
+                regForm.classList.remove('hidden-section');
+                tabReg.className = "flex-1 pb-2 font-bold text-[#F47521] border-b-2 border-[#F47521]";
+                tabLogin.className = "flex-1 pb-2 font-bold text-gray-500 hover:text-white transition";
+            }
+        };
+
+        // Login Email
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (error) {
+                alert("Error al ingresar: " + error.message);
+            }
+        });
+
+        // Registro Email
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-pass').value;
+            const username = document.getElementById('reg-username').value;
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                const user = userCredential.user;
+                
+                // Guardar username en Auth Profile
+                await updateProfile(user, { displayName: username });
+
+                // Crear documento en Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    username: username,
+                    email: email,
+                    photoURL: "https://via.placeholder.com/150",
+                    bio: "Nuevo en ComicVerse",
+                    titles: ["Novato"],
+                    isPremium: false
+                });
+
+            } catch (error) {
+                alert("Error al registrar: " + error.message);
+            }
+        });
+
+        // Google Login
+        window.googleLogin = async () => {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                
+                // Verificar si existe en DB, si no, crear
+                const docRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(docRef);
+
+                if (!docSnap.exists()) {
+                    await setDoc(docRef, {
+                        username: user.displayName,
+                        email: user.email,
+                        photoURL: user.photoURL,
+                        bio: "Nuevo en ComicVerse",
+                        titles: ["Novato"],
+                        isPremium: false
+                    });
+                }
+            } catch (error) {
+                alert("Error Google: " + error.message);
+            }
+        };
+
+        window.cerrarSesion = () => signOut(auth);
+
+        // --- GESTIÓN DE PERFIL (FIRESTORE) ---
+
+        async function cargarDatosPerfil(user) {
+            document.getElementById('profile-id').innerText = "ID: " + user.uid.substring(0, 8) + "...";
+            
+            const docRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                
+                // Renderizar Datos
+                document.getElementById('display-username').innerText = data.username;
+                document.getElementById('display-bio').innerText = data.bio || "Sin bio.";
+                document.getElementById('display-avatar').src = data.photoURL || "https://via.placeholder.com/150";
+                
+                // Renderizar Tarjeta 3D (Premium/Básico)
+                renderCardStatus(data.isPremium);
+
+                // Renderizar Títulos
+                renderTitles(data.titles || []);
+
+                // Pre-llenar editor
+                document.getElementById('edit-bio').value = data.bio || "";
+                document.getElementById('edit-photo').value = data.photoURL || "";
+                
+                // Guardar avatar en LocalStorage para usar en index.html/comics.html
+                localStorage.setItem('userAvatar', data.photoURL);
+
+            } else {
+                console.log("No se encontró perfil en DB");
+            }
         }
 
-        // --- SISTEMA DE RANKING ---
-        
-        // Modal Auth
-        window.cerrarAuth = () => document.getElementById('auth-modal').classList.add('hidden');
-        window.irALogin = () => {
-            try {
-                if (window.parent && window.parent.cargarPagina) {
-                    window.parent.cargarPagina('Usuario.html', null);
+        function renderCardStatus(isPremium) {
+            const cardBack = document.getElementById('card-back-style');
+            const typeText = document.getElementById('membership-type');
+            const icon = document.getElementById('badge-icon');
+
+            if (isPremium) {
+                cardBack.className = "card-face card-back status-premium";
+                typeText.innerText = "PREMIUM";
+                typeText.className = "text-2xl font-black uppercase text-[#F47521] drop-shadow-md";
+                icon.className = "fa-solid fa-crown text-5xl mb-2 text-yellow-400 animate-pulse";
+            } else {
+                cardBack.className = "card-face card-back status-basic";
+                typeText.innerText = "BÁSICO";
+                typeText.className = "text-2xl font-black uppercase text-gray-400";
+                icon.className = "fa-solid fa-user text-4xl mb-2 text-gray-500";
+            }
+        }
+
+        function renderTitles(userTitles) {
+            const allBadges = document.querySelectorAll('.badge');
+            allBadges.forEach(badge => {
+                const titleName = badge.innerText;
+                if (userTitles.includes(titleName)) {
+                    badge.classList.add('active');
                 } else {
-                    throw new Error("No parent access");
+                    badge.classList.remove('active');
                 }
+            });
+        }
+
+        // --- EDICIÓN DE PERFIL ---
+        window.toggleEditMode = () => {
+            const editor = document.getElementById('editor-area');
+            editor.classList.toggle('hidden');
+        };
+
+        window.guardarPerfil = async () => {
+            if (!currentUserUid) return;
+            
+            const newBio = document.getElementById('edit-bio').value;
+            const newPhoto = document.getElementById('edit-photo').value;
+            
+            try {
+                await updateDoc(doc(db, "users", currentUserUid), {
+                    bio: newBio,
+                    photoURL: newPhoto
+                });
+                // Recargar interfaz
+                const user = auth.currentUser;
+                await cargarDatosPerfil(user);
+                window.toggleEditMode();
+                alert("Perfil actualizado");
             } catch (e) {
-                console.warn("Navegación controlada:", e);
-                // Fallback seguro
-                try {
-                    window.location.href = 'Usuario.html';
-                } catch (err) {
-                    alert("Redirigiendo a Iniciar Sesión (Simulación)");
-                }
+                alert("Error al guardar: " + e.message);
             }
         };
 
-        const pitchForm = document.getElementById('pitchForm');
-        pitchForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            // VERIFICACIÓN DE LOGIN ROBUSTA
-            if (!currentUser) {
-                document.getElementById('auth-modal').classList.remove('hidden');
-                return;
-            }
-
-            const tagsValue = document.getElementById('pitchTags').value;
-            if(!tagsValue) {
-                alert("Selecciona al menos un género.");
-                return;
-            }
-
-            const btn = pitchForm.querySelector('button');
-            const originalText = btn.innerText;
-            btn.disabled = true;
-            btn.innerText = "PROCESANDO...";
-
-            try {
-                await addDoc(collection(db, "fan_pitches"), {
-                    title: document.getElementById('pitchTitle').value,
-                    author: document.getElementById('pitchAuthor').value,
-                    description: document.getElementById('pitchDesc').value,
-                    tags: tagsValue,
-                    caps: document.getElementById('pitchCaps').value,
-                    seasons: document.getElementById('pitchSeasons').value,
-                    votes: 0,
-                    createdAt: new Date().toISOString(),
-                    userId: currentUser.uid
-                });
-                alert("¡Propuesta enviada con éxito!");
-                pitchForm.reset();
-                selectedGenres.clear();
-                document.querySelectorAll('.genre-tag').forEach(t => t.classList.remove('selected'));
-            } catch (error) {
-                console.error("Error:", error);
-                alert("Error al enviar.");
-            } finally {
-                btn.disabled = false;
-                btn.innerText = originalText;
-            }
-        });
-
-        // Cargar Ranking
-        const rankingList = document.getElementById('rankingList');
-        const qRank = query(collection(db, "fan_pitches"), orderBy("votes", "desc"));
-        let pitchesCache = {};
-
-        onSnapshot(qRank, (snapshot) => {
-            rankingList.innerHTML = "";
-            let rank = 1;
-            
-            if (snapshot.empty) {
-                rankingList.innerHTML = '<div class="text-center text-gray-500 py-10">Sé el primero en proponer un cómic.</div>';
-                return;
-            }
-
-            snapshot.forEach((doc) => {
-                const pitch = doc.data();
-                const id = doc.id;
-                pitchesCache[id] = pitch;
-                
-                let rankStyle = 'border-white/5 bg-[#151515] hover:border-gray-500';
-                let trophy = '';
-                let rankNumberClass = 'text-gray-600';
-
-                if (rank === 1) {
-                    rankStyle = 'rank-1 bg-gradient-to-r from-yellow-900/20 to-transparent';
-                    trophy = '<i class="fa-solid fa-crown text-yellow-400 ml-2 animate-pulse"></i>';
-                    rankNumberClass = 'text-yellow-500 drop-shadow-[0_0_10px_rgba(234,179,8,0.5)]';
-                } else if (rank === 2) {
-                    rankStyle = 'rank-2 bg-gradient-to-r from-slate-700/20 to-transparent';
-                    trophy = '<i class="fa-solid fa-medal text-gray-400 ml-2"></i>';
-                    rankNumberClass = 'text-gray-300';
-                } else if (rank === 3) {
-                    rankStyle = 'rank-3 bg-gradient-to-r from-orange-900/20 to-transparent';
-                    trophy = '<i class="fa-solid fa-medal text-amber-700 ml-2"></i>';
-                    rankNumberClass = 'text-amber-700';
-                }
-
-                const item = document.createElement('div');
-                item.className = `p-5 rounded-lg border ${rankStyle} flex items-center justify-between gap-4 transition-all duration-300 transform hover:translate-x-1 cursor-pointer`;
-                
-                item.onclick = (e) => {
-                    if(!e.target.closest('button')) abrirPitch(id);
-                };
-
-                item.innerHTML = `
-                    <div class="flex items-center gap-5 flex-1 overflow-hidden">
-                        <div class="text-4xl font-black ${rankNumberClass} w-12 text-center italic flex-shrink-0">#${rank}</div>
-                        <div class="min-w-0">
-                            <h4 class="font-bold text-white text-lg leading-tight uppercase truncate">${pitch.title} ${trophy}</h4>
-                            <p class="text-xs text-gray-400 font-mono mt-1 truncate">CREADOR: <span class="text-[#F47521]">${pitch.author}</span></p>
-                            <p class="text-xs text-gray-500 mt-2 line-clamp-1 italic">"${pitch.description.substring(0, 60)}..."</p>
-                            <span class="text-[10px] text-[#F47521] font-bold uppercase mt-1 inline-block hover:underline">Ver Ficha Técnica <i class="fa-solid fa-arrow-right ml-1"></i></span>
-                        </div>
-                    </div>
-                    <div class="flex flex-col items-center gap-1 min-w-[60px] flex-shrink-0">
-                        <button onclick="votarPitch(event, '${id}')" class="w-10 h-10 rounded-full bg-[#F47521]/10 hover:bg-[#F47521] text-[#F47521] hover:text-black flex items-center justify-center transition border border-[#F47521]/30 z-10 relative">
-                            <i class="fa-solid fa-fire"></i>
-                        </button>
-                        <span class="text-sm font-bold text-white">${pitch.votes}</span>
-                    </div>
-                `;
-                rankingList.appendChild(item);
-                rank++;
-            });
-        });
-
-        // Votar Propuesta (Blindado)
-        window.votarPitch = async (event, id) => {
-            event.stopPropagation(); // Evitar abrir modal
-            const btn = event.currentTarget;
-            
-            // Check Local
-            const storageKey = `pitch_vote_${id}`;
-            if (localStorage.getItem(storageKey)) {
-                alert("Ya has votado por esta propuesta.");
-                return;
-            }
-
-            // Deshabilitar visualmente
-            btn.disabled = true;
-            btn.classList.add('opacity-50', 'cursor-not-allowed');
-
-            const pitchRef = doc(db, "fan_pitches", id);
-            try {
-                await updateDoc(pitchRef, { votes: increment(1) });
-                localStorage.setItem(storageKey, 'true');
-            } catch (error) {
-                console.error("Error:", error);
-                btn.disabled = false;
-                btn.classList.remove('opacity-50', 'cursor-not-allowed');
-            }
-        };
-
-        window.abrirPitch = (id) => {
-            const data = pitchesCache[id];
-            if (!data) return;
-            document.getElementById('pitch-modal-title').innerText = data.title;
-            document.getElementById('pitch-modal-author').innerText = data.author;
-            document.getElementById('pitch-modal-desc').innerText = data.description;
-            document.getElementById('pitch-modal-caps').innerText = data.caps || '?';
-            document.getElementById('pitch-modal-seasons').innerText = data.seasons || '?';
-
-            const tagsDiv = document.getElementById('pitch-modal-tags');
-            tagsDiv.innerHTML = '';
-            if (data.tags) {
-                const tagsList = data.tags.split(',').map(t => t.trim());
-                tagsList.forEach(tag => {
-                    tagsDiv.innerHTML += `<span class="border border-[#F47521] text-[#F47521] px-3 py-1 rounded-full text-xs font-bold uppercase bg-[#F47521]/10">${tag}</span>`;
-                });
-            }
-            document.getElementById('pitch-modal').classList.remove('hidden');
-        };
-
-        window.cerrarPitch = () => document.getElementById('pitch-modal').classList.add('hidden');
-
-        // --- LÓGICA DE DETALLES CÓMICS (Existente) ---
-        const comicsData = {
-            'kharn': {
-                titulo: "Virus Kharn: Extinción",
-                imgPortada: "Kharn.png",
-                autor: "FanArtist01",
-                fecha: "2025",
-                caps: "5",
-                status: "EN EMISIÓN",
-                tags: ["Zombies", "Survival", "Horror"],
-                sinopsis: "Un virus desconocido ha diezmado a la población mundial. Un grupo de supervivientes busca el origen de la plaga conocida como Kharn, mientras luchan contra infectados que evolucionan cada noche.",
-                previews: ["pre2kharn.png", "pre2kharn2.png", "pre2kharn3.png"],
-                link: "viruskharn.html"
-            },
-            'prox1': { titulo: "Próximamente", imgPortada: "Próximamente1-1.png", autor: "???", fecha: "TBA", caps: "?", status: "PRONTO", tags: ["???"], sinopsis: "Espacio reservado para futuro cómic.", previews: ["Próximamente1-1.png", "Próximamente1-1.png", "Próximamente1-1.png"], link: "Próximamente1-1.html" },
-            // ... (Resto de datos) ...
-        };
+        // --- PANEL DE ADMIN (CLAVE #Lau3700#) ---
         
-        window.abrirPanel = async function(id) {
-            const data = comicsData[id] || comicsData['prox1']; 
-            const modal = document.getElementById('detalle-modal');
-            document.getElementById('modal-img').src = data.imgPortada;
-            document.getElementById('modal-img').onerror = function(){ this.src='https://placehold.co/400x600/111/F47521?text=No+Image'; };
-            document.getElementById('modal-titulo').innerText = data.titulo;
-            document.getElementById('modal-autor').innerHTML = `<i class="fa-solid fa-pen-nib text-[#F47521]"></i> ${data.autor}`;
-            document.getElementById('modal-fecha').innerHTML = `<i class="fa-regular fa-calendar text-[#F47521]"></i> ${data.fecha}`;
-            document.getElementById('modal-caps').innerHTML = `<i class="fa-solid fa-layer-group text-[#F47521]"></i> ${data.caps} Caps`;
-            document.getElementById('modal-status').innerText = data.status;
-            document.getElementById('modal-sinopsis').innerText = data.sinopsis;
-            document.getElementById('modal-link').href = data.link;
-
-            const tagsContainer = document.getElementById('modal-tags');
-            tagsContainer.innerHTML = '';
-            data.tags.forEach(tag => {
-                tagsContainer.innerHTML += `<span class="magic-tag text-white px-3 py-1 text-xs font-bold uppercase tracking-wider">${tag}</span>`;
-            });
-
-            const previewsContainer = document.getElementById('modal-previews');
-            previewsContainer.innerHTML = '';
-            data.previews.forEach((img, i) => {
-                previewsContainer.innerHTML += `<div class="slide-3d bg-gray-800"><img src="${img}" onerror="this.src='https://placehold.co/600x400/222/F47521?text=Preview+${i+1}'" class="w-full h-full object-cover"></div>`;
-            });
-
-            modal.classList.remove('hidden');
+        window.checkAdmin = () => {
+            const key = document.getElementById('admin-key').value;
+            if (key === "#Lau3700#") {
+                document.getElementById('admin-controls').classList.remove('hidden-section');
+            } else {
+                document.getElementById('admin-controls').classList.add('hidden-section');
+            }
         };
 
-        window.cerrarPanel = function() {
-            document.getElementById('detalle-modal').classList.add('hidden');
+        window.setPremium = async (status) => {
+            if (!currentUserUid) return;
+            try {
+                await updateDoc(doc(db, "users", currentUserUid), { isPremium: status });
+                // Actualizar visualmente sin recargar
+                renderCardStatus(status);
+                alert(`Usuario ahora es ${status ? 'PREMIUM' : 'BÁSICO'}`);
+            } catch (e) { console.error(e); }
+        };
+
+        window.addTitleToUser = async () => {
+            if (!currentUserUid) return;
+            const title = document.getElementById('admin-title-select').value;
+            try {
+                await updateDoc(doc(db, "users", currentUserUid), {
+                    titles: arrayUnion(title)
+                });
+                // Recargar visualmente
+                const currentTitles = document.querySelectorAll('.badge.active');
+                // Truco rápido: Recargar todo el perfil es más seguro
+                cargarDatosPerfil(auth.currentUser);
+                alert(`Título "${title}" asignado.`);
+            } catch (e) { console.error(e); }
         };
 
     </script>
