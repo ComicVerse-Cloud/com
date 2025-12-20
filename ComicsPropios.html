@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comics Propios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --orange-cr: #F47521;
+            --dark-bg: #000000;
+            --magic-glow: 0 0 10px rgba(139, 92, 246, 0.5), 0 0 20px rgba(56, 189, 248, 0.3);
+        }
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: var(--orange-cr); border-radius: 4px; }
+
+        /* --- Botón Usuario Top Right --- */
+        .user-top-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 40;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+        .user-top-btn:hover {
+            border-color: var(--orange-cr);
+            box-shadow: 0 0 25px rgba(244, 117, 33, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* --- Efecto 3D Portada Grid --- */
+        .comic-card-container { perspective: 1000px; }
+        .comic-card {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            transform-style: preserve-3d;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .comic-card-container:hover .comic-card {
+            transform: rotateY(10deg) rotateX(5deg) scale(1.05);
+            box-shadow: -5px 5px 20px rgba(244, 117, 33, 0.4);
+            z-index: 10;
+            border: 2px solid var(--orange-cr);
+        }
+
+        /* --- Etiquetas de Estado (Emisión/Final) --- */
+        .status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.65rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 4px;
+            z-index: 20;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
+        }
+        .status-emision {
+            background: linear-gradient(90deg, #22c55e, #166534);
+            color: white;
+            border: 1px solid #4ade80;
+        }
+        .status-final {
+            background: linear-gradient(90deg, #a855f7, #6b21a8);
+            color: white;
+            border: 1px solid #d8b4fe;
+        }
+        .status-tba {
+            background: linear-gradient(90deg, #64748b, #334155);
+            color: white;
+            border: 1px solid #94a3b8;
+        }
+
+        /* --- Estilo Mágico Avalond (Etiquetas) --- */
+        .magic-tag {
+            background: linear-gradient(135deg, rgba(20,20,20,0.9), rgba(40,40,50,0.9));
+            border: 1px solid transparent;
+            position: relative;
+            background-clip: padding-box;
+            border-radius: 4px;
+            box-shadow: var(--magic-glow);
+            transition: all 0.3s;
+        }
+        .magic-tag::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: -1;
+            margin: -1px;
+            border-radius: inherit;
+            background: linear-gradient(to right, #8b5cf6, #38bdf8, #F47521);
+        }
+        .magic-tag:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 8px white;
+        }
+
+        /* --- Slider 3D Adelantos --- */
+        .slider-3d-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 40px 20px;
+            perspective: 1000px;
+            scroll-behavior: smooth;
+        }
+        .slide-3d {
+            min-width: 300px;
+            height: 200px;
+            position: relative;
+            transition: all 0.5s ease;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: rotateY(20deg) scale(0.9);
+            opacity: 0.7;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .slide-3d:hover, .slide-3d:focus {
+            transform: rotateY(0deg) scale(1.1);
+            opacity: 1;
+            z-index: 10;
+            box-shadow: 0 0 30px rgba(244, 117, 33, 0.6);
+            border: 1px solid var(--orange-cr);
+        }
+
+        /* --- Modal Panel --- */
+        #detalle-modal {
+            backdrop-filter: blur(15px);
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .panel-glass {
+            background: linear-gradient(145deg, rgba(20,20,20,0.95), rgba(10,10,10,0.98));
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 100px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,255,255,0.05);
+        }
+    </style>
+</head>
+<body class="relative min-h-screen">
+
+    <!-- BOTÓN PERFIL USUARIO (Conexión a Usuario.html) -->
+    <button onclick="parent.cargarPagina('Usuario.html', null)" class="user-top-btn hidden md:flex items-center gap-3 px-4 py-2 rounded-md group">
+        <div class="flex flex-col text-right">
+            <span class="text-[9px] text-gray-400 uppercase font-black tracking-[0.2em] group-hover:text-[#F47521] transition">Conectado</span>
+            <span class="text-xs font-black text-white uppercase tracking-widest group-hover:text-white transition flex items-center gap-2">
+                USUARIO <i class="fa-solid fa-circle-user text-[#F47521] text-lg"></i>
+            </span>
+        </div>
+    </button>
+
+    <div class="p-4 md:p-8">
+        <!-- Título de Sección -->
+        <div class="flex items-center gap-3 mb-8 border-b border-gray-800 pb-4">
+            <div class="w-2 h-10 bg-[#F47521] shadow-[0_0_15px_#F47521]"></div>
+            <h1 class="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-white drop-shadow-lg">
+                Cómics <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F47521] to-yellow-500">Propios</span>
+            </h1>
+        </div>
+
+        <!-- GRID DE PORTADAS (5 ESPACIOS) -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
+
+            <!-- 1. AVALOND -->
+            <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('avalond')">
+                <div class="comic-card h-72 bg-gray-900">
+                    <div class="status-badge status-emision animate-pulse">EN EMISIÓN</div>
+                    <img src="Avalond.png" onerror="this.src='https://placehold.co/300x450/1a1a1a/F47521?text=Avalond'" class="w-full h-full object-cover">
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
+                        <h3 class="font-bold text-white text-lg leading-tight group-hover:text-[#F47521] transition drop-shadow-md">Academia Avalond</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. TERRANOVA -->
+            <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('terra')">
+                <div class="comic-card h-72 bg-gray-900">
+                    <div class="status-badge status-emision animate-pulse">EN EMISIÓN</div>
+                    <img src="Terra.png" onerror="this.src='https://placehold.co/300x450/1a1a1a/F47521?text=TerraNova'" class="w-full h-full object-cover">
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
+                        <h3 class="font-bold text-white text-lg leading-tight group-hover:text-[#F47521] transition drop-shadow-md">TerraNova</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. PROXIMAMENTE 1 -->
+            <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox1')">
+                <div class="comic-card h-72 bg-gray-900">
+                    <div class="status-badge status-tba">PRONTO</div>
+                    <img src="Proximamente1.png" onerror="this.src='https://placehold.co/300x450/111/333?text=WIP'" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500">
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
+                        <h3 class="font-bold text-gray-400 text-lg leading-tight group-hover:text-white transition">Próximamente</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. PROXIMAMENTE 2 -->
+            <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox2')">
+                <div class="comic-card h-72 bg-gray-900">
+                    <div class="status-badge status-tba">PRONTO</div>
+                    <img src="Proximamente1.png" onerror="this.src='https://placehold.co/300x450/111/333?text=WIP'" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500">
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
+                        <h3 class="font-bold text-gray-400 text-lg leading-tight group-hover:text-white transition">Próximamente</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. PROXIMAMENTE 3 -->
+            <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox3')">
+                <div class="comic-card h-72 bg-gray-900">
+                    <div class="status-badge status-tba">PRONTO</div>
+                    <img src="Proximamente1.png" onerror="this.src='https://placehold.co/300x450/111/333?text=WIP'" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500">
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
+                        <h3 class="font-bold text-gray-400 text-lg leading-tight group-hover:text-white transition">Próximamente</h3>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PANEL MODAL DE DETALLES -->
+    <div id="detalle-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-0 md:p-4 overflow-y-auto md:overflow-visible">
+        <div class="panel-glass w-full max-w-6xl min-h-[90vh] md:min-h-0 md:h-auto rounded-none md:rounded-2xl flex flex-col md:flex-row relative animate-[fadeIn_0.4s_ease-out]">
+            
+            <!-- Botón Cerrar (X) -->
+            <button onclick="cerrarPanel()" class="absolute top-4 right-4 text-white z-50 bg-black/60 backdrop-blur rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#F47521] transition shadow-lg border border-white/10">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <!-- Columna Izquierda: Portada -->
+            <div class="w-full md:w-[400px] shrink-0 relative bg-black">
+                <img id="modal-img" src="" class="w-full h-full object-cover opacity-90 mask-image-gradient">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent md:bg-gradient-to-r"></div>
+                
+                <!-- Puntuación Flotante -->
+                <div class="absolute top-4 left-4 bg-black/80 backdrop-blur border border-[#F47521] px-4 py-2 rounded-lg shadow-[0_0_20px_rgba(244,117,33,0.3)]">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-star text-yellow-400 text-xl animate-pulse"></i>
+                        <span id="modal-score" class="text-2xl font-black text-white">0.0</span>
+                    </div>
+                    <div class="text-[10px] text-gray-400 text-center uppercase tracking-wider">Valoración</div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Contenido -->
+            <div class="flex-1 p-6 md:p-10 flex flex-col">
+                
+                <!-- Encabezado -->
+                <div class="mb-6">
+                    <div class="flex flex-wrap gap-2 mb-3" id="modal-tags"></div>
+                    <h2 id="modal-titulo" class="text-4xl md:text-6xl font-black uppercase italic text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400 mb-2 drop-shadow-lg">TITULO</h2>
+                    <div class="flex flex-wrap items-center gap-6 text-sm text-gray-400 border-b border-white/10 pb-4">
+                        <span id="modal-autor" class="flex items-center gap-2"><i class="fa-solid fa-pen-nib text-[#F47521]"></i> Autor</span>
+                        <span id="modal-fecha" class="flex items-center gap-2"><i class="fa-regular fa-calendar text-[#F47521]"></i> 2024</span>
+                        <span id="modal-caps" class="flex items-center gap-2"><i class="fa-solid fa-layer-group text-[#F47521]"></i> 0 Caps</span>
+                        <span id="modal-season" class="bg-[#F47521] text-black px-2 py-0.5 rounded font-bold text-xs uppercase">Temporada 1</span>
+                    </div>
+                </div>
+
+                <!-- Sinopsis -->
+                <div class="mb-8">
+                    <h3 class="text-[#F47521] font-bold uppercase tracking-[0.2em] mb-3 text-xs flex items-center gap-2">
+                        <span class="w-4 h-0.5 bg-[#F47521]"></span> Sinopsis
+                    </h3>
+                    <p id="modal-sinopsis" class="text-gray-300 leading-relaxed text-lg font-light">
+                        Descripción...
+                    </p>
+                </div>
+
+                <!-- Sistema de Votación (Firebase UI) -->
+                <div class="mb-8 bg-white/5 rounded-xl p-4 border border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="text-sm font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-heart text-red-500"></i> ¿Te gusta este cómic?
+                    </div>
+                    <div class="flex gap-4">
+                        <button onclick="votar('like')" class="flex items-center gap-2 bg-green-900/30 hover:bg-green-600 text-green-400 hover:text-white px-4 py-2 rounded-lg transition border border-green-500/30 active:scale-95">
+                            <i class="fa-solid fa-thumbs-up"></i> <span id="count-likes">0</span>
+                        </button>
+                        <button onclick="votar('dislike')" class="flex items-center gap-2 bg-red-900/30 hover:bg-red-600 text-red-400 hover:text-white px-4 py-2 rounded-lg transition border border-red-500/30 active:scale-95">
+                            <i class="fa-solid fa-thumbs-down"></i> <span id="count-dislikes">0</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Adelantos 3D Slider -->
+                <div class="mb-8 relative group">
+                    <h3 class="text-[#F47521] font-bold uppercase tracking-[0.2em] mb-4 text-xs flex items-center gap-2">
+                        <span class="w-4 h-0.5 bg-[#F47521]"></span> Adelantos 3D
+                    </h3>
+                    <!-- Contenedor Slider -->
+                    <div class="slider-3d-container custom-scroll" id="modal-previews">
+                        <!-- Las imágenes se inyectan aquí -->
+                    </div>
+                </div>
+
+                <!-- Footer del Modal (Botones) -->
+                <div class="mt-auto pt-4 border-t border-white/10 flex flex-col md:flex-row gap-4">
+                    <!-- Botón Cerrar/Volver grande -->
+                    <button onclick="cerrarPanel()" class="flex-1 md:flex-none bg-gray-800 hover:bg-gray-700 text-white font-bold uppercase tracking-widest py-4 px-6 rounded-lg transition flex items-center justify-center gap-2 border border-white/10">
+                        <i class="fa-solid fa-arrow-left"></i> Volver
+                    </button>
+                    
+                    <!-- Botón Leer -->
+                    <a id="modal-link" href="#" class="flex-1 text-center bg-gradient-to-r from-[#F47521] to-red-600 hover:from-white hover:to-gray-200 hover:text-black text-white font-black uppercase tracking-[0.2em] py-4 rounded-lg shadow-[0_0_30px_rgba(244,117,33,0.4)] hover:shadow-[0_0_50px_rgba(255,255,255,0.6)] transition-all transform hover:scale-[1.02] duration-300">
+                        <i class="fa-solid fa-book-open mr-2"></i> Leer Ahora
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE & LÓGICA -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+        // Configuración Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBf9ATqgErKQKpzKpFXsUu4BHmFcNSLzOE",
+            authDomain: "comic-a54bf.firebaseapp.com",
+            projectId: "comic-a54bf",
+            storageBucket: "comic-a54bf.firebasestorage.app",
+            messagingSenderId: "653412030846",
+            appId: "1:653412030846:web:86f30b301d3c8c41e1fb2f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- BASE DE DATOS LOCAL DE CÓMICS ---
+        const comicsData = {
+            'avalond': {
+                titulo: "Academia De Magia Avalond",
+                imgPortada: "Avalond.png",
+                autor: "CreatorX",
+                fecha: "2024",
+                caps: "45",
+                season: "Temporada 2",
+                tags: ["Magia", "Fantasía", "Escolar"],
+                sinopsis: "En un mundo donde el maná dicta tu estatus social, un joven sin poderes aparentes ingresa a la prestigiosa Academia Avalond. Pero bajo los cimientos de la escuela duerme un secreto milenario que está a punto de despertar.",
+                previews: ["preavalond1.png", "preavalond2.png", "preavalond3.png", "preavalond4.png", "preavalond5.png"],
+                link: "comicavalond.html"
+            },
+            'terra': {
+                titulo: "TerraNova",
+                imgPortada: "Terra.png",
+                autor: "Studio Mars",
+                fecha: "2025",
+                caps: "12",
+                season: "Temporada 1",
+                tags: ["Sci-Fi", "Espacio", "Survival"],
+                sinopsis: "Tras el colapso de la Tierra, la nave arca 'Hope' aterriza en TerraNova. Pero el planeta no está deshabitado, y sus ecosistemas responden a las emociones humanas de formas letales.",
+                previews: ["preterra1.png", "preterra2.png", "preterra3.png", "preterra4.png", "preterra5.png"],
+                link: "comicterra.html"
+            },
+            'prox1': { titulo: "Proyecto Secreto", imgPortada: "Proximamente1.png", autor: "???", fecha: "TBA", caps: "?", season: "?", tags: ["Misterio"], sinopsis: "Próximamente...", previews: ["Proximamente1.png","Proximamente1.png","Proximamente1.png","Proximamente1.png","Proximamente1.png"], link: "proximamentecomic1.html" },
+            'prox2': { titulo: "Próximamente", imgPortada: "Proximamente1.png", autor: "???", fecha: "TBA", caps: "?", season: "?", tags: ["Acción"], sinopsis: "Próximamente...", previews: ["Proximamente1.png","Proximamente1.png","Proximamente1.png","Proximamente1.png","Proximamente1.png"], link: "Próximamente2.html" },
+            'prox3': { titulo: "Próximamente", imgPortada: "Proximamente1.png", autor: "???", fecha: "TBA", caps: "?", season: "?", tags: ["Romance"], sinopsis: "Próximamente...", previews: ["Proximamente1.png","Proximamente1.png","Proximamente1.png","Proximamente1.png","Proximamente1.png"], link: "proximamente3.html" }
+        };
+
+        let currentComicId = null;
+
+        // --- FUNCIONES UI ---
+        
+        window.abrirPanel = async function(id) {
+            currentComicId = id;
+            const data = comicsData[id];
+            const modal = document.getElementById('detalle-modal');
+            
+            // Cargar datos estáticos
+            const imgEl = document.getElementById('modal-img');
+            imgEl.src = data.imgPortada;
+            imgEl.onerror = function(){ this.src='https://placehold.co/400x600/111/F47521?text=No+Image'; };
+            
+            document.getElementById('modal-titulo').innerText = data.titulo;
+            document.getElementById('modal-autor').innerHTML = `<i class="fa-solid fa-pen-nib text-[#F47521]"></i> ${data.autor}`;
+            document.getElementById('modal-fecha').innerHTML = `<i class="fa-regular fa-calendar text-[#F47521]"></i> ${data.fecha}`;
+            document.getElementById('modal-caps').innerHTML = `<i class="fa-solid fa-layer-group text-[#F47521]"></i> ${data.caps} Caps`;
+            document.getElementById('modal-season').innerText = data.season;
+            document.getElementById('modal-sinopsis').innerText = data.sinopsis;
+            document.getElementById('modal-link').href = data.link;
+
+            // Tags
+            const tagsContainer = document.getElementById('modal-tags');
+            tagsContainer.innerHTML = '';
+            data.tags.forEach(tag => {
+                tagsContainer.innerHTML += `<span class="magic-tag text-white px-3 py-1 text-xs font-bold uppercase tracking-wider">${tag}</span>`;
+            });
+
+            // Adelantos
+            const previewsContainer = document.getElementById('modal-previews');
+            previewsContainer.innerHTML = '';
+            data.previews.forEach((img, i) => {
+                previewsContainer.innerHTML += `
+                    <div class="slide-3d bg-gray-800">
+                        <img src="${img}" onerror="this.src='https://placehold.co/600x400/222/F47521?text=Preview+${i+1}'" class="w-full h-full object-cover">
+                    </div>
+                `;
+            });
+
+            // Resetear UI de votación mientras carga
+            document.getElementById('modal-score').innerText = "...";
+            document.getElementById('count-likes').innerText = "-";
+            document.getElementById('count-dislikes').innerText = "-";
+
+            modal.classList.remove('hidden');
+
+            // Cargar datos reales de Firebase
+            await cargarValoracion(id);
+        };
+
+        window.cerrarPanel = function() {
+            document.getElementById('detalle-modal').classList.add('hidden');
+        };
+
+        // --- LÓGICA DE VOTACIÓN MEJORADA ---
+        
+        async function cargarValoracion(id) {
+            try {
+                const docRef = doc(db, "ratings", id);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    actualizarUIEstrellas(data.likes || 0, data.dislikes || 0);
+                } else {
+                    // Si no existe, crear doc inicial (0,0) para que aparezca
+                    await setDoc(docRef, { likes: 0, dislikes: 0 });
+                    actualizarUIEstrellas(0, 0);
+                }
+            } catch (error) {
+                console.error("Error Firebase:", error);
+            }
+        }
+
+        window.votar = async function(tipo) {
+            if (!currentComicId) return;
+
+            // 1. CHEQUEO ANTI-SPAM (LocalStorage)
+            const storageKey = `vote_${currentComicId}`;
+            if (localStorage.getItem(storageKey)) {
+                alert("¡Ya has votado en este cómic!");
+                return;
+            }
+
+            const docRef = doc(db, "ratings", currentComicId);
+            
+            try {
+                // 2. INCREMENTAR EN FIREBASE
+                // Usamos setDoc con merge para asegurar que el documento exista antes de incrementar
+                // Si existe, solo actualiza el campo. Si no, lo crea.
+                // Nota: Para incrementar de forma atómica y segura si no existe,
+                // primero intentamos update, si falla, hacemos set.
+                
+                try {
+                    await updateDoc(docRef, {
+                        [tipo + 's']: increment(1)
+                    });
+                } catch (e) {
+                    // Si falla (documento no existe), creamos uno nuevo
+                    let newData = { likes: 0, dislikes: 0 };
+                    newData[tipo + 's'] = 1;
+                    await setDoc(docRef, newData);
+                }
+                
+                // 3. GUARDAR HUELLA LOCAL
+                localStorage.setItem(storageKey, 'true');
+
+                // 4. ACTUALIZAR UI
+                await cargarValoracion(currentComicId);
+                
+            } catch (error) {
+                console.error("Error al votar:", error);
+                alert("Hubo un error al registrar tu voto. Intenta de nuevo.");
+            }
+        };
+
+        function actualizarUIEstrellas(likes, dislikes) {
+            const total = likes + dislikes;
+            let score = 0;
+            
+            if (total > 0) {
+                // Algoritmo: % de likes sobre el total * 5
+                const percentage = likes / total;
+                score = (percentage * 5).toFixed(1);
+            }
+
+            document.getElementById('modal-score').innerText = score;
+            document.getElementById('count-likes').innerText = likes;
+            document.getElementById('count-dislikes').innerText = dislikes;
+            
+            // Color dinámico estrellas
+            const starIcon = document.querySelector('.fa-star');
+            if(score >= 4.5) starIcon.className = "fa-solid fa-star text-yellow-400 text-xl animate-pulse";
+            else if(score >= 3) starIcon.className = "fa-solid fa-star text-orange-400 text-xl";
+            else starIcon.className = "fa-solid fa-star text-gray-500 text-xl";
+        }
+
+        // Cerrar con click fuera
+        document.getElementById('detalle-modal').addEventListener('click', function(e) {
+            if (e.target === this) cerrarPanel();
+        });
+
+    </script>
+</body>
+</html>
