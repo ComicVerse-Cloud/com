@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comics Propios</title>
+    
+    <!-- SCRIPT REAL DE GOOGLE ADSENSE -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4804945170892289"
+     crossorigin="anonymous"></script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -18,6 +23,50 @@
             color: white;
             font-family: 'Segoe UI', sans-serif;
             overflow-x: hidden;
+        }
+
+        /* --- PRELOADER (BARRA DE CARGA NEÓN) --- */
+        #preloader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .loader-bar-container {
+            width: 200px;
+            height: 4px;
+            background: #222;
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 10px rgba(244, 117, 33, 0.2);
+        }
+        .loader-bar {
+            width: 50%;
+            height: 100%;
+            background: #F47521;
+            position: absolute;
+            left: -50%;
+            animation: load 1.5s infinite ease-in-out;
+            box-shadow: 0 0 15px #F47521, 0 0 30px #F47521;
+        }
+        @keyframes load {
+            0% { left: -50%; }
+            100% { left: 100%; }
+        }
+        .loading-text {
+            color: #F47521;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 12px;
+            letter-spacing: 2px;
+            animation: pulse 1s infinite;
+            text-transform: uppercase;
         }
 
         /* --- Scrollbar --- */
@@ -42,37 +91,21 @@
             border: 2px solid var(--orange-cr);
         }
 
-        /* --- Etiquetas de Estado (Emisión/Final) --- */
+        /* --- Etiquetas de Estado --- */
         .status-badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 0.65rem;
-            font-weight: 900;
+            top: 10px; right: 10px;
+            font-size: 0.65rem; font-weight: 900;
             text-transform: uppercase;
-            padding: 4px 8px;
-            border-radius: 4px;
-            z-index: 20;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            padding: 4px 8px; border-radius: 4px;
+            z-index: 20; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
             letter-spacing: 1px;
         }
-        .status-emision {
-            background: linear-gradient(90deg, #22c55e, #166534);
-            color: white;
-            border: 1px solid #4ade80;
-        }
-        .status-final {
-            background: linear-gradient(90deg, #a855f7, #6b21a8);
-            color: white;
-            border: 1px solid #d8b4fe;
-        }
-        .status-tba {
-            background: linear-gradient(90deg, #64748b, #334155);
-            color: white;
-            border: 1px solid #94a3b8;
-        }
+        .status-emision { background: linear-gradient(90deg, #22c55e, #166534); color: white; border: 1px solid #4ade80; }
+        .status-final { background: linear-gradient(90deg, #a855f7, #6b21a8); color: white; border: 1px solid #d8b4fe; }
+        .status-tba { background: linear-gradient(90deg, #64748b, #334155); color: white; border: 1px solid #94a3b8; }
 
-        /* --- Estilo Mágico Avalond (Etiquetas) --- */
+        /* --- Estilo Mágico Avalond --- */
         .magic-tag {
             background: linear-gradient(135deg, rgba(20,20,20,0.9), rgba(40,40,50,0.9));
             border: 1px solid transparent;
@@ -83,54 +116,27 @@
             transition: all 0.3s;
         }
         .magic-tag::before {
-            content: '';
-            position: absolute;
-            top: 0; right: 0; bottom: 0; left: 0;
-            z-index: -1;
-            margin: -1px;
-            border-radius: inherit;
+            content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: -1; margin: -1px; border-radius: inherit;
             background: linear-gradient(to right, #8b5cf6, #38bdf8, #F47521);
         }
-        .magic-tag:hover {
-            transform: scale(1.05);
-            text-shadow: 0 0 8px white;
-        }
+        .magic-tag:hover { transform: scale(1.05); text-shadow: 0 0 8px white; }
 
         /* --- Slider 3D Adelantos --- */
         .slider-3d-container {
-            display: flex;
-            overflow-x: auto;
-            gap: 20px;
-            padding: 40px 20px;
-            perspective: 1000px;
-            scroll-behavior: smooth;
+            display: flex; overflow-x: auto; gap: 20px; padding: 40px 20px; perspective: 1000px; scroll-behavior: smooth;
         }
         .slide-3d {
-            min-width: 300px;
-            height: 200px;
-            position: relative;
-            transition: all 0.5s ease;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transform: rotateY(20deg) scale(0.9);
-            opacity: 0.7;
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.1);
+            min-width: 300px; height: 200px; position: relative; transition: all 0.5s ease;
+            border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: rotateY(20deg) scale(0.9); opacity: 0.7; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);
         }
         .slide-3d:hover, .slide-3d:focus {
-            transform: rotateY(0deg) scale(1.1);
-            opacity: 1;
-            z-index: 10;
-            box-shadow: 0 0 30px rgba(244, 117, 33, 0.6);
-            border: 1px solid var(--orange-cr);
+            transform: rotateY(0deg) scale(1.1); opacity: 1; z-index: 10;
+            box-shadow: 0 0 30px rgba(244, 117, 33, 0.6); border: 1px solid var(--orange-cr);
         }
 
         /* --- Modal Panel --- */
-        #detalle-modal {
-            backdrop-filter: blur(15px);
-            background-color: rgba(0, 0, 0, 0.7);
-        }
+        #detalle-modal { backdrop-filter: blur(15px); background-color: rgba(0, 0, 0, 0.7); }
         .panel-glass {
             background: linear-gradient(145deg, rgba(20,20,20,0.95), rgba(10,10,10,0.98));
             border: 1px solid rgba(255,255,255,0.1);
@@ -139,21 +145,26 @@
 
         /* --- ESPACIOS PUBLICITARIOS (ADS) --- */
         .ad-slot {
-            background-color: #111;
-            border: 1px dashed #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            margin: 20px 0;
-            color: #444;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            background-color: #050505; 
+            display: block; 
+            width: 100%;
+            overflow: hidden; 
+            margin: 20px 0; 
+            min-height: 100px;
+            border: 1px solid #222;
+            text-align: center;
         }
     </style>
 </head>
 <body class="relative min-h-screen">
+
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="loader-bar-container">
+            <div class="loader-bar"></div>
+        </div>
+        <div class="loading-text">CARGANDO CÓMICS...</div>
+    </div>
 
     <div class="p-4 md:p-8">
         <!-- Título de Sección -->
@@ -225,19 +236,17 @@
         </div>
 
         <!-- --- ESPACIO PUBLICITARIO 1 (BANNER HORIZONTAL) --- -->
-        <div class="ad-slot w-full h-24 rounded-lg mt-12">
-            <!-- AQUÍ VA EL SCRIPT DE GOOGLE ADSENSE -->
-            <!-- 
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
-            <ins class="adsbygoogle"
+        <!-- Banner visible en la carga inicial -->
+        <div class="ad-slot w-full mt-12 rounded-lg">
+             <ins class="adsbygoogle"
                  style="display:block"
-                 data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
-                 data-ad-slot="1234567890"
+                 data-ad-client="ca-pub-4804945170892289"
+                 data-ad-slot="XXXXXXXXXX" 
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
-            <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script>
-            -->
-            <span class="text-gray-600 animate-pulse">Espacio Publicitario (Banner Principal)</span>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
         </div>
     </div>
 
@@ -287,13 +296,12 @@
                     </p>
                 </div>
 
-                <!-- Sistema de Votación (REDISEÑADO PARA MÓVIL) -->
+                <!-- Sistema de Votación (MÓVIL Y ESCRITORIO) -->
                 <div class="mb-8 bg-white/5 rounded-xl p-4 border border-white/5 flex flex-col gap-4">
                     <div class="flex items-center justify-between">
                         <div class="text-sm font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
                             <i class="fa-solid fa-heart text-red-500"></i> Valorar Obra
                         </div>
-                        <!-- Botones Like/Dislike -->
                         <div class="flex gap-3">
                             <button id="btn-like" onclick="votar('like')" class="flex items-center gap-2 bg-green-900/30 hover:bg-green-600 text-green-400 hover:text-white px-4 py-2 rounded-lg transition border border-green-500/30 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
                                 <i class="fa-solid fa-thumbs-up"></i> <span id="count-likes">0</span>
@@ -303,8 +311,7 @@
                             </button>
                         </div>
                     </div>
-                    
-                    <!-- CALIFICACIÓN VISIBLE (Debajo de los botones, clave para móvil) -->
+                    <!-- CALIFICACIÓN VISIBLE PARA MÓVIL -->
                     <div class="flex items-center justify-center gap-3 bg-black/40 p-3 rounded-lg border border-white/5">
                         <span class="text-gray-400 text-xs uppercase tracking-widest">Calificación Global:</span>
                         <div class="flex items-center gap-2">
@@ -324,9 +331,13 @@
                 </div>
 
                 <!-- --- ESPACIO PUBLICITARIO 2 (DENTRO DEL MODAL) --- -->
-                <div class="ad-slot w-full h-16 rounded-lg mb-4 border-dashed border-gray-700 bg-black/50">
-                    <!-- SCRIPT DE PUBLICIDAD SECUNDARIA -->
-                    <span class="text-gray-600 text-xs animate-pulse">Anuncio Patrocinado</span>
+                <!-- 
+                    NOTA IMPORTANTE: 
+                    El contenedor está vacío inicialmente. El anuncio se inyectará dinámicamente
+                    al abrir el panel para evitar errores de ancho 0.
+                -->
+                <div id="modal-ad-container" class="ad-slot w-full h-auto min-h-[100px] rounded-lg mb-4 bg-black/50 border-dashed border-gray-700">
+                     <!-- El anuncio aparecerá aquí mágicamente al abrir el modal -->
                 </div>
 
                 <!-- Footer del Modal (Botones) -->
@@ -343,10 +354,26 @@
         </div>
     </div>
 
-    <!-- FIREBASE & LÓGICA -->
+    <!-- SCRIPT DE LÓGICA (FIREBASE + PRELOADER + DYNAMIC ADS) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+        // --- MANEJO DEL PRELOADER ---
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            if(preloader) {
+                preloader.style.opacity = '0';
+                setTimeout(() => preloader.style.display = 'none', 500);
+            }
+        });
+        setTimeout(() => {
+            const preloader = document.getElementById('preloader');
+            if(preloader && preloader.style.display !== 'none') {
+                preloader.style.opacity = '0';
+                setTimeout(() => preloader.style.display = 'none', 500);
+            }
+        }, 3000);
 
         const firebaseConfig = {
             apiKey: "AIzaSyBf9ATqgErKQKpzKpFXsUu4BHmFcNSLzOE",
@@ -360,7 +387,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- BASE DE DATOS LOCAL ---
         const comicsData = {
             'avalond': {
                 titulo: "Academia De Magia Avalond",
@@ -392,6 +418,7 @@
         };
 
         let currentComicId = null;
+        let modalAdInitialized = false;
 
         window.abrirPanel = async function(id) {
             currentComicId = id;
@@ -425,11 +452,33 @@
                 `;
             });
 
-            // Resetear UI
             actualizarTextoScore("0.0", 0, 0);
             resetearBotones();
 
             modal.classList.remove('hidden');
+            
+            // --- INYECCIÓN DINÁMICA DE ANUNCIO (FIX ERROR WIDTH=0) ---
+            const adContainer = document.getElementById('modal-ad-container');
+            if (adContainer && !modalAdInitialized) {
+                // Insertamos la etiqueta SOLO cuando el modal es visible
+                adContainer.innerHTML = `
+                     <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-4804945170892289"
+                         data-ad-slot="XXXXXXXXXX"
+                         data-ad-format="rectangle"
+                         data-full-width-responsive="true"></ins>
+                `;
+                
+                // Ejecutamos el push con un pequeño retraso
+                setTimeout(() => {
+                    try {
+                        (window.adsbygoogle = window.adsbygoogle || []).push({});
+                        modalAdInitialized = true;
+                    } catch (e) { console.error("Ad error", e); }
+                }, 200); 
+            }
+
             await cargarValoracion(id);
         };
 
@@ -437,8 +486,6 @@
             document.getElementById('detalle-modal').classList.add('hidden');
         };
 
-        // --- LÓGICA DE VOTACIÓN BLINDADA ---
-        
         async function cargarValoracion(id) {
             try {
                 const docRef = doc(db, "ratings", id);
@@ -451,10 +498,7 @@
                     await setDoc(docRef, { likes: 0, dislikes: 0 });
                     actualizarUIEstrellas(0, 0);
                 }
-                
-                // Chequear si ya votó para bloquear botones visualmente
                 checkVotoPrevio(id);
-
             } catch (error) {
                 console.error("Error Firebase:", error);
             }
@@ -492,47 +536,35 @@
         window.votar = async function(tipo) {
             if (!currentComicId) return;
 
-            // 1. CHEQUEO ANTI-SPAM LOCAL
             const storageKey = `vote_${currentComicId}`;
             if (localStorage.getItem(storageKey)) {
                 alert("¡Ya has votado en este cómic!");
                 return;
             }
 
-            // 2. BLOQUEO INMEDIATO (UX)
             deshabilitarBotones(true);
 
             const docRef = doc(db, "ratings", currentComicId);
             
             try {
-                // 3. INCREMENTAR EN FIREBASE
                 try {
-                    await updateDoc(docRef, {
-                        [tipo + 's']: increment(1)
-                    });
+                    await updateDoc(docRef, { [tipo + 's']: increment(1) });
                 } catch (e) {
                     let newData = { likes: 0, dislikes: 0 };
                     newData[tipo + 's'] = 1;
                     await setDoc(docRef, newData);
                 }
-                
-                // 4. GUARDAR HUELLA LOCAL
                 localStorage.setItem(storageKey, 'true');
-
-                // 5. ACTUALIZAR UI
                 await cargarValoracion(currentComicId);
-                
             } catch (error) {
                 console.error("Error al votar:", error);
-                alert("Error al votar. Reintentar.");
-                deshabilitarBotones(false); // Reactivar si falló
+                deshabilitarBotones(false);
             }
         };
 
         function actualizarUIEstrellas(likes, dislikes) {
             const total = likes + dislikes;
             let score = 0;
-            
             if (total > 0) {
                 const percentage = likes / total;
                 score = (percentage * 5).toFixed(1);
@@ -541,17 +573,14 @@
         }
 
         function actualizarTextoScore(score, likes, dislikes) {
-            // Actualizar ambos scores (Desktop y Mobile)
             const scoreEls = [document.getElementById('modal-score-desktop'), document.getElementById('modal-score-mobile')];
             scoreEls.forEach(el => { if(el) el.innerText = score; });
 
             document.getElementById('count-likes').innerText = likes;
             document.getElementById('count-dislikes').innerText = dislikes;
             
-            // Color dinámico
             const starClass = score >= 4.5 ? "text-yellow-400 animate-pulse" : (score >= 3 ? "text-orange-400" : "text-gray-500");
             const starIcons = [document.querySelector('.fa-star'), document.getElementById('star-icon-mobile')];
-            
             starIcons.forEach(icon => {
                 if(icon) icon.className = `fa-solid fa-star text-lg ${starClass}`;
             });
