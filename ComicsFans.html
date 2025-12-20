@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comics Fans</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --orange-cr: #F47521; 
+            --dark-bg: #000000;
+            --magic-glow: 0 0 10px rgba(244, 117, 33, 0.5), 0 0 20px rgba(255, 100, 0, 0.3);
+        }
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- PRELOADER --- */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .loader-bar-container {
+            width: 200px; height: 4px; background: #222; border-radius: 2px; overflow: hidden; position: relative;
+            box-shadow: 0 0 10px rgba(244, 117, 33, 0.2);
+        }
+        .loader-bar {
+            width: 50%; height: 100%; background: var(--orange-cr); position: absolute; left: -50%;
+            animation: load 1.5s infinite ease-in-out;
+            box-shadow: 0 0 15px var(--orange-cr);
+        }
+        @keyframes load { 0% { left: -50%; } 100% { left: 100%; } }
+        .loading-text {
+            color: var(--orange-cr); margin-top: 15px; font-family: monospace; font-size: 12px;
+            letter-spacing: 2px; animation: pulse 1s infinite; text-transform: uppercase;
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: var(--orange-cr); border-radius: 4px; }
+
+        /* --- Efecto 3D Portada --- */
+        .comic-card-container { perspective: 1000px; }
+        .comic-card {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            transform-style: preserve-3d;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .comic-card-container:hover .comic-card {
+            transform: rotateY(10deg) rotateX(5deg) scale(1.05);
+            box-shadow: -5px 5px 20px rgba(244, 117, 33, 0.4);
+            z-index: 10;
+            border: 2px solid var(--orange-cr);
+        }
+
+        /* --- Etiquetas de Estado --- */
+        .status-badge {
+            position: absolute; top: 10px; right: 10px; font-size: 0.65rem; font-weight: 900;
+            text-transform: uppercase; padding: 4px 8px; border-radius: 4px; z-index: 20;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5); letter-spacing: 1px;
+        }
+        .status-emision { background: linear-gradient(90deg, #22c55e, #166534); color: white; border: 1px solid #4ade80; }
+        .status-final { background: linear-gradient(90deg, #a855f7, #6b21a8); color: white; border: 1px solid #d8b4fe; }
+        .status-tba { background: linear-gradient(90deg, #64748b, #334155); color: white; border: 1px solid #94a3b8; }
+
+        /* --- Estilo Mágico Tags (Visualización) --- */
+        .magic-tag {
+            background: linear-gradient(135deg, rgba(20,20,20,0.9), rgba(40,40,50,0.9));
+            border: 1px solid transparent; position: relative; background-clip: padding-box;
+            border-radius: 4px; box-shadow: var(--magic-glow); transition: all 0.3s;
+        }
+        .magic-tag::before {
+            content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: -1; margin: -1px; border-radius: inherit;
+            background: linear-gradient(to right, #F47521, #fbbf24);
+        }
+        .magic-tag:hover { transform: scale(1.05); text-shadow: 0 0 8px white; }
+
+        /* --- Slider 3D Adelantos --- */
+        .slider-3d-container {
+            display: flex; overflow-x: auto; gap: 20px; padding: 40px 20px; perspective: 1000px; scroll-behavior: smooth;
+        }
+        .slide-3d {
+            min-width: 300px; height: 200px; position: relative; transition: all 0.5s ease;
+            border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: rotateY(20deg) scale(0.9); opacity: 0.7; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .slide-3d:hover, .slide-3d:focus {
+            transform: rotateY(0deg) scale(1.1); opacity: 1; z-index: 10;
+            box-shadow: 0 0 30px rgba(244, 117, 33, 0.6); border: 1px solid var(--orange-cr);
+        }
+
+        /* --- Modals Panel --- */
+        #detalle-modal, #pitch-modal, #auth-modal { backdrop-filter: blur(15px); background-color: rgba(0, 0, 0, 0.85); }
+        .panel-glass {
+            background: linear-gradient(145deg, rgba(20,20,20,0.98), rgba(10,10,10,0.99));
+            border: 1px solid rgba(244, 117, 33, 0.3);
+            box-shadow: 0 0 100px rgba(0,0,0,0.8), inset 0 0 20px rgba(244, 117, 33, 0.05);
+        }
+
+        /* --- Input Styles Ranking --- */
+        .input-dark {
+            background: rgba(10,10,10,0.8); border: 1px solid #333; color: white; padding: 12px; width: 100%;
+            border-radius: 8px; transition: all 0.3s; font-family: monospace;
+        }
+        .input-dark:focus {
+            border-color: var(--orange-cr); outline: none; box-shadow: 0 0 15px rgba(244, 117, 33, 0.2); background: rgba(20,20,20,1);
+        }
+        
+        /* Rank Medal Styles */
+        .rank-1 { border: 2px solid #fbbf24; background: linear-gradient(90deg, rgba(251,191,36,0.1), transparent); }
+        .rank-2 { border: 2px solid #94a3b8; background: linear-gradient(90deg, rgba(148,163,184,0.1), transparent); }
+        .rank-3 { border: 2px solid #b45309; background: linear-gradient(90deg, rgba(180,83,9,0.1), transparent); }
+
+        /* --- Etiquetas Seleccionables --- */
+        .genre-tag {
+            padding: 6px 12px; border: 1px solid #333; border-radius: 20px; font-size: 0.75rem; cursor: pointer;
+            transition: all 0.3s ease; text-transform: uppercase; font-weight: bold; background: #111; color: #777;
+        }
+        .genre-tag:hover { border-color: #fff; color: #fff; }
+        .genre-tag.selected {
+            background: var(--orange-cr); color: black; border-color: var(--orange-cr);
+            box-shadow: 0 0 10px var(--orange-cr); transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="relative min-h-screen pb-20">
+
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="loader-bar-container">
+            <div class="loader-bar"></div>
+        </div>
+        <div class="loading-text">CARGANDO COMUNIDAD...</div>
+    </div>
+
+    <div class="p-4 md:p-8">
+        <!-- Título de Sección -->
+        <div class="flex items-center gap-3 mb-8 border-b border-gray-800 pb-4">
+            <div class="w-2 h-10 bg-[#F47521] shadow-[0_0_15px_#F47521]"></div>
+            <h1 class="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-white drop-shadow-lg">
+                Cómics <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F47521] to-yellow-500">Fans</span>
+            </h1>
+        </div>
+
+        <!-- GRID DE PORTADAS (5 ESPACIOS) -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8 mb-20">
+            <!-- 1. VIRUS KHARN -->
+            <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('kharn')">
+                <div class="comic-card h-72 bg-gray-900">
+                    <div class="status-badge status-emision animate-pulse">EN EMISIÓN</div>
+                    <img src="Kharn.png" onerror="this.src='https://placehold.co/300x450/111/F47521?text=Virus+Kharn'" class="w-full h-full object-cover">
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
+                        <h3 class="font-bold text-white text-lg leading-tight group-hover:text-[#F47521] transition drop-shadow-md">Virus Kharn: Extinción</h3>
+                    </div>
+                </div>
+            </div>
+            <!-- 2-5. PROXIMAMENTE -->
+            <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox1')">
+                <div class="comic-card h-72 bg-gray-900">
+                    <div class="status-badge status-tba">PRONTO</div>
+                    <img src="Próximamente1-1.png" onerror="this.src='https://placehold.co/300x450/111/333?text=WIP'" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500">
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
+                        <h3 class="font-bold text-gray-400 text-lg leading-tight group-hover:text-white transition">Próximamente</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox2')">
+                <div class="comic-card h-72 bg-gray-900">
+                    <div class="status-badge status-tba">PRONTO</div>
+                    <img src="Próximamente2-2.png" onerror="this.src='https://placehold.co/300x450/111/333?text=WIP'" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500">
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
+                        <h3 class="font-bold text-gray-400 text-lg leading-tight group-hover:text-white transition">Próximamente</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox3')">
+                <div class="comic-card h-72 bg-gray-900">
+                    <div class="status-badge status-tba">PRONTO</div>
+                    <img src="Próximamente3-3.png" onerror="this.src='https://placehold.co/300x450/111/333?text=WIP'" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500">
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
+                        <h3 class="font-bold text-gray-400 text-lg leading-tight group-hover:text-white transition">Próximamente</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox4')">
+                <div class="comic-card h-72 bg-gray-900">
+                    <div class="status-badge status-tba">PRONTO</div>
+                    <img src="Próximamente4-4.png" onerror="this.src='https://placehold.co/300x450/111/333?text=WIP'" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-500">
+                    <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
+                        <h3 class="font-bold text-gray-400 text-lg leading-tight group-hover:text-white transition">Próximamente</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- --- SECCIÓN NUEVA: SISTEMA DE VOTACIÓN / RANKING --- -->
+        <div class="border-t border-gray-800 pt-12">
+            <!-- Título Profesional Unificado -->
+            <div class="flex items-center gap-3 mb-8 border-b border-gray-800 pb-4">
+                <div class="w-2 h-10 bg-[#F47521] shadow-[0_0_15px_#F47521]"></div>
+                <h2 class="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-white drop-shadow-lg">
+                    Clasificación <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-[#F47521]">Global</span>
+                </h2>
+            </div>
+            
+            <p class="text-gray-400 mb-10 max-w-3xl text-lg font-light leading-relaxed">
+                El poder está en tus manos. Sube tu idea y compite. La comunidad decidirá qué historia merece ser producida y oficializada en <span class="text-[#F47521] font-bold">ComicVerse</span>.
+            </p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                
+                <!-- Columna 1: Formulario de Subida (Estilo Tech) -->
+                <div class="bg-[#0f0f0f] p-8 rounded-2xl border border-[#F47521]/30 shadow-[0_0_30px_rgba(244,117,33,0.1)] relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#F47521] to-transparent opacity-50 animate-pulse"></div>
+                    
+                    <h3 class="text-2xl font-black text-white mb-6 uppercase flex items-center gap-2">
+                        <i class="fa-solid fa-cloud-arrow-up text-[#F47521]"></i> Postular Idea
+                    </h3>
+                    <form id="pitchForm" class="space-y-5">
+                        <div>
+                            <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Título del Proyecto</label>
+                            <input type="text" id="pitchTitle" class="input-dark" placeholder="Ej: El Guerrero Galáctico" required maxlength="50">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Autor / Artista</label>
+                            <input type="text" id="pitchAuthor" class="input-dark" placeholder="Tu alias" required maxlength="30">
+                        </div>
+                        
+                        <!-- SELECTOR DE GÉNEROS (NUEVO) -->
+                        <div>
+                            <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Géneros (Máx 5)</label>
+                            <div class="flex flex-wrap gap-2" id="genre-selector">
+                                <!-- Se llenará con JS -->
+                            </div>
+                            <input type="hidden" id="pitchTags" required>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Caps. Aprox</label>
+                                <input type="number" id="pitchCaps" class="input-dark" placeholder="Ej: 12" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Temporadas</label>
+                                <input type="number" id="pitchSeasons" class="input-dark" placeholder="Ej: 1" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Sinopsis (Máx 500 car.)</label>
+                            <textarea id="pitchDesc" class="input-dark h-32 resize-none" placeholder="Engancha a la audiencia..." required maxlength="500"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-[#F47521] to-red-600 hover:from-white hover:to-gray-200 hover:text-black text-white font-black py-4 rounded-lg transition-all shadow-[0_0_20px_rgba(244,117,33,0.4)] uppercase tracking-widest transform hover:scale-[1.02]">
+                            ENVIAR AL SISTEMA
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Columna 2 y 3: Ranking en Vivo (Estilo Leaderboard) -->
+                <div class="lg:col-span-2">
+                    <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                        <h3 class="text-xl font-bold text-white uppercase flex items-center gap-3">
+                            <i class="fa-solid fa-chart-simple text-[#F47521]"></i> Top Propuestas
+                        </h3>
+                        <span class="text-xs bg-red-600 px-3 py-1 rounded-full text-white font-bold animate-pulse flex items-center gap-2">
+                            <span class="w-2 h-2 bg-white rounded-full"></span> EN VIVO
+                        </span>
+                    </div>
+                    
+                    <!-- Contenedor del Ranking -->
+                    <div id="rankingList" class="space-y-3 max-h-[800px] overflow-y-auto custom-scroll pr-2">
+                        <div class="text-center text-gray-600 py-20 flex flex-col items-center">
+                            <i class="fa-solid fa-circle-notch fa-spin text-4xl text-[#F47521] mb-4"></i>
+                            <p class="uppercase tracking-widest text-sm">Sincronizando Base de Datos...</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PANEL MODAL DETALLE CÓMICS -->
+    <div id="detalle-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-0 md:p-4 overflow-y-auto md:overflow-visible">
+        <div class="panel-glass w-full max-w-6xl min-h-[90vh] md:min-h-0 md:h-auto rounded-none md:rounded-2xl flex flex-col md:flex-row relative animate-[fadeIn_0.4s_ease-out]">
+            <button onclick="cerrarPanel()" class="absolute top-4 right-4 text-white z-50 bg-black/60 backdrop-blur rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#F47521] transition shadow-lg border border-white/10"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <div class="w-full md:w-[400px] shrink-0 relative bg-black">
+                <img id="modal-img" src="" class="w-full h-full object-cover opacity-90 mask-image-gradient">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent md:bg-gradient-to-r"></div>
+            </div>
+            <div class="flex-1 p-6 md:p-10 flex flex-col">
+                <div class="mb-6">
+                    <div class="flex flex-wrap gap-2 mb-3" id="modal-tags"></div>
+                    <h2 id="modal-titulo" class="text-4xl md:text-6xl font-black uppercase italic text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400 mb-2 drop-shadow-lg">TITULO</h2>
+                    <div class="flex flex-wrap items-center gap-6 text-sm text-gray-400 border-b border-white/10 pb-4">
+                        <span id="modal-autor" class="flex items-center gap-2"><i class="fa-solid fa-pen-nib text-[#F47521]"></i> Autor</span>
+                        <span id="modal-fecha" class="flex items-center gap-2"><i class="fa-regular fa-calendar text-[#F47521]"></i> Fecha</span>
+                        <span id="modal-caps" class="flex items-center gap-2"><i class="fa-solid fa-layer-group text-[#F47521]"></i> Caps</span>
+                        <span id="modal-status" class="bg-[#F47521] text-black px-2 py-0.5 rounded font-bold text-xs uppercase">Estado</span>
+                    </div>
+                </div>
+                <div class="mb-8">
+                    <h3 class="text-[#F47521] font-bold uppercase tracking-[0.2em] mb-3 text-xs flex items-center gap-2"><span class="w-4 h-0.5 bg-[#F47521]"></span> Sinopsis</h3>
+                    <p id="modal-sinopsis" class="text-gray-300 leading-relaxed text-lg font-light">Descripción...</p>
+                </div>
+                <div class="mb-8 relative group">
+                    <h3 class="text-[#F47521] font-bold uppercase tracking-[0.2em] mb-4 text-xs flex items-center gap-2"><span class="w-4 h-0.5 bg-[#F47521]"></span> Adelantos 3D</h3>
+                    <div class="slider-3d-container custom-scroll" id="modal-previews"></div>
+                </div>
+                <div class="mt-auto pt-4 border-t border-white/10 flex flex-col md:flex-row gap-4">
+                    <button onclick="cerrarPanel()" class="flex-1 md:flex-none bg-gray-800 hover:bg-gray-700 text-white font-bold uppercase tracking-widest py-4 px-6 rounded-lg transition flex items-center justify-center gap-2 border border-white/10"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+                    <a id="modal-link" href="#" class="flex-1 text-center bg-gradient-to-r from-[#F47521] to-red-600 hover:from-white hover:to-gray-200 hover:text-black text-white font-black uppercase tracking-[0.2em] py-4 rounded-lg shadow-[0_0_30px_rgba(244,117,33,0.4)] hover:shadow-[0_0_50px_rgba(255,255,255,0.6)] transition-all transform hover:scale-[1.02] duration-300"><i class="fa-solid fa-book-open mr-2"></i> Leer Ahora</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ESPECÍFICO PARA PITCHES (IDEAS) - MEJORADO -->
+    <div id="pitch-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="panel-glass w-full max-w-3xl h-auto rounded-xl p-8 relative animate-[fadeIn_0.3s_ease-out] border border-[#F47521]/50 shadow-[0_0_50px_rgba(244,117,33,0.2)]">
+            <button onclick="cerrarPitch()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-black/50 p-2 rounded-full hover:bg-[#F47521] transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+            
+            <div class="flex flex-col items-center mb-8">
+                <span class="bg-[#F47521]/20 text-[#F47521] px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-[#F47521]/50 mb-4 animate-pulse">Propuesta de la Comunidad</span>
+                <h2 id="pitch-modal-title" class="text-3xl md:text-5xl font-black text-white text-center uppercase italic drop-shadow-lg">TITULO PROYECTO</h2>
+                <div class="h-1 w-24 bg-[#F47521] mt-4 rounded-full"></div>
+            </div>
+            
+            <div class="flex justify-between items-center bg-black/40 p-4 rounded-lg border border-white/10 mb-6">
+                <div class="text-center px-4 border-r border-white/10 w-1/3">
+                    <p class="text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Creador</p>
+                    <p id="pitch-modal-author" class="text-[#F47521] font-bold text-lg">Autor</p>
+                </div>
+                <div class="text-center px-4 border-r border-white/10 w-1/3">
+                    <p class="text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Capítulos</p>
+                    <p id="pitch-modal-caps" class="text-white font-bold text-lg">0</p>
+                </div>
+                <div class="text-center px-4 w-1/3">
+                    <p class="text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Temporadas</p>
+                    <p id="pitch-modal-seasons" class="text-white font-bold text-lg">0</p>
+                </div>
+            </div>
+
+            <div class="mb-6 text-center">
+                <div id="pitch-modal-tags" class="flex flex-wrap justify-center gap-2"></div>
+            </div>
+
+            <div class="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg border-l-4 border-[#F47521] mb-8 shadow-inner">
+                <h3 class="text-[#F47521] font-bold uppercase tracking-widest text-xs mb-3 flex items-center gap-2"><i class="fa-solid fa-align-left"></i> Sinopsis Completa</h3>
+                <p id="pitch-modal-desc" class="text-gray-300 leading-relaxed text-lg font-light italic">Descripción...</p>
+            </div>
+
+            <div class="text-center">
+                <button onclick="cerrarPitch()" class="bg-white hover:bg-gray-200 text-black font-black uppercase tracking-widest py-3 px-12 rounded-full transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE LOGIN PERSONALIZADO -->
+    <div id="auth-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
+        <div class="bg-[#111] border-2 border-[#F47521] w-full max-w-md p-8 rounded-xl relative shadow-[0_0_50px_rgba(244,117,33,0.5)] text-center animate-[fadeIn_0.2s_ease-out]">
+            <i class="fa-solid fa-lock text-5xl text-[#F47521] mb-6 block"></i>
+            <h3 class="text-2xl font-black text-white uppercase mb-2">Acceso Requerido</h3>
+            <p class="text-gray-400 mb-8">Debes iniciar sesión en <span class="text-[#F47521] font-bold">ComicVerse</span> para postular tu idea al ranking global.</p>
+            
+            <div class="flex flex-col gap-3">
+                <button onclick="irALogin()" class="w-full bg-[#F47521] hover:bg-white hover:text-black text-black font-black uppercase py-3 rounded transition-all">
+                    Conectar Cuenta
+                </button>
+                <button onclick="cerrarAuth()" class="w-full bg-transparent border border-gray-600 text-gray-400 hover:text-white hover:border-white font-bold uppercase py-3 rounded transition-all">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGICA Y DATOS -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+        // Preloader
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            if(preloader) { preloader.style.opacity = '0'; setTimeout(() => preloader.style.display = 'none', 500); }
+        });
+        setTimeout(() => {
+            const preloader = document.getElementById('preloader');
+            if(preloader && preloader.style.display !== 'none') { preloader.style.opacity = '0'; setTimeout(() => preloader.style.display = 'none', 500); }
+        }, 3000);
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBf9ATqgErKQKpzKpFXsUu4BHmFcNSLzOE",
+            authDomain: "comic-a54bf.firebaseapp.com",
+            projectId: "comic-a54bf",
+            storageBucket: "comic-a54bf.firebasestorage.app",
+            messagingSenderId: "653412030846",
+            appId: "1:653412030846:web:86f30b301d3c8c41e1fb2f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Estado de usuario
+        let currentUser = null;
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+        });
+
+        // --- SELECTOR DE GÉNEROS (20 OPCIONES) ---
+        const genres = [
+            "Acción", "Aventura", "Comedia", "Drama", "Fantasía", 
+            "Magia", "Terror", "Misterio", "Psicológico", "Romance", 
+            "Sci-Fi", "Recuentos de la vida", "Sobrenatural", "Thriller", "Deportes", 
+            "Histórico", "Mecha", "Musical", "Isekai", "Superhéroes"
+        ];
+        
+        const genreContainer = document.getElementById('genre-selector');
+        const selectedGenres = new Set();
+
+        genres.forEach(genre => {
+            const tag = document.createElement('span');
+            tag.className = 'genre-tag';
+            tag.innerText = genre;
+            tag.onclick = () => toggleGenre(tag, genre);
+            genreContainer.appendChild(tag);
+        });
+
+        function toggleGenre(element, genre) {
+            if (selectedGenres.has(genre)) {
+                selectedGenres.delete(genre);
+                element.classList.remove('selected');
+            } else {
+                if (selectedGenres.size >= 5) {
+                    alert("Máximo 5 géneros permitidos.");
+                    return;
+                }
+                selectedGenres.add(genre);
+                element.classList.add('selected');
+            }
+            document.getElementById('pitchTags').value = Array.from(selectedGenres).join(', ');
+        }
+
+        // --- SISTEMA DE RANKING ---
+        
+        // Modal Auth
+        window.cerrarAuth = () => document.getElementById('auth-modal').classList.add('hidden');
+        window.irALogin = () => {
+            try {
+                if (window.parent && window.parent.cargarPagina) {
+                    window.parent.cargarPagina('Usuario.html', null);
+                } else {
+                    throw new Error("No parent access");
+                }
+            } catch (e) {
+                console.warn("Navegación controlada:", e);
+                // Fallback seguro
+                try {
+                    window.location.href = 'Usuario.html';
+                } catch (err) {
+                    alert("Redirigiendo a Iniciar Sesión (Simulación)");
+                }
+            }
+        };
+
+        const pitchForm = document.getElementById('pitchForm');
+        pitchForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // VERIFICACIÓN DE LOGIN ROBUSTA
+            if (!currentUser) {
+                document.getElementById('auth-modal').classList.remove('hidden');
+                return;
+            }
+
+            const tagsValue = document.getElementById('pitchTags').value;
+            if(!tagsValue) {
+                alert("Selecciona al menos un género.");
+                return;
+            }
+
+            const btn = pitchForm.querySelector('button');
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = "PROCESANDO...";
+
+            try {
+                await addDoc(collection(db, "fan_pitches"), {
+                    title: document.getElementById('pitchTitle').value,
+                    author: document.getElementById('pitchAuthor').value,
+                    description: document.getElementById('pitchDesc').value,
+                    tags: tagsValue,
+                    caps: document.getElementById('pitchCaps').value,
+                    seasons: document.getElementById('pitchSeasons').value,
+                    votes: 0,
+                    createdAt: new Date().toISOString(),
+                    userId: currentUser.uid
+                });
+                alert("¡Propuesta enviada con éxito!");
+                pitchForm.reset();
+                selectedGenres.clear();
+                document.querySelectorAll('.genre-tag').forEach(t => t.classList.remove('selected'));
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error al enviar.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }
+        });
+
+        // Cargar Ranking
+        const rankingList = document.getElementById('rankingList');
+        const qRank = query(collection(db, "fan_pitches"), orderBy("votes", "desc"));
+        let pitchesCache = {};
+
+        onSnapshot(qRank, (snapshot) => {
+            rankingList.innerHTML = "";
+            let rank = 1;
+            
+            if (snapshot.empty) {
+                rankingList.innerHTML = '<div class="text-center text-gray-500 py-10">Sé el primero en proponer un cómic.</div>';
+                return;
+            }
+
+            snapshot.forEach((doc) => {
+                const pitch = doc.data();
+                const id = doc.id;
+                pitchesCache[id] = pitch;
+                
+                let rankStyle = 'border-white/5 bg-[#151515] hover:border-gray-500';
+                let trophy = '';
+                let rankNumberClass = 'text-gray-600';
+
+                if (rank === 1) {
+                    rankStyle = 'rank-1 bg-gradient-to-r from-yellow-900/20 to-transparent';
+                    trophy = '<i class="fa-solid fa-crown text-yellow-400 ml-2 animate-pulse"></i>';
+                    rankNumberClass = 'text-yellow-500 drop-shadow-[0_0_10px_rgba(234,179,8,0.5)]';
+                } else if (rank === 2) {
+                    rankStyle = 'rank-2 bg-gradient-to-r from-slate-700/20 to-transparent';
+                    trophy = '<i class="fa-solid fa-medal text-gray-400 ml-2"></i>';
+                    rankNumberClass = 'text-gray-300';
+                } else if (rank === 3) {
+                    rankStyle = 'rank-3 bg-gradient-to-r from-orange-900/20 to-transparent';
+                    trophy = '<i class="fa-solid fa-medal text-amber-700 ml-2"></i>';
+                    rankNumberClass = 'text-amber-700';
+                }
+
+                const item = document.createElement('div');
+                item.className = `p-5 rounded-lg border ${rankStyle} flex items-center justify-between gap-4 transition-all duration-300 transform hover:translate-x-1 cursor-pointer`;
+                
+                item.onclick = (e) => {
+                    if(!e.target.closest('button')) abrirPitch(id);
+                };
+
+                item.innerHTML = `
+                    <div class="flex items-center gap-5 flex-1 overflow-hidden">
+                        <div class="text-4xl font-black ${rankNumberClass} w-12 text-center italic flex-shrink-0">#${rank}</div>
+                        <div class="min-w-0">
+                            <h4 class="font-bold text-white text-lg leading-tight uppercase truncate">${pitch.title} ${trophy}</h4>
+                            <p class="text-xs text-gray-400 font-mono mt-1 truncate">CREADOR: <span class="text-[#F47521]">${pitch.author}</span></p>
+                            <p class="text-xs text-gray-500 mt-2 line-clamp-1 italic">"${pitch.description.substring(0, 60)}..."</p>
+                            <span class="text-[10px] text-[#F47521] font-bold uppercase mt-1 inline-block hover:underline">Ver Ficha Técnica <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center gap-1 min-w-[60px] flex-shrink-0">
+                        <button onclick="votarPitch(event, '${id}')" class="w-10 h-10 rounded-full bg-[#F47521]/10 hover:bg-[#F47521] text-[#F47521] hover:text-black flex items-center justify-center transition border border-[#F47521]/30 z-10 relative">
+                            <i class="fa-solid fa-fire"></i>
+                        </button>
+                        <span class="text-sm font-bold text-white">${pitch.votes}</span>
+                    </div>
+                `;
+                rankingList.appendChild(item);
+                rank++;
+            });
+        });
+
+        // Votar Propuesta (Blindado)
+        window.votarPitch = async (event, id) => {
+            event.stopPropagation(); // Evitar abrir modal
+            const btn = event.currentTarget;
+            
+            // Check Local
+            const storageKey = `pitch_vote_${id}`;
+            if (localStorage.getItem(storageKey)) {
+                alert("Ya has votado por esta propuesta.");
+                return;
+            }
+
+            // Deshabilitar visualmente
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            const pitchRef = doc(db, "fan_pitches", id);
+            try {
+                await updateDoc(pitchRef, { votes: increment(1) });
+                localStorage.setItem(storageKey, 'true');
+            } catch (error) {
+                console.error("Error:", error);
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        };
+
+        window.abrirPitch = (id) => {
+            const data = pitchesCache[id];
+            if (!data) return;
+            document.getElementById('pitch-modal-title').innerText = data.title;
+            document.getElementById('pitch-modal-author').innerText = data.author;
+            document.getElementById('pitch-modal-desc').innerText = data.description;
+            document.getElementById('pitch-modal-caps').innerText = data.caps || '?';
+            document.getElementById('pitch-modal-seasons').innerText = data.seasons || '?';
+
+            const tagsDiv = document.getElementById('pitch-modal-tags');
+            tagsDiv.innerHTML = '';
+            if (data.tags) {
+                const tagsList = data.tags.split(',').map(t => t.trim());
+                tagsList.forEach(tag => {
+                    tagsDiv.innerHTML += `<span class="border border-[#F47521] text-[#F47521] px-3 py-1 rounded-full text-xs font-bold uppercase bg-[#F47521]/10">${tag}</span>`;
+                });
+            }
+            document.getElementById('pitch-modal').classList.remove('hidden');
+        };
+
+        window.cerrarPitch = () => document.getElementById('pitch-modal').classList.add('hidden');
+
+        // --- LÓGICA DE DETALLES CÓMICS (Existente) ---
+        const comicsData = {
+            'kharn': {
+                titulo: "Virus Kharn: Extinción",
+                imgPortada: "Kharn.png",
+                autor: "FanArtist01",
+                fecha: "2025",
+                caps: "5",
+                status: "EN EMISIÓN",
+                tags: ["Zombies", "Survival", "Horror"],
+                sinopsis: "Un virus desconocido ha diezmado a la población mundial. Un grupo de supervivientes busca el origen de la plaga conocida como Kharn, mientras luchan contra infectados que evolucionan cada noche.",
+                previews: ["pre2kharn.png", "pre2kharn2.png", "pre2kharn3.png"],
+                link: "viruskharn.html"
+            },
+            'prox1': { titulo: "Próximamente", imgPortada: "Próximamente1-1.png", autor: "???", fecha: "TBA", caps: "?", status: "PRONTO", tags: ["???"], sinopsis: "Espacio reservado para futuro cómic.", previews: ["Próximamente1-1.png", "Próximamente1-1.png", "Próximamente1-1.png"], link: "Próximamente1-1.html" },
+            // ... (Resto de datos) ...
+        };
+        
+        window.abrirPanel = async function(id) {
+            const data = comicsData[id] || comicsData['prox1']; 
+            const modal = document.getElementById('detalle-modal');
+            document.getElementById('modal-img').src = data.imgPortada;
+            document.getElementById('modal-img').onerror = function(){ this.src='https://placehold.co/400x600/111/F47521?text=No+Image'; };
+            document.getElementById('modal-titulo').innerText = data.titulo;
+            document.getElementById('modal-autor').innerHTML = `<i class="fa-solid fa-pen-nib text-[#F47521]"></i> ${data.autor}`;
+            document.getElementById('modal-fecha').innerHTML = `<i class="fa-regular fa-calendar text-[#F47521]"></i> ${data.fecha}`;
+            document.getElementById('modal-caps').innerHTML = `<i class="fa-solid fa-layer-group text-[#F47521]"></i> ${data.caps} Caps`;
+            document.getElementById('modal-status').innerText = data.status;
+            document.getElementById('modal-sinopsis').innerText = data.sinopsis;
+            document.getElementById('modal-link').href = data.link;
+
+            const tagsContainer = document.getElementById('modal-tags');
+            tagsContainer.innerHTML = '';
+            data.tags.forEach(tag => {
+                tagsContainer.innerHTML += `<span class="magic-tag text-white px-3 py-1 text-xs font-bold uppercase tracking-wider">${tag}</span>`;
+            });
+
+            const previewsContainer = document.getElementById('modal-previews');
+            previewsContainer.innerHTML = '';
+            data.previews.forEach((img, i) => {
+                previewsContainer.innerHTML += `<div class="slide-3d bg-gray-800"><img src="${img}" onerror="this.src='https://placehold.co/600x400/222/F47521?text=Preview+${i+1}'" class="w-full h-full object-cover"></div>`;
+            });
+
+            modal.classList.remove('hidden');
+        };
+
+        window.cerrarPanel = function() {
+            document.getElementById('detalle-modal').classList.add('hidden');
+        };
+
+    </script>
+</body>
+</html>
