@@ -68,14 +68,31 @@
         /* --- Badges / Títulos --- */
         .badge-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
         .badge {
-            font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
-            padding: 4px 10px; border-radius: 20px; border: 1px solid #333;
-            background: #111; color: #777; transition: all 0.3s;
+            font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
+            padding: 4px 10px; border-radius: 4px; border: 1px solid #333;
+            background: #0a0a0a; color: #444; transition: all 0.3s;
+            filter: grayscale(100%); opacity: 0.5; /* Desactivado por defecto */
         }
-        .badge.active {
-            border-color: var(--orange-cr); color: white; background: rgba(244, 117, 33, 0.1);
-            box-shadow: 0 0 10px rgba(244, 117, 33, 0.3);
+        
+        /* Estilos de Rareza (Solo se aplican cuando tiene la clase .owned) */
+        .badge.owned {
+            filter: grayscale(0%); opacity: 1; border-color: transparent; color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5); transform: scale(1.05);
         }
+
+        /* Common */
+        .badge.common.owned { background: #333; border: 1px solid #555; }
+        /* Rare (Azul/Verde) */
+        .badge.rare.owned { background: linear-gradient(135deg, #0f4c75, #3282b8); box-shadow: 0 0 5px #3282b8; }
+        /* Epic (Violeta/Rojo) */
+        .badge.epic.owned { background: linear-gradient(135deg, #6a0572, #ab0e86); box-shadow: 0 0 8px #ab0e86; }
+        /* Legendary (Dorado/Animado) */
+        .badge.legendary.owned { 
+            background: linear-gradient(135deg, #ffd700, #b8860b); color: black;
+            box-shadow: 0 0 15px #ffd700; animation: pulseGold 2s infinite;
+        }
+
+        @keyframes pulseGold { 0% { box-shadow: 0 0 5px #ffd700; } 50% { box-shadow: 0 0 20px #ffd700; } 100% { box-shadow: 0 0 5px #ffd700; } }
 
         /* --- Inputs --- */
         .input-cr {
@@ -83,6 +100,14 @@
             color: white; border-radius: 4px; outline: none; transition: 0.3s;
         }
         .input-cr:focus { border-color: var(--orange-cr); }
+
+        /* --- Tabla Admin --- */
+        .admin-table-container { max-height: 200px; overflow-y: auto; margin-top: 10px; border: 1px solid #333; border-radius: 4px; }
+        .admin-table { width: 100%; text-align: left; border-collapse: collapse; font-size: 0.8rem; }
+        .admin-table th { background: #222; color: #aaa; padding: 8px; position: sticky; top: 0; }
+        .admin-table td { border-bottom: 1px solid #222; padding: 8px; color: #ddd; }
+        .admin-table tr:hover { background: rgba(244, 117, 33, 0.1); cursor: pointer; }
+        .admin-table tr.selected { background: rgba(244, 117, 33, 0.3); border-left: 3px solid var(--orange-cr); }
 
         /* --- Ocultar secciones --- */
         .hidden-section { display: none; }
@@ -100,29 +125,22 @@
         </div>
 
         <div class="bg-[#1a1a1a] p-8 rounded-xl border border-white/10 shadow-2xl relative overflow-hidden">
-            <!-- Pestañas -->
             <div class="flex mb-6 border-b border-white/10">
                 <button onclick="switchTab('login')" id="tab-login" class="flex-1 pb-2 font-bold text-[#F47521] border-b-2 border-[#F47521]">LOGIN</button>
                 <button onclick="switchTab('register')" id="tab-register" class="flex-1 pb-2 font-bold text-gray-500 hover:text-white transition">REGISTRO</button>
             </div>
 
-            <!-- Formulario Login -->
             <form id="login-form" class="space-y-4">
                 <input type="email" id="login-email" placeholder="Correo Electrónico" class="input-cr" required>
                 <input type="password" id="login-pass" placeholder="Contraseña" class="input-cr" required>
-                <button type="submit" class="w-full bg-[#F47521] hover:bg-orange-600 text-black font-black uppercase py-3 rounded transition hover:scale-[1.02]">
-                    Ingresar
-                </button>
+                <button type="submit" class="w-full bg-[#F47521] hover:bg-orange-600 text-black font-black uppercase py-3 rounded transition hover:scale-[1.02]">Ingresar</button>
             </form>
 
-            <!-- Formulario Registro (Oculto por defecto) -->
             <form id="register-form" class="space-y-4 hidden-section">
                 <input type="text" id="reg-username" placeholder="Nombre de Usuario (Único)" class="input-cr" required>
                 <input type="email" id="reg-email" placeholder="Correo Electrónico" class="input-cr" required>
                 <input type="password" id="reg-pass" placeholder="Contraseña (Mín 6 caracteres)" class="input-cr" required>
-                <button type="submit" class="w-full bg-white hover:bg-gray-200 text-black font-black uppercase py-3 rounded transition hover:scale-[1.02]">
-                    Crear Cuenta
-                </button>
+                <button type="submit" class="w-full bg-white hover:bg-gray-200 text-black font-black uppercase py-3 rounded transition hover:scale-[1.02]">Crear Cuenta</button>
             </form>
 
             <div class="my-6 flex items-center justify-between text-gray-500 text-xs uppercase">
@@ -132,8 +150,7 @@
             </div>
 
             <button onclick="googleLogin()" class="w-full bg-black border border-white/20 hover:border-white text-white font-bold py-3 rounded flex items-center justify-center gap-3 transition">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5">
-                Google
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5"> Google
             </button>
         </div>
     </div>
@@ -143,37 +160,29 @@
     <!-- ======================= -->
     <div id="profile-container" class="w-full max-w-4xl hidden-section animate-enter">
         
-        <!-- Header Perfil -->
         <div class="flex justify-between items-end mb-6">
             <div>
                 <h2 class="text-3xl font-black italic uppercase">Mi <span class="text-[#F47521]">Perfil</span></h2>
                 <p class="text-xs text-gray-500 font-mono" id="profile-id">ID: Cargando...</p>
             </div>
-            <button onclick="cerrarSesion()" class="text-red-500 text-xs font-bold uppercase hover:underline">
-                <i class="fa-solid fa-power-off"></i> Cerrar Sesión
-            </button>
+            <button onclick="cerrarSesion()" class="text-red-500 text-xs font-bold uppercase hover:underline"><i class="fa-solid fa-power-off"></i> Cerrar Sesión</button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            <!-- COLUMNA IZQUIERDA: Tarjeta 3D y Datos -->
+            <!-- COLUMNA IZQUIERDA -->
             <div class="md:col-span-1 space-y-6">
-                
-                <!-- Tarjeta 3D Giratoria -->
+                <!-- Tarjeta 3D -->
                 <div class="card-scene" onclick="this.querySelector('.card-obj').classList.toggle('is-flipped')">
                     <div class="card-obj" id="membership-card">
-                        <!-- Frente -->
                         <div class="card-face card-front">
                             <div class="relative mb-4">
                                 <img id="display-avatar" src="https://via.placeholder.com/150" class="w-24 h-24 rounded-full border-2 border-white object-cover">
-                                <button onclick="toggleEditMode()" class="absolute bottom-0 right-0 bg-[#F47521] text-black w-8 h-8 rounded-full flex items-center justify-center hover:scale-110 transition shadow-lg">
-                                    <i class="fa-solid fa-pen"></i>
-                                </button>
+                                <button onclick="toggleEditMode()" class="absolute bottom-0 right-0 bg-[#F47521] text-black w-8 h-8 rounded-full flex items-center justify-center hover:scale-110 transition shadow-lg"><i class="fa-solid fa-pen"></i></button>
                             </div>
                             <h3 id="display-username" class="text-xl font-bold text-white">Usuario</h3>
                             <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest"><i class="fa-solid fa-rotate mr-1"></i> Toca para ver Membresía</p>
                         </div>
-                        <!-- Atrás -->
                         <div class="card-face card-back status-basic" id="card-back-style">
                             <i id="badge-icon" class="fa-solid fa-user text-4xl mb-2 text-gray-500"></i>
                             <h3 id="membership-type" class="text-2xl font-black uppercase text-gray-400">Básico</h3>
@@ -182,82 +191,79 @@
                     </div>
                 </div>
 
-                <!-- Bio -->
+                <!-- Bio / Editor -->
                 <div class="bg-[#111] p-4 rounded-lg border border-white/5">
                     <h4 class="text-[#F47521] text-xs font-bold uppercase mb-2">Biografía</h4>
                     <p id="display-bio" class="text-sm text-gray-300 italic">Sin biografía.</p>
-                    <!-- Editor Oculto -->
                     <div id="editor-area" class="hidden mt-4 pt-4 border-t border-white/10">
-                        <input type="text" id="edit-photo" placeholder="URL Foto Perfil" class="input-cr mb-2 text-xs">
+                        <label class="text-[10px] text-gray-500 uppercase mb-1 block">URL Foto Perfil</label>
+                        <input type="text" id="edit-photo" placeholder="https://..." class="input-cr mb-2 text-xs">
                         <textarea id="edit-bio" placeholder="Escribe tu bio..." class="input-cr h-20 text-xs mb-2"></textarea>
                         <button onclick="guardarPerfil()" class="w-full bg-green-600 hover:bg-green-500 text-white text-xs font-bold py-2 rounded">GUARDAR CAMBIOS</button>
                     </div>
                 </div>
-
             </div>
 
-            <!-- COLUMNA DERECHA: Títulos y Admin -->
+            <!-- COLUMNA DERECHA -->
             <div class="md:col-span-2 space-y-6">
                 
-                <!-- Títulos de Comunidad -->
+                <!-- Títulos (Todos mostrados, bloqueados o desbloqueados) -->
                 <div class="bg-[#1a1a1a] p-6 rounded-xl border border-white/10">
-                    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-medal text-yellow-500"></i> Títulos Obtenidos
-                    </h3>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-medal text-yellow-500"></i> Títulos Obtenidos
+                        </h3>
+                        <span id="titles-count" class="text-xs bg-[#333] px-2 py-1 rounded text-white">0 / 20</span>
+                    </div>
+                    <div class="text-xs text-gray-500 mb-2 italic" id="default-title-msg"></div>
                     <div class="badge-grid" id="titles-container">
-                        <!-- Se llenan con JS -->
-                        <span class="badge">Creador</span>
-                        <span class="badge">Crítico</span>
-                        <span class="badge">Votante</span>
-                        <span class="badge">VIP</span>
-                        <span class="badge">Beta Tester</span>
-                        <span class="badge">Donador</span>
-                        <span class="badge">Leyenda</span>
-                        <span class="badge">Otaku</span>
-                        <span class="badge">Artista</span>
-                        <span class="badge">Moderador</span>
-                        <span class="badge">Explorador</span>
-                        <span class="badge">Coleccionista</span>
-                        <span class="badge">Maestro</span>
-                        <span class="badge">Fan #1</span>
-                        <span class="badge">Guionista</span>
-                        <span class="badge">Traductor</span>
-                        <span class="badge">Editor</span>
-                        <span class="badge">Héroe</span>
-                        <span class="badge">Villano</span>
-                        <span class="badge">Dios</span>
+                        <!-- Se llenan con JS dinámicamente -->
                     </div>
                 </div>
 
-                <!-- Panel de Administrador (Secreto) -->
+                <!-- Panel de Administrador (Tabla + Buscador) -->
                 <div class="bg-black p-6 rounded-xl border border-red-900/30">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-sm font-bold text-red-500 uppercase tracking-widest"><i class="fa-solid fa-user-secret"></i> Zona Admin</h3>
-                        <input type="password" id="admin-key" placeholder="Clave de Acceso" class="bg-[#111] border border-red-900/50 text-red-500 text-xs px-2 py-1 rounded w-32 text-center" onkeyup="checkAdmin()">
+                        <input type="password" id="admin-key" placeholder="Clave" class="bg-[#111] border border-red-900/50 text-red-500 text-xs px-2 py-1 rounded w-24 text-center" onkeyup="checkAdmin()">
                     </div>
 
-                    <div id="admin-controls" class="hidden-section space-y-4 border-t border-red-900/20 pt-4">
-                        <p class="text-xs text-gray-500">Editando al usuario actual (Tú)</p>
+                    <div id="admin-controls" class="hidden-section border-t border-red-900/20 pt-4">
                         
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs text-gray-400 mb-1">Membresía</label>
-                                <button onclick="setPremium(true)" class="w-full bg-yellow-600/20 text-yellow-500 border border-yellow-600/50 text-xs font-bold py-2 rounded mb-2 hover:bg-yellow-600 hover:text-black">Hacer Premium</button>
-                                <button onclick="setPremium(false)" class="w-full bg-gray-800 text-gray-400 border border-gray-600 text-xs font-bold py-2 rounded hover:bg-white hover:text-black">Hacer Básico</button>
-                            </div>
-                            <div>
-                                <label class="block text-xs text-gray-400 mb-1">Asignar Título</label>
-                                <select id="admin-title-select" class="w-full bg-[#111] text-white text-xs p-2 rounded border border-gray-700 mb-2">
-                                    <option value="Creador">Creador</option>
-                                    <option value="Crítico">Crítico</option>
-                                    <option value="Votante">Votante</option>
-                                    <option value="Leyenda">Leyenda</option>
-                                    <option value="Dios">Dios</option>
-                                    <!-- Agregar más si se quiere -->
-                                </select>
-                                <button onclick="addTitleToUser()" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2 rounded">Asignar</button>
+                        <!-- Buscador y Tabla -->
+                        <div class="mb-4">
+                            <input type="text" id="admin-search" placeholder="Buscar Gmail..." class="w-full bg-[#111] border border-gray-700 text-white text-xs p-2 rounded mb-2" onkeyup="filtrarUsuarios()">
+                            <div class="admin-table-container custom-scroll">
+                                <table class="admin-table">
+                                    <thead><tr><th>Usuario / Email</th><th>ID</th></tr></thead>
+                                    <tbody id="users-table-body">
+                                        <!-- JS llena esto -->
+                                        <tr><td colspan="2" class="text-center py-2">Cargando...</td></tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
+
+                        <!-- Panel de Acción para Usuario Seleccionado -->
+                        <div id="admin-actions-panel" class="bg-[#1a1a1a] p-4 rounded border border-gray-700 opacity-50 pointer-events-none transition-opacity">
+                            <p class="text-xs text-[#F47521] font-bold mb-2">Editando a: <span id="selected-user-email" class="text-white">Nadie seleccionado</span></p>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-[10px] text-gray-500 mb-1">Membresía</label>
+                                    <button onclick="adminSetPremium(true)" class="w-full bg-yellow-600/20 text-yellow-500 border border-yellow-600/50 text-xs font-bold py-1 rounded mb-2 hover:bg-yellow-600 hover:text-black">Hacer PREMIUM</button>
+                                    <button onclick="adminSetPremium(false)" class="w-full bg-gray-800 text-gray-400 border border-gray-600 text-xs font-bold py-1 rounded hover:bg-white hover:text-black">Hacer BÁSICO</button>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] text-gray-500 mb-1">Asignar Título</label>
+                                    <select id="admin-title-select" class="w-full bg-[#111] text-white text-xs p-1 rounded border border-gray-700 mb-2">
+                                        <!-- JS llena esto -->
+                                    </select>
+                                    <button onclick="adminAddTitle()" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-1 rounded">Asignar</button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -269,7 +275,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBf9ATqgErKQKpzKpFXsUu4BHmFcNSLzOE",
@@ -286,146 +292,150 @@
         const provider = new GoogleAuthProvider();
 
         let currentUserUid = null;
+        let allUsersCache = []; // Cache para la tabla de admin
+        let selectedUserId = null; // ID del usuario seleccionado en la tabla
 
-        // --- MANEJO DE ESTADO (LOGIN vs PERFIL) ---
+        // --- DEFINICIÓN DE TÍTULOS Y RAREZAS ---
+        const ALL_TITLES = [
+            { name: "Creador", type: "legendary" },
+            { name: "Dios", type: "legendary" },
+            { name: "Leyenda", type: "legendary" },
+            { name: "Fan #1", type: "legendary" },
+            { name: "Héroe", type: "epic" },
+            { name: "Villano", type: "epic" },
+            { name: "VIP", type: "epic" },
+            { name: "Donador", type: "epic" },
+            { name: "Maestro", type: "epic" },
+            { name: "Moderador", type: "rare" },
+            { name: "Artista", type: "rare" },
+            { name: "Editor", type: "rare" },
+            { name: "Guionista", type: "rare" },
+            { name: "Traductor", type: "rare" },
+            { name: "Crítico", type: "common" },
+            { name: "Votante", type: "common" },
+            { name: "Beta Tester", type: "common" },
+            { name: "Otaku", type: "common" },
+            { name: "Explorador", type: "common" },
+            { name: "Coleccionista", type: "common" }
+        ];
+
+        // Inicializar dropdown de admin y grid de perfil
+        const adminSelect = document.getElementById('admin-title-select');
+        const titlesContainer = document.getElementById('titles-container');
+        
+        ALL_TITLES.forEach(t => {
+            // Dropdown
+            const opt = document.createElement('option');
+            opt.value = t.name; opt.innerText = t.name;
+            adminSelect.appendChild(opt);
+            
+            // Grid (Visualmente todos existen, estado locked por defecto)
+            const badge = document.createElement('span');
+            badge.className = `badge ${t.type}`;
+            badge.dataset.title = t.name;
+            badge.innerText = t.name;
+            titlesContainer.appendChild(badge);
+        });
+
+        // --- AUTH ---
         onAuthStateChanged(auth, async (user) => {
             const authContainer = document.getElementById('auth-container');
             const profileContainer = document.getElementById('profile-container');
 
             if (user) {
-                // Usuario logueado
                 currentUserUid = user.uid;
                 authContainer.classList.add('hidden-section');
                 profileContainer.classList.remove('hidden-section');
                 await cargarDatosPerfil(user);
             } else {
-                // No hay usuario
                 currentUserUid = null;
                 authContainer.classList.remove('hidden-section');
                 profileContainer.classList.add('hidden-section');
             }
         });
 
-        // --- FUNCIONES DE AUTENTICACIÓN ---
-        
-        window.switchTab = (tab) => {
+        window.switchTab = (tab) => { /* ... (mismo código tabs) ... */ 
             const loginForm = document.getElementById('login-form');
             const regForm = document.getElementById('register-form');
             const tabLogin = document.getElementById('tab-login');
             const tabReg = document.getElementById('tab-register');
-
             if (tab === 'login') {
-                loginForm.classList.remove('hidden-section');
-                regForm.classList.add('hidden-section');
+                loginForm.classList.remove('hidden-section'); regForm.classList.add('hidden-section');
                 tabLogin.className = "flex-1 pb-2 font-bold text-[#F47521] border-b-2 border-[#F47521]";
                 tabReg.className = "flex-1 pb-2 font-bold text-gray-500 hover:text-white transition";
             } else {
-                loginForm.classList.add('hidden-section');
-                regForm.classList.remove('hidden-section');
+                loginForm.classList.add('hidden-section'); regForm.classList.remove('hidden-section');
                 tabReg.className = "flex-1 pb-2 font-bold text-[#F47521] border-b-2 border-[#F47521]";
                 tabLogin.className = "flex-1 pb-2 font-bold text-gray-500 hover:text-white transition";
             }
         };
 
-        // Login Email
+        // Handlers Login/Register/Google (Igual que antes)
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-pass').value;
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-            } catch (error) {
-                alert("Error al ingresar: " + error.message);
-            }
+            try { await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-pass').value); }
+            catch (e) { alert("Error: " + e.message); }
         });
-
-        // Registro Email
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('reg-email').value;
-            const pass = document.getElementById('reg-pass').value;
-            const username = document.getElementById('reg-username').value;
-
+            const userVal = document.getElementById('reg-username').value;
+            const emailVal = document.getElementById('reg-email').value;
             try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-                const user = userCredential.user;
-                
-                // Guardar username en Auth Profile
-                await updateProfile(user, { displayName: username });
-
-                // Crear documento en Firestore
-                await setDoc(doc(db, "users", user.uid), {
-                    username: username,
-                    email: email,
-                    photoURL: "https://via.placeholder.com/150",
-                    bio: "Nuevo en ComicVerse",
-                    titles: ["Novato"],
-                    isPremium: false
-                });
-
-            } catch (error) {
-                alert("Error al registrar: " + error.message);
-            }
+                const cred = await createUserWithEmailAndPassword(auth, emailVal, document.getElementById('reg-pass').value);
+                await updateProfile(cred.user, { displayName: userVal });
+                await setDoc(doc(db, "users", cred.user.uid), { username: userVal, email: emailVal, photoURL: "https://via.placeholder.com/150", bio: "Nuevo en ComicVerse", titles: [], isPremium: false });
+            } catch (e) { alert("Error: " + e.message); }
         });
-
-        // Google Login
         window.googleLogin = async () => {
             try {
-                const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-                
-                // Verificar si existe en DB, si no, crear
-                const docRef = doc(db, "users", user.uid);
-                const docSnap = await getDoc(docRef);
-
-                if (!docSnap.exists()) {
-                    await setDoc(docRef, {
-                        username: user.displayName,
-                        email: user.email,
-                        photoURL: user.photoURL,
-                        bio: "Nuevo en ComicVerse",
-                        titles: ["Novato"],
-                        isPremium: false
-                    });
+                const res = await signInWithPopup(auth, provider);
+                const userRef = doc(db, "users", res.user.uid);
+                const snap = await getDoc(userRef);
+                if(!snap.exists()) {
+                    await setDoc(userRef, { username: res.user.displayName, email: res.user.email, photoURL: res.user.photoURL, bio: "Nuevo en ComicVerse", titles: [], isPremium: false });
                 }
-            } catch (error) {
-                alert("Error Google: " + error.message);
-            }
+            } catch (e) { alert(e.message); }
         };
-
         window.cerrarSesion = () => signOut(auth);
 
-        // --- GESTIÓN DE PERFIL (FIRESTORE) ---
-
+        // --- PERFIL ---
         async function cargarDatosPerfil(user) {
             document.getElementById('profile-id').innerText = "ID: " + user.uid.substring(0, 8) + "...";
+            const snap = await getDoc(doc(db, "users", user.uid));
             
-            const docRef = doc(db, "users", user.uid);
-            const docSnap = await getDoc(docRef);
-
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                
-                // Renderizar Datos
+            if (snap.exists()) {
+                const data = snap.data();
                 document.getElementById('display-username').innerText = data.username;
                 document.getElementById('display-bio').innerText = data.bio || "Sin bio.";
                 document.getElementById('display-avatar').src = data.photoURL || "https://via.placeholder.com/150";
                 
-                // Renderizar Tarjeta 3D (Premium/Básico)
-                renderCardStatus(data.isPremium);
-
-                // Renderizar Títulos
-                renderTitles(data.titles || []);
-
-                // Pre-llenar editor
-                document.getElementById('edit-bio').value = data.bio || "";
-                document.getElementById('edit-photo').value = data.photoURL || "";
-                
-                // Guardar avatar en LocalStorage para usar en index.html/comics.html
+                // Guardar foto local para usar en otras páginas
                 localStorage.setItem('userAvatar', data.photoURL);
 
-            } else {
-                console.log("No se encontró perfil en DB");
+                renderCardStatus(data.isPremium);
+                
+                // Renderizar Títulos
+                const userTitles = data.titles || [];
+                const badges = document.querySelectorAll('.badge');
+                let count = 0;
+                
+                // Mensaje si es nuevo
+                const msgEl = document.getElementById('default-title-msg');
+                if (userTitles.length === 0) {
+                    msgEl.innerText = "Nuevo usuario (Aún no tienes títulos)";
+                } else {
+                    msgEl.innerText = "";
+                }
+
+                badges.forEach(b => {
+                    if (userTitles.includes(b.dataset.title)) {
+                        b.classList.add('owned');
+                        count++;
+                    } else {
+                        b.classList.remove('owned');
+                    }
+                });
+                document.getElementById('titles-count').innerText = `${count} / ${ALL_TITLES.length}`;
             }
         }
 
@@ -433,93 +443,124 @@
             const cardBack = document.getElementById('card-back-style');
             const typeText = document.getElementById('membership-type');
             const icon = document.getElementById('badge-icon');
-
             if (isPremium) {
                 cardBack.className = "card-face card-back status-premium";
-                typeText.innerText = "PREMIUM";
-                typeText.className = "text-2xl font-black uppercase text-[#F47521] drop-shadow-md";
+                typeText.innerText = "PREMIUM"; typeText.className = "text-2xl font-black uppercase text-[#F47521] drop-shadow-md";
                 icon.className = "fa-solid fa-crown text-5xl mb-2 text-yellow-400 animate-pulse";
             } else {
                 cardBack.className = "card-face card-back status-basic";
-                typeText.innerText = "BÁSICO";
-                typeText.className = "text-2xl font-black uppercase text-gray-400";
+                typeText.innerText = "BÁSICO"; typeText.className = "text-2xl font-black uppercase text-gray-400";
                 icon.className = "fa-solid fa-user text-4xl mb-2 text-gray-500";
             }
         }
 
-        function renderTitles(userTitles) {
-            const allBadges = document.querySelectorAll('.badge');
-            allBadges.forEach(badge => {
-                const titleName = badge.innerText;
-                if (userTitles.includes(titleName)) {
-                    badge.classList.add('active');
-                } else {
-                    badge.classList.remove('active');
-                }
-            });
-        }
-
-        // --- EDICIÓN DE PERFIL ---
-        window.toggleEditMode = () => {
-            const editor = document.getElementById('editor-area');
-            editor.classList.toggle('hidden');
-        };
-
+        window.toggleEditMode = () => document.getElementById('editor-area').classList.toggle('hidden');
         window.guardarPerfil = async () => {
-            if (!currentUserUid) return;
-            
-            const newBio = document.getElementById('edit-bio').value;
-            const newPhoto = document.getElementById('edit-photo').value;
-            
+            if(!currentUserUid) return;
             try {
                 await updateDoc(doc(db, "users", currentUserUid), {
-                    bio: newBio,
-                    photoURL: newPhoto
+                    bio: document.getElementById('edit-bio').value,
+                    photoURL: document.getElementById('edit-photo').value
                 });
-                // Recargar interfaz
-                const user = auth.currentUser;
-                await cargarDatosPerfil(user);
+                await cargarDatosPerfil(auth.currentUser);
                 window.toggleEditMode();
                 alert("Perfil actualizado");
-            } catch (e) {
-                alert("Error al guardar: " + e.message);
-            }
+            } catch(e) { alert("Error: " + e.message); }
         };
 
-        // --- PANEL DE ADMIN (CLAVE #Lau3700#) ---
-        
-        window.checkAdmin = () => {
+        // --- ADMIN ZONE ---
+        window.checkAdmin = async () => {
             const key = document.getElementById('admin-key').value;
             if (key === "#Lau3700#") {
                 document.getElementById('admin-controls').classList.remove('hidden-section');
+                await loadAllUsers(); // Cargar tabla al entrar
             } else {
                 document.getElementById('admin-controls').classList.add('hidden-section');
             }
         };
 
-        window.setPremium = async (status) => {
-            if (!currentUserUid) return;
+        async function loadAllUsers() {
+            const tbody = document.getElementById('users-table-body');
+            tbody.innerHTML = '<tr><td colspan="2" class="text-center">Cargando datos...</td></tr>';
+            
             try {
-                await updateDoc(doc(db, "users", currentUserUid), { isPremium: status });
-                // Actualizar visualmente sin recargar
-                renderCardStatus(status);
-                alert(`Usuario ahora es ${status ? 'PREMIUM' : 'BÁSICO'}`);
-            } catch (e) { console.error(e); }
+                const querySnapshot = await getDocs(collection(db, "users"));
+                allUsersCache = [];
+                querySnapshot.forEach((doc) => {
+                    allUsersCache.push({ id: doc.id, ...doc.data() });
+                });
+                renderUserTable(allUsersCache);
+            } catch (e) {
+                console.error("Error cargando usuarios:", e);
+                tbody.innerHTML = '<tr><td colspan="2" class="text-red-500">Error al cargar (Ver consola)</td></tr>';
+            }
+        }
+
+        window.filtrarUsuarios = () => {
+            const term = document.getElementById('admin-search').value.toLowerCase();
+            const filtered = allUsersCache.filter(u => 
+                (u.email && u.email.toLowerCase().includes(term)) || 
+                (u.username && u.username.toLowerCase().includes(term))
+            );
+            renderUserTable(filtered);
         };
 
-        window.addTitleToUser = async () => {
-            if (!currentUserUid) return;
+        function renderUserTable(users) {
+            const tbody = document.getElementById('users-table-body');
+            tbody.innerHTML = '';
+            
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="2" class="text-center text-gray-500">No hay resultados</td></tr>';
+                return;
+            }
+
+            users.forEach(u => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="font-bold text-white">${u.username || 'Sin nombre'}</div>
+                        <div class="text-gray-500 text-[10px]">${u.email || 'No Email'}</div>
+                    </td>
+                    <td class="font-mono text-xs text-gray-600">${u.id.substring(0,6)}...</td>
+                `;
+                tr.onclick = () => selectUserForAdmin(u.id, u.email);
+                tbody.appendChild(tr);
+            });
+        }
+
+        function selectUserForAdmin(uid, email) {
+            selectedUserId = uid;
+            
+            // UI Feedback visual en tabla
+            const rows = document.querySelectorAll('.admin-table tr');
+            rows.forEach(r => r.classList.remove('selected'));
+            // (Nota: para añadir clase 'selected' al clickeado se requeriría pasar 'this' o evento, simplificamos por ID)
+            
+            // Activar panel
+            const panel = document.getElementById('admin-actions-panel');
+            panel.classList.remove('opacity-50', 'pointer-events-none');
+            document.getElementById('selected-user-email').innerText = email || uid;
+        }
+
+        // Acciones Admin (Usan selectedUserId)
+        window.adminSetPremium = async (status) => {
+            if (!selectedUserId) return alert("Selecciona un usuario de la tabla primero");
+            try {
+                await updateDoc(doc(db, "users", selectedUserId), { isPremium: status });
+                alert(`Usuario ${selectedUserId.substring(0,4)}... ahora es ${status ? 'PREMIUM' : 'BÁSICO'}`);
+                // Si me edité a mí mismo, recargar mi vista
+                if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser);
+            } catch(e) { alert(e.message); }
+        };
+
+        window.adminAddTitle = async () => {
+            if (!selectedUserId) return alert("Selecciona un usuario de la tabla primero");
             const title = document.getElementById('admin-title-select').value;
             try {
-                await updateDoc(doc(db, "users", currentUserUid), {
-                    titles: arrayUnion(title)
-                });
-                // Recargar visualmente
-                const currentTitles = document.querySelectorAll('.badge.active');
-                // Truco rápido: Recargar todo el perfil es más seguro
-                cargarDatosPerfil(auth.currentUser);
-                alert(`Título "${title}" asignado.`);
-            } catch (e) { console.error(e); }
+                await updateDoc(doc(db, "users", selectedUserId), { titles: arrayUnion(title) });
+                alert(`Título "${title}" añadido al usuario.`);
+                if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser);
+            } catch(e) { alert(e.message); }
         };
 
     </script>
