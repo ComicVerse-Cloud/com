@@ -21,28 +21,6 @@
             overflow-x: hidden;
         }
 
-        /* --- PRELOADER --- */
-        #preloader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #000; z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease;
-        }
-        .loader-bar-container {
-            width: 200px; height: 4px; background: #222; border-radius: 2px; overflow: hidden; position: relative;
-            box-shadow: 0 0 10px rgba(244, 117, 33, 0.2);
-        }
-        .loader-bar {
-            width: 50%; height: 100%; background: var(--orange-cr); position: absolute; left: -50%;
-            animation: load 1.5s infinite ease-in-out;
-            box-shadow: 0 0 15px var(--orange-cr);
-        }
-        @keyframes load { 0% { left: -50%; } 100% { left: 100%; } }
-        .loading-text {
-            color: var(--orange-cr); margin-top: 15px; font-family: monospace; font-size: 12px;
-            letter-spacing: 2px; animation: pulse 1s infinite; text-transform: uppercase;
-        }
-
         /* --- Scrollbar --- */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #111; }
@@ -75,7 +53,7 @@
         .status-final { background: linear-gradient(90deg, #a855f7, #6b21a8); color: white; border: 1px solid #d8b4fe; }
         .status-tba { background: linear-gradient(90deg, #64748b, #334155); color: white; border: 1px solid #94a3b8; }
 
-        /* --- Estilo Mágico Tags (Visualización) --- */
+        /* --- Estilo Mágico Tags --- */
         .magic-tag {
             background: linear-gradient(135deg, rgba(20,20,20,0.9), rgba(40,40,50,0.9));
             border: 1px solid transparent; position: relative; background-clip: padding-box;
@@ -102,14 +80,14 @@
         }
 
         /* --- Modals Panel --- */
-        #detalle-modal, #pitch-modal, #auth-modal { backdrop-filter: blur(15px); background-color: rgba(0, 0, 0, 0.85); }
+        #detalle-modal, #pitch-modal, #auth-modal, #pin-modal, #limit-modal { backdrop-filter: blur(15px); background-color: rgba(0, 0, 0, 0.85); }
         .panel-glass {
             background: linear-gradient(145deg, rgba(20,20,20,0.98), rgba(10,10,10,0.99));
             border: 1px solid rgba(244, 117, 33, 0.3);
             box-shadow: 0 0 100px rgba(0,0,0,0.8), inset 0 0 20px rgba(244, 117, 33, 0.05);
         }
 
-        /* --- Input Styles Ranking --- */
+        /* --- Input Styles --- */
         .input-dark {
             background: rgba(10,10,10,0.8); border: 1px solid #333; color: white; padding: 12px; width: 100%;
             border-radius: 8px; transition: all 0.3s; font-family: monospace;
@@ -118,8 +96,19 @@
             border-color: var(--orange-cr); outline: none; box-shadow: 0 0 15px rgba(244, 117, 33, 0.2); background: rgba(20,20,20,1);
         }
         
-        /* Rank Medal Styles */
-        .rank-1 { border: 2px solid #fbbf24; background: linear-gradient(90deg, rgba(251,191,36,0.1), transparent); }
+        /* --- RANKING STYLES --- */
+        .rank-1 {
+            border: 2px solid #fbbf24;
+            background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(245, 158, 11, 0.05));
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.2), inset 0 0 15px rgba(251, 191, 36, 0.05);
+            position: relative; overflow: hidden;
+        }
+        .rank-1::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: skewX(-20deg); animation: shine 3s infinite;
+        }
+        @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
         .rank-2 { border: 2px solid #94a3b8; background: linear-gradient(90deg, rgba(148,163,184,0.1), transparent); }
         .rank-3 { border: 2px solid #b45309; background: linear-gradient(90deg, rgba(180,83,9,0.1), transparent); }
 
@@ -137,14 +126,6 @@
 </head>
 <body class="relative min-h-screen pb-20">
 
-    <!-- PRELOADER -->
-    <div id="preloader">
-        <div class="loader-bar-container">
-            <div class="loader-bar"></div>
-        </div>
-        <div class="loading-text">CARGANDO COMUNIDAD...</div>
-    </div>
-
     <div class="p-4 md:p-8">
         <!-- Título de Sección -->
         <div class="flex items-center gap-3 mb-8 border-b border-gray-800 pb-4">
@@ -154,7 +135,7 @@
             </h1>
         </div>
 
-        <!-- GRID DE PORTADAS (5 ESPACIOS) -->
+        <!-- GRID DE PORTADAS -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8 mb-20">
             <!-- 1. VIRUS KHARN -->
             <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('kharn')">
@@ -166,7 +147,7 @@
                     </div>
                 </div>
             </div>
-            <!-- 2-5. PROXIMAMENTE -->
+            <!-- 2. PROXIMAMENTE 1 -->
             <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox1')">
                 <div class="comic-card h-72 bg-gray-900">
                     <div class="status-badge status-tba">PRONTO</div>
@@ -176,6 +157,7 @@
                     </div>
                 </div>
             </div>
+            <!-- 3. PROXIMAMENTE 2 -->
             <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox2')">
                 <div class="comic-card h-72 bg-gray-900">
                     <div class="status-badge status-tba">PRONTO</div>
@@ -185,6 +167,7 @@
                     </div>
                 </div>
             </div>
+            <!-- 4. PROXIMAMENTE 3 -->
             <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox3')">
                 <div class="comic-card h-72 bg-gray-900">
                     <div class="status-badge status-tba">PRONTO</div>
@@ -194,6 +177,7 @@
                     </div>
                 </div>
             </div>
+            <!-- 5. PROXIMAMENTE 4 -->
             <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox4')">
                 <div class="comic-card h-72 bg-gray-900">
                     <div class="status-badge status-tba">PRONTO</div>
@@ -205,9 +189,8 @@
             </div>
         </div>
 
-        <!-- --- SECCIÓN NUEVA: SISTEMA DE VOTACIÓN / RANKING --- -->
+        <!-- --- SECCIÓN DE VOTACIÓN / RANKING --- -->
         <div class="border-t border-gray-800 pt-12">
-            <!-- Título Profesional Unificado -->
             <div class="flex items-center gap-3 mb-8 border-b border-gray-800 pb-4">
                 <div class="w-2 h-10 bg-[#F47521] shadow-[0_0_15px_#F47521]"></div>
                 <h2 class="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-white drop-shadow-lg">
@@ -221,7 +204,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 
-                <!-- Columna 1: Formulario de Subida (Estilo Tech) -->
+                <!-- Columna 1: Formulario de Subida -->
                 <div class="bg-[#0f0f0f] p-8 rounded-2xl border border-[#F47521]/30 shadow-[0_0_30px_rgba(244,117,33,0.1)] relative overflow-hidden group">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#F47521] to-transparent opacity-50 animate-pulse"></div>
                     
@@ -238,12 +221,33 @@
                             <input type="text" id="pitchAuthor" class="input-dark" placeholder="Tu alias" required maxlength="30">
                         </div>
                         
-                        <!-- SELECTOR DE GÉNEROS (NUEVO) -->
+                        <!-- ORIGEN DEL ARTE -->
+                        <div>
+                            <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Origen del Arte</label>
+                            <div class="flex gap-4 p-2 bg-black/30 rounded border border-white/10">
+                                <label class="flex items-center gap-2 cursor-pointer hover:text-white text-gray-400 transition">
+                                    <input type="radio" name="artOrigin" value="Propio" class="accent-[#F47521] w-4 h-4" checked>
+                                    <span class="text-xs font-bold uppercase">100% Original</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer hover:text-white text-gray-400 transition">
+                                    <input type="radio" name="artOrigin" value="IA" class="accent-[#F47521] w-4 h-4">
+                                    <span class="text-xs font-bold uppercase">Asistido por IA</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Contacto Privado -->
+                        <div>
+                            <label class="block text-xs text-yellow-500 uppercase font-bold mb-2 tracking-widest flex items-center gap-2">
+                                <i class="fa-solid fa-lock"></i> Contacto (Privado)
+                            </label>
+                            <input type="text" id="pitchContact" class="input-dark border-yellow-500/50 focus:border-yellow-500" placeholder="Email o Teléfono (Solo visible para Admin)" required>
+                        </div>
+                        
+                        <!-- Selector de Géneros -->
                         <div>
                             <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Géneros (Máx 5)</label>
-                            <div class="flex flex-wrap gap-2" id="genre-selector">
-                                <!-- Se llenará con JS -->
-                            </div>
+                            <div class="flex flex-wrap gap-2" id="genre-selector"></div>
                             <input type="hidden" id="pitchTags" required>
                         </div>
 
@@ -267,7 +271,7 @@
                     </form>
                 </div>
 
-                <!-- Columna 2 y 3: Ranking en Vivo (Estilo Leaderboard) -->
+                <!-- Columna 2 y 3: Ranking en Vivo -->
                 <div class="lg:col-span-2">
                     <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
                         <h3 class="text-xl font-bold text-white uppercase flex items-center gap-3">
@@ -278,7 +282,6 @@
                         </span>
                     </div>
                     
-                    <!-- Contenedor del Ranking -->
                     <div id="rankingList" class="space-y-3 max-h-[800px] overflow-y-auto custom-scroll pr-2">
                         <div class="text-center text-gray-600 py-20 flex flex-col items-center">
                             <i class="fa-solid fa-circle-notch fa-spin text-4xl text-[#F47521] mb-4"></i>
@@ -292,13 +295,19 @@
 
     </div>
 
-    <!-- PANEL MODAL DETALLE CÓMICS -->
+    <!-- PANEL MODAL DETALLE CÓMICS (INCLUYE VOTACIÓN) -->
     <div id="detalle-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-0 md:p-4 overflow-y-auto md:overflow-visible">
         <div class="panel-glass w-full max-w-6xl min-h-[90vh] md:min-h-0 md:h-auto rounded-none md:rounded-2xl flex flex-col md:flex-row relative animate-[fadeIn_0.4s_ease-out]">
             <button onclick="cerrarPanel()" class="absolute top-4 right-4 text-white z-50 bg-black/60 backdrop-blur rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#F47521] transition shadow-lg border border-white/10"><i class="fa-solid fa-xmark text-xl"></i></button>
             <div class="w-full md:w-[400px] shrink-0 relative bg-black">
                 <img id="modal-img" src="" class="w-full h-full object-cover opacity-90 mask-image-gradient">
                 <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent md:bg-gradient-to-r"></div>
+                
+                <!-- Puntuación Flotante -->
+                <div class="hidden md:flex absolute top-4 left-4 bg-black/80 backdrop-blur border border-[#F47521] px-4 py-2 rounded-lg shadow-[0_0_20px_rgba(244,117,33,0.3)] items-center gap-2">
+                    <i class="fa-solid fa-star text-yellow-400 text-xl animate-pulse"></i>
+                    <span id="modal-score-desktop" class="text-2xl font-black text-white">0.0</span>
+                </div>
             </div>
             <div class="flex-1 p-6 md:p-10 flex flex-col">
                 <div class="mb-6">
@@ -315,6 +324,33 @@
                     <h3 class="text-[#F47521] font-bold uppercase tracking-[0.2em] mb-3 text-xs flex items-center gap-2"><span class="w-4 h-0.5 bg-[#F47521]"></span> Sinopsis</h3>
                     <p id="modal-sinopsis" class="text-gray-300 leading-relaxed text-lg font-light">Descripción...</p>
                 </div>
+
+                <!-- SECCIÓN DE VOTACIÓN (AGREGADA) -->
+                <div class="mb-8 bg-white/5 rounded-xl p-4 border border-white/5 flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-heart text-red-500"></i> Valorar Obra
+                        </div>
+                        <div class="flex gap-3">
+                            <button id="btn-like" onclick="votar('like')" class="flex items-center gap-2 bg-green-900/30 hover:bg-green-600 text-green-400 hover:text-white px-4 py-2 rounded-lg transition border border-green-500/30 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fa-solid fa-thumbs-up"></i> <span id="count-likes">0</span>
+                            </button>
+                            <button id="btn-dislike" onclick="votar('dislike')" class="flex items-center gap-2 bg-red-900/30 hover:bg-red-600 text-red-400 hover:text-white px-4 py-2 rounded-lg transition border border-red-500/30 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <i class="fa-solid fa-thumbs-down"></i> <span id="count-dislikes">0</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Calificación Visible en Móvil -->
+                    <div class="flex items-center justify-center gap-3 bg-black/40 p-3 rounded-lg border border-white/5">
+                        <span class="text-gray-400 text-xs uppercase tracking-widest">Calificación Global:</span>
+                        <div class="flex items-center gap-2">
+                            <i id="star-icon-mobile" class="fa-solid fa-star text-yellow-400 text-lg"></i>
+                            <span id="modal-score-mobile" class="text-xl font-black text-white">0.0</span>
+                            <span class="text-xs text-gray-500">/ 5.0</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="mb-8 relative group">
                     <h3 class="text-[#F47521] font-bold uppercase tracking-[0.2em] mb-4 text-xs flex items-center gap-2"><span class="w-4 h-0.5 bg-[#F47521]"></span> Adelantos 3D</h3>
                     <div class="slider-3d-container custom-scroll" id="modal-previews"></div>
@@ -327,7 +363,7 @@
         </div>
     </div>
 
-    <!-- MODAL ESPECÍFICO PARA PITCHES (IDEAS) - MEJORADO -->
+    <!-- MODAL ESPECÍFICO PARA PITCHES (IDEAS) - DATOS COMPLETOS -->
     <div id="pitch-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
         <div class="panel-glass w-full max-w-3xl h-auto rounded-xl p-8 relative animate-[fadeIn_0.3s_ease-out] border border-[#F47521]/50 shadow-[0_0_50px_rgba(244,117,33,0.2)]">
             <button onclick="cerrarPitch()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-black/50 p-2 rounded-full hover:bg-[#F47521] transition"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -338,18 +374,23 @@
                 <div class="h-1 w-24 bg-[#F47521] mt-4 rounded-full"></div>
             </div>
             
-            <div class="flex justify-between items-center bg-black/40 p-4 rounded-lg border border-white/10 mb-6">
-                <div class="text-center px-4 border-r border-white/10 w-1/3">
-                    <p class="text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Creador</p>
-                    <p id="pitch-modal-author" class="text-[#F47521] font-bold text-lg">Autor</p>
+            <!-- GRID DE DATOS -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-black/40 p-4 rounded-lg border border-white/10 mb-6 text-center">
+                <div class="border-r border-white/10 px-2">
+                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Creador</p>
+                    <p id="pitch-modal-author" class="text-[#F47521] font-bold text-sm md:text-lg truncate">Autor</p>
                 </div>
-                <div class="text-center px-4 border-r border-white/10 w-1/3">
-                    <p class="text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Capítulos</p>
-                    <p id="pitch-modal-caps" class="text-white font-bold text-lg">0</p>
+                <div class="border-r border-white/10 px-2">
+                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Origen</p>
+                    <p id="pitch-modal-origin" class="text-white font-bold text-sm md:text-lg">?</p>
                 </div>
-                <div class="text-center px-4 w-1/3">
-                    <p class="text-xs text-gray-500 uppercase font-bold tracking-widest mb-1">Temporadas</p>
-                    <p id="pitch-modal-seasons" class="text-white font-bold text-lg">0</p>
+                <div class="border-r border-white/10 px-2">
+                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Capítulos</p>
+                    <p id="pitch-modal-caps" class="text-white font-bold text-sm md:text-lg">0</p>
+                </div>
+                <div class="px-2">
+                    <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Temporadas</p>
+                    <p id="pitch-modal-seasons" class="text-white font-bold text-sm md:text-lg">0</p>
                 </div>
             </div>
 
@@ -357,7 +398,15 @@
                 <div id="pitch-modal-tags" class="flex flex-wrap justify-center gap-2"></div>
             </div>
 
-            <div class="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg border-l-4 border-[#F47521] mb-8 shadow-inner">
+            <div class="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg border-l-4 border-[#F47521] mb-8 shadow-inner relative">
+                <!-- Botón de Contacto Protegido -->
+                <div class="absolute top-4 right-4">
+                    <button id="btn-classified" onclick="openPinModal()" class="bg-red-900/50 hover:bg-red-600 border border-red-500/50 text-red-200 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded transition flex items-center gap-2">
+                        <i class="fa-solid fa-lock"></i> Clasificado
+                    </button>
+                    <div id="revealed-contact" class="hidden text-[#F47521] font-mono text-sm border border-[#F47521] px-3 py-1 rounded bg-black"></div>
+                </div>
+
                 <h3 class="text-[#F47521] font-bold uppercase tracking-widest text-xs mb-3 flex items-center gap-2"><i class="fa-solid fa-align-left"></i> Sinopsis Completa</h3>
                 <p id="pitch-modal-desc" class="text-gray-300 leading-relaxed text-lg font-light italic">Descripción...</p>
             </div>
@@ -370,20 +419,39 @@
         </div>
     </div>
 
-    <!-- MODAL DE LOGIN PERSONALIZADO -->
+    <!-- MODAL DE PIN (SEGURIDAD) -->
+    <div id="pin-modal" class="fixed inset-0 z-[70] hidden flex items-center justify-center p-4">
+        <div class="bg-[#111] border-2 border-red-600 w-full max-w-sm p-6 rounded-lg relative shadow-[0_0_50px_rgba(220,38,38,0.5)] text-center animate-bounce-in">
+            <i class="fa-solid fa-user-secret text-4xl text-red-600 mb-4 block"></i>
+            <h3 class="text-xl font-black text-white uppercase mb-2">Acceso Restringido</h3>
+            <p class="text-gray-400 text-xs mb-4">Ingresa el código de seguridad para ver el contacto.</p>
+            <input type="password" id="pinInput" class="input-dark text-center tracking-[0.5em] text-xl mb-4 border-red-900 focus:border-red-500" placeholder="PIN">
+            <div class="flex gap-2">
+                <button onclick="verificarPin()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-2 rounded">DESBLOQUEAR</button>
+                <button onclick="cerrarPinModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 rounded">CANCELAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE LÍMITE -->
+    <div id="limit-modal" class="fixed inset-0 z-[80] hidden flex items-center justify-center p-4">
+        <div class="bg-[#111] border-2 border-[#F47521] w-full max-w-sm p-6 rounded-xl relative shadow-[0_0_30px_rgba(244,117,33,0.5)] text-center">
+            <div class="w-16 h-16 bg-[#F47521] rounded-full flex items-center justify-center mx-auto mb-4 text-3xl text-black font-black">!</div>
+            <h3 class="text-xl font-black text-white uppercase mb-2">¡Alto Ahí!</h3>
+            <p class="text-gray-300 font-medium">Solo 5 géneros, no seas ambicioso.</p>
+            <button onclick="cerrarLimitModal()" class="mt-6 w-full bg-white text-black font-bold uppercase py-2 rounded hover:bg-gray-200">Entendido</button>
+        </div>
+    </div>
+
+    <!-- MODAL DE LOGIN -->
     <div id="auth-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-[#111] border-2 border-[#F47521] w-full max-w-md p-8 rounded-xl relative shadow-[0_0_50px_rgba(244,117,33,0.5)] text-center animate-[fadeIn_0.2s_ease-out]">
             <i class="fa-solid fa-lock text-5xl text-[#F47521] mb-6 block"></i>
             <h3 class="text-2xl font-black text-white uppercase mb-2">Acceso Requerido</h3>
             <p class="text-gray-400 mb-8">Debes iniciar sesión en <span class="text-[#F47521] font-bold">ComicVerse</span> para postular tu idea al ranking global.</p>
-            
             <div class="flex flex-col gap-3">
-                <button onclick="irALogin()" class="w-full bg-[#F47521] hover:bg-white hover:text-black text-black font-black uppercase py-3 rounded transition-all">
-                    Conectar Cuenta
-                </button>
-                <button onclick="cerrarAuth()" class="w-full bg-transparent border border-gray-600 text-gray-400 hover:text-white hover:border-white font-bold uppercase py-3 rounded transition-all">
-                    Cancelar
-                </button>
+                <button onclick="irALogin()" class="w-full bg-[#F47521] hover:bg-white hover:text-black text-black font-black uppercase py-3 rounded transition-all">Conectar Cuenta</button>
+                <button onclick="cerrarAuth()" class="w-full bg-transparent border border-gray-600 text-gray-400 hover:text-white hover:border-white font-bold uppercase py-3 rounded transition-all">Cancelar</button>
             </div>
         </div>
     </div>
@@ -393,16 +461,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-
-        // Preloader
-        window.addEventListener('load', () => {
-            const preloader = document.getElementById('preloader');
-            if(preloader) { preloader.style.opacity = '0'; setTimeout(() => preloader.style.display = 'none', 500); }
-        });
-        setTimeout(() => {
-            const preloader = document.getElementById('preloader');
-            if(preloader && preloader.style.display !== 'none') { preloader.style.opacity = '0'; setTimeout(() => preloader.style.display = 'none', 500); }
-        }, 3000);
 
         const firebaseConfig = {
             apiKey: "AIzaSyBf9ATqgErKQKpzKpFXsUu4BHmFcNSLzOE",
@@ -417,13 +475,10 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // Estado de usuario
         let currentUser = null;
-        onAuthStateChanged(auth, (user) => {
-            currentUser = user;
-        });
+        onAuthStateChanged(auth, (user) => { currentUser = user; });
 
-        // --- SELECTOR DE GÉNEROS (20 OPCIONES) ---
+        // --- SELECTOR DE GÉNEROS ---
         const genres = [
             "Acción", "Aventura", "Comedia", "Drama", "Fantasía", 
             "Magia", "Terror", "Misterio", "Psicológico", "Romance", 
@@ -448,7 +503,7 @@
                 element.classList.remove('selected');
             } else {
                 if (selectedGenres.size >= 5) {
-                    alert("Máximo 5 géneros permitidos.");
+                    document.getElementById('limit-modal').classList.remove('hidden');
                     return;
                 }
                 selectedGenres.add(genre);
@@ -456,44 +511,31 @@
             }
             document.getElementById('pitchTags').value = Array.from(selectedGenres).join(', ');
         }
-
-        // --- SISTEMA DE RANKING ---
         
-        // Modal Auth
+        window.cerrarLimitModal = () => document.getElementById('limit-modal').classList.add('hidden');
+
+        // --- SISTEMA DE RANKING Y CONTACTO ---
+        
         window.cerrarAuth = () => document.getElementById('auth-modal').classList.add('hidden');
         window.irALogin = () => {
             try {
                 if (window.parent && window.parent.cargarPagina) {
                     window.parent.cargarPagina('Usuario.html', null);
-                } else {
-                    throw new Error("No parent access");
-                }
+                } else { throw new Error("No parent access"); }
             } catch (e) {
-                console.warn("Navegación controlada:", e);
-                // Fallback seguro
-                try {
-                    window.location.href = 'Usuario.html';
-                } catch (err) {
-                    alert("Redirigiendo a Iniciar Sesión (Simulación)");
-                }
+                try { window.location.href = 'Usuario.html'; } catch (err) { alert("Redirigiendo a Iniciar Sesión (Simulación)"); }
             }
         };
 
         const pitchForm = document.getElementById('pitchForm');
         pitchForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            // VERIFICACIÓN DE LOGIN ROBUSTA
-            if (!currentUser) {
-                document.getElementById('auth-modal').classList.remove('hidden');
-                return;
-            }
+            if (!currentUser) { document.getElementById('auth-modal').classList.remove('hidden'); return; }
 
             const tagsValue = document.getElementById('pitchTags').value;
-            if(!tagsValue) {
-                alert("Selecciona al menos un género.");
-                return;
-            }
+            if(!tagsValue) { alert("Selecciona al menos un género."); return; }
+
+            const originValue = document.querySelector('input[name="artOrigin"]:checked').value;
 
             const btn = pitchForm.querySelector('button');
             const originalText = btn.innerText;
@@ -506,8 +548,10 @@
                     author: document.getElementById('pitchAuthor').value,
                     description: document.getElementById('pitchDesc').value,
                     tags: tagsValue,
+                    contact: document.getElementById('pitchContact').value,
                     caps: document.getElementById('pitchCaps').value,
                     seasons: document.getElementById('pitchSeasons').value,
+                    origin: originValue, // Guardar si es IA o Propio
                     votes: 0,
                     createdAt: new Date().toISOString(),
                     userId: currentUser.uid
@@ -525,7 +569,6 @@
             }
         });
 
-        // Cargar Ranking
         const rankingList = document.getElementById('rankingList');
         const qRank = query(collection(db, "fan_pitches"), orderBy("votes", "desc"));
         let pitchesCache = {};
@@ -534,10 +577,7 @@
             rankingList.innerHTML = "";
             let rank = 1;
             
-            if (snapshot.empty) {
-                rankingList.innerHTML = '<div class="text-center text-gray-500 py-10">Sé el primero en proponer un cómic.</div>';
-                return;
-            }
+            if (snapshot.empty) { rankingList.innerHTML = '<div class="text-center text-gray-500 py-10">Sé el primero en proponer un cómic.</div>'; return; }
 
             snapshot.forEach((doc) => {
                 const pitch = doc.data();
@@ -548,29 +588,34 @@
                 let trophy = '';
                 let rankNumberClass = 'text-gray-600';
 
+                // --- ESTILOS MEJORADOS PARA EL TOP 1 (GOLD) ---
                 if (rank === 1) {
-                    rankStyle = 'rank-1 bg-gradient-to-r from-yellow-900/20 to-transparent';
-                    trophy = '<i class="fa-solid fa-crown text-yellow-400 ml-2 animate-pulse"></i>';
-                    rankNumberClass = 'text-yellow-500 drop-shadow-[0_0_10px_rgba(234,179,8,0.5)]';
+                    rankStyle = 'rank-1'; // Usando la clase CSS definida arriba
+                    trophy = '<i class="fa-solid fa-crown text-yellow-400 ml-2 animate-pulse drop-shadow-md"></i>';
+                    rankNumberClass = 'text-yellow-500 drop-shadow-[0_0_10px_rgba(234,179,8,0.8)]';
                 } else if (rank === 2) {
-                    rankStyle = 'rank-2 bg-gradient-to-r from-slate-700/20 to-transparent';
+                    rankStyle = 'rank-2';
                     trophy = '<i class="fa-solid fa-medal text-gray-400 ml-2"></i>';
                     rankNumberClass = 'text-gray-300';
                 } else if (rank === 3) {
-                    rankStyle = 'rank-3 bg-gradient-to-r from-orange-900/20 to-transparent';
+                    rankStyle = 'rank-3';
                     trophy = '<i class="fa-solid fa-medal text-amber-700 ml-2"></i>';
                     rankNumberClass = 'text-amber-700';
                 }
 
+                // CHEQUEO VISUAL DE VOTO PREVIO POR PROPUESTA
+                const hasVoted = localStorage.getItem(`pitch_vote_${id}`);
+                const voteBtnClass = hasVoted 
+                    ? 'bg-[#F47521] text-black border-[#F47521] opacity-50 cursor-not-allowed' 
+                    : 'bg-[#F47521]/10 text-[#F47521] border-[#F47521]/30 hover:bg-[#F47521] hover:text-black';
+
                 const item = document.createElement('div');
-                item.className = `p-5 rounded-lg border ${rankStyle} flex items-center justify-between gap-4 transition-all duration-300 transform hover:translate-x-1 cursor-pointer`;
-                
-                item.onclick = (e) => {
-                    if(!e.target.closest('button')) abrirPitch(id);
-                };
+                const hoverEffect = rank === 1 ? 'hover:shadow-[0_0_25px_rgba(251,191,36,0.4)]' : 'hover:translate-x-1';
+                item.className = `p-5 rounded-lg border ${rankStyle} flex items-center justify-between gap-4 transition-all duration-300 transform ${hoverEffect} cursor-pointer relative`;
+                item.onclick = (e) => { if(!e.target.closest('button')) abrirPitch(id); };
 
                 item.innerHTML = `
-                    <div class="flex items-center gap-5 flex-1 overflow-hidden">
+                    <div class="flex items-center gap-5 flex-1 overflow-hidden relative z-10">
                         <div class="text-4xl font-black ${rankNumberClass} w-12 text-center italic flex-shrink-0">#${rank}</div>
                         <div class="min-w-0">
                             <h4 class="font-bold text-white text-lg leading-tight uppercase truncate">${pitch.title} ${trophy}</h4>
@@ -579,8 +624,8 @@
                             <span class="text-[10px] text-[#F47521] font-bold uppercase mt-1 inline-block hover:underline">Ver Ficha Técnica <i class="fa-solid fa-arrow-right ml-1"></i></span>
                         </div>
                     </div>
-                    <div class="flex flex-col items-center gap-1 min-w-[60px] flex-shrink-0">
-                        <button onclick="votarPitch(event, '${id}')" class="w-10 h-10 rounded-full bg-[#F47521]/10 hover:bg-[#F47521] text-[#F47521] hover:text-black flex items-center justify-center transition border border-[#F47521]/30 z-10 relative">
+                    <div class="flex flex-col items-center gap-1 min-w-[60px] flex-shrink-0 relative z-10">
+                        <button onclick="votarPitch(event, '${id}')" class="w-10 h-10 rounded-full flex items-center justify-center transition border ${voteBtnClass}" ${hasVoted ? 'disabled' : ''}>
                             <i class="fa-solid fa-fire"></i>
                         </button>
                         <span class="text-sm font-bold text-white">${pitch.votes}</span>
@@ -591,41 +636,49 @@
             });
         });
 
-        // Votar Propuesta (Blindado)
+        // Votar Propuesta (Blindado + Visual)
         window.votarPitch = async (event, id) => {
-            event.stopPropagation(); // Evitar abrir modal
+            event.stopPropagation();
             const btn = event.currentTarget;
             
-            // Check Local
-            const storageKey = `pitch_vote_${id}`;
-            if (localStorage.getItem(storageKey)) {
-                alert("Ya has votado por esta propuesta.");
-                return;
-            }
+            // Check Local por propuesta
+            if (localStorage.getItem(`pitch_vote_${id}`)) { return; }
 
-            // Deshabilitar visualmente
+            // Bloqueo visual inmediato
             btn.disabled = true;
-            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            btn.classList.remove('bg-[#F47521]/10', 'text-[#F47521]', 'hover:bg-[#F47521]', 'hover:text-black');
+            btn.classList.add('bg-[#F47521]', 'text-black', 'opacity-50', 'cursor-not-allowed');
 
             const pitchRef = doc(db, "fan_pitches", id);
             try {
                 await updateDoc(pitchRef, { votes: increment(1) });
-                localStorage.setItem(storageKey, 'true');
+                localStorage.setItem(`pitch_vote_${id}`, 'true');
             } catch (error) {
                 console.error("Error:", error);
+                // Revertir si falla
                 btn.disabled = false;
-                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btn.classList.add('bg-[#F47521]/10', 'text-[#F47521]', 'hover:bg-[#F47521]', 'hover:text-black');
+                btn.classList.remove('bg-[#F47521]', 'text-black', 'opacity-50', 'cursor-not-allowed');
             }
         };
+
+        // --- MANEJO DEL PIN Y CONTACTO ---
+        let currentPitchContact = ""; 
 
         window.abrirPitch = (id) => {
             const data = pitchesCache[id];
             if (!data) return;
+            
+            document.getElementById('btn-classified').classList.remove('hidden');
+            document.getElementById('revealed-contact').classList.add('hidden');
+            currentPitchContact = data.contact || "No especificado";
+
             document.getElementById('pitch-modal-title').innerText = data.title;
             document.getElementById('pitch-modal-author').innerText = data.author;
             document.getElementById('pitch-modal-desc').innerText = data.description;
             document.getElementById('pitch-modal-caps').innerText = data.caps || '?';
             document.getElementById('pitch-modal-seasons').innerText = data.seasons || '?';
+            document.getElementById('pitch-modal-origin').innerText = data.origin || 'Desconocido';
 
             const tagsDiv = document.getElementById('pitch-modal-tags');
             tagsDiv.innerHTML = '';
@@ -640,7 +693,26 @@
 
         window.cerrarPitch = () => document.getElementById('pitch-modal').classList.add('hidden');
 
-        // --- LÓGICA DE DETALLES CÓMICS (Existente) ---
+        window.openPinModal = () => {
+            document.getElementById('pinInput').value = "";
+            document.getElementById('pin-modal').classList.remove('hidden');
+        };
+        window.cerrarPinModal = () => document.getElementById('pin-modal').classList.add('hidden');
+        
+        window.verificarPin = () => {
+            const pin = document.getElementById('pinInput').value;
+            if (pin === "33y99destinados") {
+                document.getElementById('btn-classified').classList.add('hidden');
+                const contactDiv = document.getElementById('revealed-contact');
+                contactDiv.innerText = currentPitchContact;
+                contactDiv.classList.remove('hidden');
+                cerrarPinModal();
+            } else {
+                alert("ACCESO DENEGADO: PIN INCORRECTO");
+            }
+        };
+
+        // --- LÓGICA DE DETALLES CÓMICS ---
         const comicsData = {
             'kharn': {
                 titulo: "Virus Kharn: Extinción",
@@ -655,12 +727,18 @@
                 link: "viruskharn.html"
             },
             'prox1': { titulo: "Próximamente", imgPortada: "Próximamente1-1.png", autor: "???", fecha: "TBA", caps: "?", status: "PRONTO", tags: ["???"], sinopsis: "Espacio reservado para futuro cómic.", previews: ["Próximamente1-1.png", "Próximamente1-1.png", "Próximamente1-1.png"], link: "Próximamente1-1.html" },
-            // ... (Resto de datos) ...
+            'prox2': { titulo: "Próximamente", imgPortada: "Próximamente2-2.png", autor: "???", fecha: "TBA", caps: "?", status: "PRONTO", tags: ["???"], sinopsis: "Espacio reservado para futuro cómic.", previews: ["Próximamente2-2.png", "Próximamente2-2.png", "Próximamente2-2.png"], link: "Próximamente2-2.html" },
+            'prox3': { titulo: "Próximamente", imgPortada: "Próximamente3-3.png", autor: "???", fecha: "TBA", caps: "?", status: "PRONTO", tags: ["???"], sinopsis: "Espacio reservado para futuro cómic.", previews: ["Próximamente3-3.png", "Próximamente3-3.png", "Próximamente3-3.png"], link: "Próximamente3-3.html" },
+            'prox4': { titulo: "Próximamente", imgPortada: "Próximamente4-4.png", autor: "???", fecha: "TBA", caps: "?", status: "PRONTO", tags: ["???"], sinopsis: "Espacio reservado para futuro cómic.", previews: ["Próximamente4-4.png", "Próximamente4-4.png", "Próximamente4-4.png"], link: "Próximamente4-4.html" }
         };
         
+        let currentComicId = null;
+
         window.abrirPanel = async function(id) {
+            currentComicId = id;
             const data = comicsData[id] || comicsData['prox1']; 
             const modal = document.getElementById('detalle-modal');
+            
             document.getElementById('modal-img').src = data.imgPortada;
             document.getElementById('modal-img').onerror = function(){ this.src='https://placehold.co/400x600/111/F47521?text=No+Image'; };
             document.getElementById('modal-titulo').innerText = data.titulo;
@@ -683,13 +761,128 @@
                 previewsContainer.innerHTML += `<div class="slide-3d bg-gray-800"><img src="${img}" onerror="this.src='https://placehold.co/600x400/222/F47521?text=Preview+${i+1}'" class="w-full h-full object-cover"></div>`;
             });
 
+            // Resetear UI
+            actualizarTextoScore("0.0", 0, 0);
+            resetearBotones();
+
             modal.classList.remove('hidden');
+            await cargarValoracion(id);
         };
 
         window.cerrarPanel = function() {
             document.getElementById('detalle-modal').classList.add('hidden');
         };
 
+        // --- LÓGICA DE VOTACIÓN (COMIC DETAILS) ---
+        
+        async function cargarValoracion(id) {
+            try {
+                const docRef = doc(db, "ratings", id);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    actualizarUIEstrellas(data.likes || 0, data.dislikes || 0);
+                } else {
+                    await setDoc(docRef, { likes: 0, dislikes: 0 });
+                    actualizarUIEstrellas(0, 0);
+                }
+                checkVotoPrevio(id);
+            } catch (error) {
+                console.error("Error Firebase:", error);
+            }
+        }
+
+        function checkVotoPrevio(id) {
+            const storageKey = `vote_${id}`;
+            if (localStorage.getItem(storageKey)) {
+                deshabilitarBotones(true);
+            } else {
+                deshabilitarBotones(false);
+            }
+        }
+
+        function deshabilitarBotones(estado) {
+            const btnLike = document.getElementById('btn-like');
+            const btnDislike = document.getElementById('btn-dislike');
+            
+            btnLike.disabled = estado;
+            btnDislike.disabled = estado;
+            
+            if (estado) {
+                btnLike.classList.add('opacity-50', 'cursor-not-allowed');
+                btnDislike.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                btnLike.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnDislike.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+        
+        function resetearBotones() {
+            deshabilitarBotones(false);
+        }
+
+        window.votar = async function(tipo) {
+            if (!currentComicId) return;
+
+            // 1. CHEQUEO ANTI-SPAM LOCAL
+            const storageKey = `vote_${currentComicId}`;
+            if (localStorage.getItem(storageKey)) {
+                alert("¡Ya has votado en este cómic!");
+                return;
+            }
+
+            // 2. BLOQUEO INMEDIATO (UX)
+            deshabilitarBotones(true);
+
+            const docRef = doc(db, "ratings", currentComicId);
+            
+            try {
+                try {
+                    await updateDoc(docRef, { [tipo + 's']: increment(1) });
+                } catch (e) {
+                    let newData = { likes: 0, dislikes: 0 };
+                    newData[tipo + 's'] = 1;
+                    await setDoc(docRef, newData);
+                }
+                localStorage.setItem(storageKey, 'true');
+                await cargarValoracion(currentComicId);
+            } catch (error) {
+                console.error("Error al votar:", error);
+                alert("Error al votar. Reintentar.");
+                deshabilitarBotones(false);
+            }
+        };
+
+        function actualizarUIEstrellas(likes, dislikes) {
+            const total = likes + dislikes;
+            let score = 0;
+            
+            if (total > 0) {
+                const percentage = likes / total;
+                score = (percentage * 5).toFixed(1);
+            }
+            actualizarTextoScore(score, likes, dislikes);
+        }
+
+        function actualizarTextoScore(score, likes, dislikes) {
+            const scoreEls = [document.getElementById('modal-score-desktop'), document.getElementById('modal-score-mobile')];
+            scoreEls.forEach(el => { if(el) el.innerText = score; });
+
+            document.getElementById('count-likes').innerText = likes;
+            document.getElementById('count-dislikes').innerText = dislikes;
+            
+            const starClass = score >= 4.5 ? "text-yellow-400 animate-pulse" : (score >= 3 ? "text-orange-400" : "text-gray-500");
+            const starIcons = [document.querySelector('.fa-star'), document.getElementById('star-icon-mobile')];
+            
+            starIcons.forEach(icon => {
+                if(icon) icon.className = `fa-solid fa-star text-lg ${starClass}`;
+            });
+        }
+
+        document.getElementById('detalle-modal').addEventListener('click', function(e) {
+            if (e.target === this) cerrarPanel();
+        });
     </script>
 </body>
 </html>
