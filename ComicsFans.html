@@ -127,7 +127,6 @@
 <body class="relative min-h-screen pb-20">
 
     <div class="p-4 md:p-8">
-        <!-- Título de Sección -->
         <div class="flex items-center gap-3 mb-8 border-b border-gray-800 pb-4">
             <div class="w-2 h-10 bg-[#F47521] shadow-[0_0_15px_#F47521]"></div>
             <h1 class="text-3xl md:text-4xl font-black italic uppercase tracking-tighter text-white drop-shadow-lg">
@@ -135,9 +134,7 @@
             </h1>
         </div>
 
-        <!-- GRID DE PORTADAS -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8 mb-20">
-            <!-- 1. VIRUS KHARN -->
             <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('kharn')">
                 <div class="comic-card h-72 bg-gray-900">
                     <div class="status-badge status-emision animate-pulse">EN EMISIÓN</div>
@@ -147,7 +144,6 @@
                     </div>
                 </div>
             </div>
-            <!-- 2. PROXIMAMENTE 1 -->
             <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox1')">
                 <div class="comic-card h-72 bg-gray-900">
                     <div class="status-badge status-tba">PRONTO</div>
@@ -157,7 +153,6 @@
                     </div>
                 </div>
             </div>
-            <!-- 3. PROXIMAMENTE 2 -->
             <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox2')">
                 <div class="comic-card h-72 bg-gray-900">
                     <div class="status-badge status-tba">PRONTO</div>
@@ -167,7 +162,6 @@
                     </div>
                 </div>
             </div>
-            <!-- 4. PROXIMAMENTE 3 -->
             <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox3')">
                 <div class="comic-card h-72 bg-gray-900">
                     <div class="status-badge status-tba">PRONTO</div>
@@ -177,7 +171,6 @@
                     </div>
                 </div>
             </div>
-            <!-- 5. PROXIMAMENTE 4 -->
             <div class="comic-card-container cursor-pointer group" onclick="abrirPanel('prox4')">
                 <div class="comic-card h-72 bg-gray-900">
                     <div class="status-badge status-tba">PRONTO</div>
@@ -189,7 +182,6 @@
             </div>
         </div>
 
-        <!-- --- SECCIÓN DE VOTACIÓN / RANKING --- -->
         <div class="border-t border-gray-800 pt-12">
             <div class="flex items-center gap-3 mb-8 border-b border-gray-800 pb-4">
                 <div class="w-2 h-10 bg-[#F47521] shadow-[0_0_15px_#F47521]"></div>
@@ -204,7 +196,6 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 
-                <!-- Columna 1: Formulario de Subida -->
                 <div class="bg-[#0f0f0f] p-8 rounded-2xl border border-[#F47521]/30 shadow-[0_0_30px_rgba(244,117,33,0.1)] relative overflow-hidden group">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#F47521] to-transparent opacity-50 animate-pulse"></div>
                     
@@ -221,7 +212,6 @@
                             <input type="text" id="pitchAuthor" class="input-dark" placeholder="Tu alias" required maxlength="30">
                         </div>
                         
-                        <!-- ORIGEN DEL ARTE -->
                         <div>
                             <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Origen del Arte</label>
                             <div class="flex gap-4 p-2 bg-black/30 rounded border border-white/10">
@@ -236,7 +226,6 @@
                             </div>
                         </div>
 
-                        <!-- Contacto Privado -->
                         <div>
                             <label class="block text-xs text-yellow-500 uppercase font-bold mb-2 tracking-widest flex items-center gap-2">
                                 <i class="fa-solid fa-lock"></i> Contacto (Privado)
@@ -244,7 +233,6 @@
                             <input type="text" id="pitchContact" class="input-dark border-yellow-500/50 focus:border-yellow-500" placeholder="Email o Teléfono (Solo visible para Admin)" required>
                         </div>
                         
-                        <!-- Selector de Géneros -->
                         <div>
                             <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 tracking-widest">Géneros (Máx 5)</label>
                             <div class="flex flex-wrap gap-2" id="genre-selector"></div>
@@ -271,7 +259,6 @@
                     </form>
                 </div>
 
-                <!-- Columna 2 y 3: Ranking en Vivo -->
                 <div class="lg:col-span-2">
                     <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
                         <h3 class="text-xl font-bold text-white uppercase flex items-center gap-3">
@@ -295,7 +282,6 @@
 
     </div>
 
-    <!-- PANEL MODAL DETALLE CÓMICS (INCLUYE VOTACIÓN) -->
     <div id="detalle-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-0 md:p-4 overflow-y-auto md:overflow-visible">
         <div class="panel-glass w-full max-w-6xl min-h-[90vh] md:min-h-0 md:h-auto rounded-none md:rounded-2xl flex flex-col md:flex-row relative animate-[fadeIn_0.4s_ease-out]">
             <button onclick="cerrarPanel()" class="absolute top-4 right-4 text-white z-50 bg-black/60 backdrop-blur rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#F47521] transition shadow-lg border border-white/10"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -303,7 +289,6 @@
                 <img id="modal-img" src="" class="w-full h-full object-cover opacity-90 mask-image-gradient">
                 <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent md:bg-gradient-to-r"></div>
                 
-                <!-- Puntuación Flotante -->
                 <div class="hidden md:flex absolute top-4 left-4 bg-black/80 backdrop-blur border border-[#F47521] px-4 py-2 rounded-lg shadow-[0_0_20px_rgba(244,117,33,0.3)] items-center gap-2">
                     <i class="fa-solid fa-star text-yellow-400 text-xl animate-pulse"></i>
                     <span id="modal-score-desktop" class="text-2xl font-black text-white">0.0</span>
@@ -325,7 +310,6 @@
                     <p id="modal-sinopsis" class="text-gray-300 leading-relaxed text-lg font-light">Descripción...</p>
                 </div>
 
-                <!-- SECCIÓN DE VOTACIÓN (AGREGADA) -->
                 <div class="mb-8 bg-white/5 rounded-xl p-4 border border-white/5 flex flex-col gap-4">
                     <div class="flex items-center justify-between">
                         <div class="text-sm font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
@@ -340,7 +324,6 @@
                             </button>
                         </div>
                     </div>
-                    <!-- Calificación Visible en Móvil -->
                     <div class="flex items-center justify-center gap-3 bg-black/40 p-3 rounded-lg border border-white/5">
                         <span class="text-gray-400 text-xs uppercase tracking-widest">Calificación Global:</span>
                         <div class="flex items-center gap-2">
@@ -363,7 +346,6 @@
         </div>
     </div>
 
-    <!-- MODAL ESPECÍFICO PARA PITCHES (IDEAS) - DATOS COMPLETOS -->
     <div id="pitch-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
         <div class="panel-glass w-full max-w-3xl h-auto rounded-xl p-8 relative animate-[fadeIn_0.3s_ease-out] border border-[#F47521]/50 shadow-[0_0_50px_rgba(244,117,33,0.2)]">
             <button onclick="cerrarPitch()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-black/50 p-2 rounded-full hover:bg-[#F47521] transition"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -374,7 +356,6 @@
                 <div class="h-1 w-24 bg-[#F47521] mt-4 rounded-full"></div>
             </div>
             
-            <!-- GRID DE DATOS -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-black/40 p-4 rounded-lg border border-white/10 mb-6 text-center">
                 <div class="border-r border-white/10 px-2">
                     <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1">Creador</p>
@@ -398,8 +379,7 @@
                 <div id="pitch-modal-tags" class="flex flex-wrap justify-center gap-2"></div>
             </div>
 
-            <div class="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg border-l-4 border-[#F47521] mb-8 shadow-inner relative">
-                <!-- Botón de Contacto Protegido -->
+            <div class="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg border-l-4 border-[#F47521] mb-8 shadow-inner relative max-h-[40vh] overflow-y-auto">
                 <div class="absolute top-4 right-4">
                     <button id="btn-classified" onclick="openPinModal()" class="bg-red-900/50 hover:bg-red-600 border border-red-500/50 text-red-200 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded transition flex items-center gap-2">
                         <i class="fa-solid fa-lock"></i> Clasificado
@@ -408,9 +388,8 @@
                 </div>
 
                 <h3 class="text-[#F47521] font-bold uppercase tracking-widest text-xs mb-3 flex items-center gap-2"><i class="fa-solid fa-align-left"></i> Sinopsis Completa</h3>
-                <p id="pitch-modal-desc" class="text-gray-300 leading-relaxed text-lg font-light italic">Descripción...</p>
+                <p id="pitch-modal-desc" class="text-gray-300 leading-relaxed text-lg font-light italic break-words whitespace-pre-wrap">Descripción...</p>
             </div>
-
             <div class="text-center">
                 <button onclick="cerrarPitch()" class="bg-white hover:bg-gray-200 text-black font-black uppercase tracking-widest py-3 px-12 rounded-full transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
                     Entendido
@@ -419,7 +398,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE PIN (SEGURIDAD) -->
     <div id="pin-modal" class="fixed inset-0 z-[70] hidden flex items-center justify-center p-4">
         <div class="bg-[#111] border-2 border-red-600 w-full max-w-sm p-6 rounded-lg relative shadow-[0_0_50px_rgba(220,38,38,0.5)] text-center animate-bounce-in">
             <i class="fa-solid fa-user-secret text-4xl text-red-600 mb-4 block"></i>
@@ -433,7 +411,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE LÍMITE -->
     <div id="limit-modal" class="fixed inset-0 z-[80] hidden flex items-center justify-center p-4">
         <div class="bg-[#111] border-2 border-[#F47521] w-full max-w-sm p-6 rounded-xl relative shadow-[0_0_30px_rgba(244,117,33,0.5)] text-center">
             <div class="w-16 h-16 bg-[#F47521] rounded-full flex items-center justify-center mx-auto mb-4 text-3xl text-black font-black">!</div>
@@ -443,7 +420,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE LOGIN -->
     <div id="auth-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
         <div class="bg-[#111] border-2 border-[#F47521] w-full max-w-md p-8 rounded-xl relative shadow-[0_0_50px_rgba(244,117,33,0.5)] text-center animate-[fadeIn_0.2s_ease-out]">
             <i class="fa-solid fa-lock text-5xl text-[#F47521] mb-6 block"></i>
@@ -456,7 +432,6 @@
         </div>
     </div>
 
-    <!-- LOGICA Y DATOS -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
