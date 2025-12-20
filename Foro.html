@@ -28,15 +28,17 @@
         ::-webkit-scrollbar-thumb { background: var(--orange-cr); border-radius: 4px; }
 
         /* --- ESTILOS DE MARCOS (Importados para visualización) --- */
-        .avatar-container { position: relative; display: inline-block; padding: 4px; border-radius: 50%; }
+        .avatar-container { position: relative; display: inline-block; padding: 4px; border-radius: 50%; box-sizing: border-box; }
         .frame-gold { background: linear-gradient(45deg, #FFD700, #FDB931); box-shadow: 0 0 10px #FFD700; animation: spin 4s linear infinite; }
         .frame-neon { background: linear-gradient(90deg, #00f2ff, #001eff); box-shadow: 0 0 10px #00f2ff; animation: pulse-blue 2s infinite; }
         .frame-fire { background: linear-gradient(0deg, #ff0000, #ffae00); box-shadow: 0 0 10px #ff4500; animation: shake 3s infinite; }
         .frame-glitch { border: 2px solid #00ff00; box-shadow: 2px 2px #ff00de; }
-        /* ... se pueden añadir más del usuario.html si se requiere ... */
+        .frame-angel-gold { border: 2px solid #FFD700; box-shadow: 0 0 10px #FFD700; }
+        /* ... se pueden añadir más ... */
         
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes pulse-blue { 50% { box-shadow: 0 0 20px #00f2ff; } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-1px); } 75% { transform: translateX(1px); } }
         
         /* --- Estilos Foro --- */
         .forum-card {
@@ -71,8 +73,15 @@
         .message { display: flex; gap: 12px; max-width: 85%; animation: fadeIn 0.3s; align-items: flex-end; }
         .message.self { align-self: flex-end; flex-direction: row-reverse; }
         
-        .message-avatar-box { flex-shrink: 0; }
-        .message-avatar { width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #222; }
+        /* FIX IMÁGENES CHAT */
+        .message-avatar-box { 
+            flex-shrink: 0; width: 44px; height: 44px; 
+            display: flex; justify-content: center; align-items: center; 
+        }
+        .avatar-sm { 
+            width: 36px; height: 36px; object-fit: cover; border-radius: 50%; 
+            border: 1px solid #444; display: block; 
+        }
         
         .message-content {
             background: #222; padding: 10px 15px; border-radius: 18px; border-bottom-left-radius: 2px;
@@ -134,8 +143,9 @@
                         <p class="text-gray-500 text-sm mt-1">Debate, comparte y conecta con la comunidad.</p>
                     </div>
                 </div>
-                <button onclick="openThreadModal()" class="bg-gradient-to-r from-[#F47521] to-red-600 hover:from-white hover:to-gray-200 hover:text-black text-white font-black uppercase py-3 px-8 rounded-lg text-sm transition-all shadow-[0_0_20px_rgba(244,117,33,0.4)] transform hover:scale-105 flex items-center gap-2">
-                    <i class="fa-solid fa-pen-nib"></i> Crear Hilo
+                <!-- Panel de Publicación Profesional -->
+                <button onclick="openThreadModal()" class="bg-gradient-to-r from-[#F47521] to-red-600 hover:from-white hover:to-gray-200 hover:text-black text-white font-black uppercase py-3 px-8 rounded-lg text-sm transition-all shadow-[0_0_20px_rgba(244,117,33,0.4)] transform hover:scale-105 flex items-center gap-2 border border-white/10">
+                    <i class="fa-solid fa-pen-nib"></i> Crear Discusión
                 </button>
             </div>
 
@@ -143,7 +153,7 @@
             <div class="flex flex-col md:flex-row gap-4 mb-8 bg-[#111] p-4 rounded-xl border border-white/5">
                 <div class="relative flex-1">
                     <i class="fa-solid fa-search absolute left-4 top-3.5 text-gray-500"></i>
-                    <input type="text" id="search-threads" placeholder="Buscar hilos..." class="input-dark pl-10" onkeyup="filtrarHilos()">
+                    <input type="text" id="search-threads" placeholder="Buscar hilos..." class="input-dark pl-10 bg-[#0a0a0a] border-[#333]" onkeyup="filtrarHilos()">
                 </div>
                 <div class="flex flex-wrap gap-2 items-center" id="forum-filters">
                     <span class="text-xs text-gray-500 uppercase font-bold mr-2">Filtrar:</span>
@@ -178,9 +188,16 @@
                             Chat <span class="text-white drop-shadow-md">En Vivo</span>
                         </h2>
                     </div>
-                    <div class="flex items-center gap-2 bg-black/20 px-3 py-1 rounded-full">
-                        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                        <span class="text-xs font-bold text-black uppercase">Limpieza Automática (1h)</span>
+                    <div class="flex items-center gap-3">
+                        <!-- Indicador -->
+                        <div class="flex items-center gap-2 bg-black/20 px-3 py-1 rounded-full border border-black/10">
+                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                            <span class="text-xs font-bold text-black uppercase">Limpieza en 1h</span>
+                        </div>
+                        <!-- BOTÓN BORRAR TODO (ADMIN) -->
+                        <button onclick="openClearChatModal()" class="bg-red-600 hover:bg-white hover:text-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center transition shadow-lg border-2 border-red-800" title="Limpiar todo el chat (Admin)">
+                            <i class="fa-solid fa-broom"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -240,7 +257,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE BORRAR (SEGURIDAD) -->
+    <!-- MODAL DE BORRAR ITEM (SEGURIDAD) -->
     <div id="delete-modal" class="hidden-section modal-overlay">
         <div class="modal-box border-red-600 shadow-red-900/50 text-center">
             <i class="fa-solid fa-trash-can text-5xl text-red-600 mb-4 animate-bounce"></i>
@@ -250,6 +267,20 @@
             <div class="flex gap-3">
                 <button onclick="confirmDelete()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded uppercase">Eliminar</button>
                 <button onclick="closeDeleteModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 rounded uppercase">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE VACIAR CHAT (NUEVO) -->
+    <div id="clear-chat-modal" class="hidden-section modal-overlay">
+        <div class="modal-box border-red-600 shadow-[0_0_50px_rgba(220,38,38,0.5)] text-center bg-[#110000]">
+            <i class="fa-solid fa-biohazard text-5xl text-red-600 mb-4 animate-pulse"></i>
+            <h3 class="text-2xl font-black text-white uppercase mb-2">Protocolo de Limpieza</h3>
+            <p class="text-red-300 mb-6 text-sm font-bold">¡ADVERTENCIA! Esto borrará TODOS los mensajes del chat global permanentemente.</p>
+            <input type="password" id="clear-chat-key" class="input-dark text-center text-red-500 font-bold tracking-[0.5em] text-xl mb-6 border-red-900 focus:border-red-500 bg-black" placeholder="CLAVE MAESTRA">
+            <div class="flex gap-3">
+                <button onclick="confirmClearChat()" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-black py-3 rounded uppercase border border-red-500">EJECUTAR LIMPIEZA</button>
+                <button onclick="closeClearChatModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 rounded uppercase">ABORTAR</button>
             </div>
         </div>
     </div>
@@ -293,7 +324,7 @@
     <!-- LOGICA FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, addDoc, deleteDoc, collection, query, orderBy, limit, onSnapshot, serverTimestamp, updateDoc, increment, where } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, addDoc, deleteDoc, collection, query, orderBy, limit, onSnapshot, serverTimestamp, updateDoc, increment, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -327,12 +358,13 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     userData.username = data.username || user.displayName;
-                    userData.avatar = data.photoURL || user.photoURL || generateRandomAvatar();
-                    userData.frame = data.frame || ""; // Guardar el marco
+                    // FIX: Si no hay foto, usar placeholder fijo, NO generar aleatoria
+                    userData.avatar = data.photoURL || user.photoURL || "https://via.placeholder.com/40";
+                    userData.frame = data.frame || ""; 
                     document.getElementById('current-username').innerText = userData.username;
                 } else {
                     userData.username = user.displayName;
-                    userData.avatar = user.photoURL || generateRandomAvatar();
+                    userData.avatar = user.photoURL || "https://via.placeholder.com/40";
                 }
             } else {
                 currentUser = null;
@@ -340,20 +372,11 @@
             }
         });
 
-        function generateRandomAvatar() {
-            const num = Math.floor(Math.random() * 1000);
-            return `https://api.dicebear.com/7.x/avataaars/svg?seed=${num}`;
-        }
-
         // --- CHAT GLOBAL (Golden Hour Logic) ---
         const chatForm = document.getElementById('chat-form');
         const chatInput = document.getElementById('chat-input');
         const chatContainer = document.getElementById('chat-messages');
 
-        // Filtrar mensajes de más de 1 hora
-        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000); 
-
-        // Consulta: Ordenar por fecha. El filtrado de "hora" lo haremos en cliente para simplificar índices
         const qChat = query(collection(db, "global_chat"), orderBy("createdAt", "desc"), limit(60));
 
         onSnapshot(qChat, (snapshot) => {
@@ -363,21 +386,16 @@
             snapshot.forEach(doc => {
                 const msg = doc.data();
                 msg.id = doc.id;
-                // Si el mensaje tiene fecha y es reciente (o si es muy nuevo y fecha aun es null por latencia)
+                // Filtro 1 Hora
                 if (msg.createdAt) {
                     const msgDate = msg.createdAt.toDate();
-                    // Filtro de 1 hora en cliente
                     if (msgDate > new Date(Date.now() - 3600000)) { 
                         messages.push(msg);
                     }
                 } else {
-                    // Mensajes acabados de enviar (serverTimestamp pending) se muestran
-                    messages.push(msg);
+                    messages.push(msg); // Mensajes recientes sin timestamp aun
                 }
             });
-
-            // Invertir para mostrar correctamente (query es desc, chat es bottom-up)
-            // messages.reverse(); // CSS flex-direction: column-reverse handles visual order
 
             if (messages.length === 0) {
                 chatContainer.innerHTML = '<div class="text-center text-gray-600 mt-10">El chat está limpio. Di hola.</div>';
@@ -386,17 +404,17 @@
             messages.forEach((msg) => {
                 const isSelf = currentUser && msg.uid === currentUser.uid;
                 const time = msg.createdAt ? new Date(msg.createdAt.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Enviando...';
-                
-                // MARCO: Si el mensaje tiene marco guardado, aplicarlo
                 const frameClass = msg.frame ? msg.frame : '';
-                
                 const deleteBtn = `<button onclick="requestDelete('${msg.id}', 'global_chat')" class="btn-delete ml-2 text-[10px]"><i class="fa-solid fa-trash"></i></button>`;
+                
+                // FIX IMAGENES: Fallback seguro y tamaño forzado en CSS
+                const avatarSrc = (msg.avatar && msg.avatar.length > 10) ? msg.avatar : "https://via.placeholder.com/40";
 
                 const html = `
                     <div class="message ${isSelf ? 'self' : ''}">
                         <div class="message-avatar-box">
                             <div class="avatar-container ${frameClass}" style="padding:2px;">
-                                <img src="${msg.avatar || generateRandomAvatar()}" class="avatar-sm">
+                                <img src="${avatarSrc}" class="avatar-sm">
                             </div>
                         </div>
                         <div class="flex flex-col ${isSelf ? 'items-end' : 'items-start'} max-w-full">
@@ -427,12 +445,47 @@
                     uid: currentUser.uid,
                     username: userData.username,
                     avatar: userData.avatar,
-                    frame: userData.frame, // GUARDAR EL MARCO CON EL MENSAJE
+                    frame: userData.frame,
                     createdAt: serverTimestamp()
                 });
                 chatInput.value = "";
             } catch (err) { console.error(err); }
         });
+
+        // --- BORRAR TODO EL CHAT (ADMIN) ---
+        window.openClearChatModal = () => {
+            document.getElementById('clear-chat-modal').classList.remove('hidden-section');
+            document.getElementById('clear-chat-key').value = "";
+        };
+        window.closeClearChatModal = () => document.getElementById('clear-chat-modal').classList.add('hidden-section');
+
+        window.confirmClearChat = async () => {
+            const key = document.getElementById('clear-chat-key').value;
+            if (key === "#Lau3700#") {
+                const btn = document.querySelector('#clear-chat-modal button');
+                btn.innerText = "BORRANDO...";
+                try {
+                    // Batch delete
+                    const q = query(collection(db, "global_chat"), limit(500));
+                    const snapshot = await getDocs(q);
+                    const batch = writeBatch(db);
+                    
+                    snapshot.docs.forEach((doc) => {
+                        batch.delete(doc.ref);
+                    });
+                    
+                    await batch.commit();
+                    alert("Chat Global eliminado con éxito.");
+                    closeClearChatModal();
+                } catch (e) {
+                    alert("Error al limpiar: " + e.message);
+                } finally {
+                    btn.innerText = "EJECUTAR LIMPIEZA";
+                }
+            } else {
+                alert("CLAVE INCORRECTA");
+            }
+        };
 
 
         // --- FORO: LISTADO DE HILOS ---
@@ -464,35 +517,28 @@
                 if(data.tag === 'Noticias') tagColor = "border-yellow-500 text-yellow-400";
                 if(data.tag === 'Debate') tagColor = "border-green-500 text-green-400";
 
-                // Avatar Frame in Thread
                 const frameClass = data.frame ? data.frame : '';
+                const avatarSrc = (data.avatar && data.avatar.length > 10) ? data.avatar : "https://via.placeholder.com/40";
 
                 const html = `
                     <div class="forum-card cursor-pointer" onclick="openViewModal('${data.id}')">
                         <div class="flex justify-between items-start mb-3">
                             <div class="flex items-center gap-3">
                                 <div class="avatar-container ${frameClass}" style="padding:2px;">
-                                    <img src="${data.avatar || generateRandomAvatar()}" class="w-10 h-10 rounded-full border border-gray-600 object-cover">
+                                    <img src="${avatarSrc}" class="w-10 h-10 rounded-full border border-gray-600 object-cover">
                                 </div>
                                 <div>
                                     <h3 class="text-lg font-bold text-white leading-tight hover:text-[#F47521] transition">${data.title}</h3>
                                     <p class="text-xs text-gray-500">por <span class="text-[#F47521]">${data.author}</span> • ${date}</p>
                                 </div>
                             </div>
-                            <!-- Botón borrar no propaga click al padre -->
                             <button onclick="event.stopPropagation(); requestDelete('${data.id}', 'forum_threads')" class="btn-delete p-2"><i class="fa-solid fa-trash"></i></button>
                         </div>
-                        
                         <p class="text-gray-300 text-sm mb-4 pl-14 line-clamp-2">${data.content}</p>
-
                         <div class="pl-14 flex items-center gap-4">
                             <span class="tag-badge ${tagColor}">${data.tag}</span>
-                            <div class="flex items-center gap-1 text-xs text-gray-500">
-                                <i class="fa-solid fa-heart text-red-500"></i> ${data.likes || 0}
-                            </div>
-                            <div class="flex items-center gap-1 text-xs text-gray-500">
-                                <i class="fa-solid fa-comment text-blue-500"></i> ${data.commentCount || 0}
-                            </div>
+                            <div class="flex items-center gap-1 text-xs text-gray-500"><i class="fa-solid fa-heart text-red-500"></i> ${data.likes || 0}</div>
+                            <div class="flex items-center gap-1 text-xs text-gray-500"><i class="fa-solid fa-comment text-blue-500"></i> ${data.commentCount || 0}</div>
                         </div>
                     </div>
                 `;
@@ -501,22 +547,15 @@
         };
 
         window.filtrarCategoria = (cat, btn) => {
-            // UI Toggle
             document.querySelectorAll('#forum-filters .tag-badge').forEach(b => b.classList.remove('active', 'bg-[#F47521]', 'text-black'));
             if(btn) btn.classList.add('active', 'bg-[#F47521]', 'text-black');
-
-            if (cat === 'Todo') {
-                renderThreads(allThreads);
-            } else {
-                const filtered = allThreads.filter(t => t.tag === cat);
-                renderThreads(filtered);
-            }
+            if (cat === 'Todo') renderThreads(allThreads);
+            else renderThreads(allThreads.filter(t => t.tag === cat));
         };
 
         window.filtrarHilos = () => {
             const term = document.getElementById('search-threads').value.toLowerCase();
-            const filtered = allThreads.filter(t => t.title.toLowerCase().includes(term) || t.content.toLowerCase().includes(term));
-            renderThreads(filtered);
+            renderThreads(allThreads.filter(t => t.title.toLowerCase().includes(term) || t.content.toLowerCase().includes(term)));
         };
 
         // --- SISTEMA DE COMENTARIOS Y VISTA DE HILO ---
@@ -532,8 +571,6 @@
             document.getElementById('view-thread-author').innerText = thread.author;
             document.getElementById('view-thread-date').innerText = new Date(thread.createdAt.toDate()).toLocaleString();
             
-            // Like Button en Modal
-            // Check if liked
             const hasLiked = localStorage.getItem(`like_${id}`);
             const likeColor = hasLiked ? 'text-red-500' : 'text-gray-500 hover:text-red-500';
             
@@ -542,11 +579,9 @@
                 <button onclick="likeThread('${id}')" class="ml-4 ${likeColor} transition font-bold"><i class="fa-solid fa-heart"></i> <span id="modal-likes">${thread.likes || 0}</span></button>
             `;
 
-            // Cargar comentarios
             const commentsRef = collection(db, "forum_threads", id, "comments");
             const qComm = query(commentsRef, orderBy("createdAt", "asc"));
             
-            // Listener en tiempo real para comentarios
             onSnapshot(qComm, (snap) => {
                 const list = document.getElementById('comments-list');
                 list.innerHTML = "";
@@ -555,10 +590,11 @@
                 snap.forEach(doc => {
                     const c = doc.data();
                     const cFrame = c.frame || '';
+                    const cAvatar = (c.avatar && c.avatar.length > 10) ? c.avatar : "https://via.placeholder.com/40";
                     const html = `
                         <div class="flex gap-3 animate-[fadeIn_0.2s]">
                             <div class="avatar-container ${cFrame} flex-shrink-0" style="padding:2px; width:fit-content; height:fit-content;">
-                                <img src="${c.avatar}" class="w-8 h-8 rounded-full border border-gray-600">
+                                <img src="${cAvatar}" class="w-8 h-8 rounded-full border border-gray-600">
                             </div>
                             <div class="flex-1">
                                 <div class="flex justify-between items-baseline">
@@ -578,7 +614,6 @@
 
         window.closeViewModal = () => document.getElementById('view-thread-modal').classList.add('hidden-section');
 
-        // Enviar Comentario
         document.getElementById('comment-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             if(!currentUser) return alertRequiredLogin();
@@ -593,13 +628,11 @@
                     frame: userData.frame,
                     createdAt: serverTimestamp()
                 });
-                // Actualizar contador
                 await updateDoc(doc(db, "forum_threads", currentThreadId), { commentCount: increment(1) });
                 document.getElementById('comment-input').value = "";
             } catch(err) { console.error(err); }
         });
 
-        // Likes (1 por usuario local)
         window.likeThread = async (id) => {
             if(!currentUser) return alertRequiredLogin();
             if(localStorage.getItem(`like_${id}`)) {
@@ -609,11 +642,9 @@
             const ref = doc(db, "forum_threads", id);
             await updateDoc(ref, { likes: increment(1) });
             localStorage.setItem(`like_${id}`, 'true');
-            // Update UI modal if open
             const count = document.getElementById('modal-likes');
             if(count) count.innerText = parseInt(count.innerText) + 1;
         };
-
 
         // --- CREAR HILO ---
         const threadModal = document.getElementById('thread-modal');
@@ -644,11 +675,10 @@
             } catch (err) { console.error(err); }
         });
 
-
         // --- BORRAR (PANEL SEGURO) ---
         let deleteTargetId = null;
         let deleteCollection = null;
-        let deleteSubId = null; // Para comentarios
+        let deleteSubId = null;
 
         window.requestDelete = (id, collection) => {
             deleteTargetId = id; deleteCollection = collection; deleteSubId = null;
@@ -671,11 +701,9 @@
             if (key === "#Lau3700#") {
                 try {
                     if (deleteSubId) {
-                        // Borrar Comentario
                         await deleteDoc(doc(db, "forum_threads", deleteTargetId, "comments", deleteSubId));
                         await updateDoc(doc(db, "forum_threads", deleteTargetId), { commentCount: increment(-1) });
                     } else {
-                        // Borrar Hilo o Chat
                         await deleteDoc(doc(db, deleteCollection, deleteTargetId));
                     }
                     closeDeleteModal();
