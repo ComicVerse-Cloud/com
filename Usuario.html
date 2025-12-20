@@ -24,6 +24,36 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-enter { animation: fadeIn 0.5s ease-out forwards; }
 
+        /* --- MARCOS DE PERFIL (10 Estilos) --- */
+        .avatar-container { position: relative; display: inline-block; padding: 5px; border-radius: 50%; }
+        
+        /* 1. Golden God */
+        .frame-gold { background: linear-gradient(45deg, #FFD700, #FDB931, #FFD700); animation: spin 4s linear infinite; box-shadow: 0 0 15px #FFD700; }
+        /* 2. Neon Cyber */
+        .frame-neon { background: linear-gradient(90deg, #00f2ff, #001eff); animation: pulse-blue 2s infinite; box-shadow: 0 0 15px #00f2ff; }
+        /* 3. Hell Fire */
+        .frame-fire { background: linear-gradient(0deg, #ff0000, #ffae00); box-shadow: 0 -5px 20px #ff4500; animation: shake 3s infinite; }
+        /* 4. Glitch Tech */
+        .frame-glitch { border: 3px solid #00ff00; box-shadow: 2px 2px #ff00de, -2px -2px #00ffff; }
+        /* 5. Royal Purple */
+        .frame-royal { background: linear-gradient(135deg, #4b0082, #800080); box-shadow: 0 0 15px #800080; border: 2px solid white; }
+        /* 6. Toxic Green */
+        .frame-toxic { border: 3px dashed #39ff14; box-shadow: 0 0 10px #39ff14; animation: spin-slow 10s linear infinite; }
+        /* 7. Love Aura */
+        .frame-love { background: linear-gradient(to bottom, #ff69b4, #ff1493); box-shadow: 0 0 15px #ff1493; }
+        /* 8. Void Darkness */
+        .frame-void { background: black; border: 1px solid #333; box-shadow: inset 0 0 20px #000; }
+        /* 9. Rainbow RGB */
+        .frame-rainbow { background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); animation: spin 2s linear infinite; }
+        /* 10. Diamond Ice */
+        .frame-diamond { background: linear-gradient(135deg, #e0f7fa, #00bcd4); border: 2px solid #fff; box-shadow: 0 0 15px #00bcd4; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes spin-slow { 100% { transform: rotate(360deg); } }
+        @keyframes pulse-blue { 0% { box-shadow: 0 0 10px #00f2ff; } 50% { box-shadow: 0 0 25px #00f2ff; } 100% { box-shadow: 0 0 10px #00f2ff; } }
+
+        .profile-img { border-radius: 50%; border: 3px solid #1a1a1a; position: relative; z-index: 2; width: 6rem; height: 6rem; object-fit: cover; }
+
         /* --- Tarjeta 3D (Flip Card) --- */
         .card-scene { perspective: 1000px; width: 100%; height: 250px; cursor: grab; }
         .card-obj {
@@ -39,58 +69,36 @@
             justify-content: center; align-items: center;
             box-shadow: 0 0 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
         }
-        /* Cara Frontal (Info) */
-        .card-front { 
-            background: linear-gradient(135deg, #1a1a1a, #0d0d0d); 
-            border-bottom: 4px solid var(--orange-cr);
-        }
-        /* Cara Trasera (Membresía) */
-        .card-back { 
-            background: linear-gradient(135deg, #000000, #1a1a1a); 
-            transform: rotateY(180deg); 
-            position: relative; overflow: hidden;
-        }
+        .card-front { background: linear-gradient(135deg, #1a1a1a, #0d0d0d); border-bottom: 4px solid var(--orange-cr); }
+        .card-back { background: linear-gradient(135deg, #000000, #1a1a1a); transform: rotateY(180deg); position: relative; overflow: hidden; }
         
-        /* Estilos Premium vs Basico */
-        .status-premium {
-            border: 2px solid #fbbf24;
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
-        }
+        .status-premium { border: 2px solid #fbbf24; box-shadow: 0 0 20px rgba(251, 191, 36, 0.3); }
         .status-premium::before {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: radial-gradient(circle, rgba(251,191,36,0.1) 0%, transparent 70%);
             animation: rotateBg 10s linear infinite; pointer-events: none;
         }
         .status-basic { border: 2px solid #525252; }
-
         @keyframes rotateBg { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- Badges / Títulos --- */
+        /* --- Badges / Títulos Mejorados --- */
         .badge-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
         .badge {
             font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
             padding: 4px 10px; border-radius: 4px; border: 1px solid #333;
             background: #0a0a0a; color: #444; transition: all 0.3s;
-            filter: grayscale(100%); opacity: 0.5; /* Desactivado por defecto */
+            filter: grayscale(100%); opacity: 0.5;
         }
         
-        /* Estilos de Rareza (Solo se aplican cuando tiene la clase .owned) */
-        .badge.owned {
-            filter: grayscale(0%); opacity: 1; border-color: transparent; color: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5); transform: scale(1.05);
-        }
-
-        /* Common */
-        .badge.common.owned { background: #333; border: 1px solid #555; }
-        /* Rare (Azul/Verde) */
-        .badge.rare.owned { background: linear-gradient(135deg, #0f4c75, #3282b8); box-shadow: 0 0 5px #3282b8; }
-        /* Epic (Violeta/Rojo) */
-        .badge.epic.owned { background: linear-gradient(135deg, #6a0572, #ab0e86); box-shadow: 0 0 8px #ab0e86; }
-        /* Legendary (Dorado/Animado) */
-        .badge.legendary.owned { 
-            background: linear-gradient(135deg, #ffd700, #b8860b); color: black;
-            box-shadow: 0 0 15px #ffd700; animation: pulseGold 2s infinite;
-        }
+        /* Títulos Activos - Diseño Único */
+        .badge.owned { filter: grayscale(0%); opacity: 1; border-color: transparent; color: white; transform: scale(1.05); }
+        
+        .badge[data-title="Creador"].owned { background: linear-gradient(90deg, #F47521, #ff4500); box-shadow: 0 0 10px #ff4500; }
+        .badge[data-title="Dios"].owned { background: linear-gradient(90deg, #fff, #ffd700); color: black; box-shadow: 0 0 15px white; animation: pulseGold 2s infinite; }
+        .badge[data-title="VIP"].owned { background: #6d28d9; border: 1px solid #a78bfa; }
+        .badge[data-title="Artista"].owned { background: #ec4899; }
+        .badge[data-title="Héroe"].owned { background: #3b82f6; }
+        .badge[data-title="Villano"].owned { background: #ef4444; }
 
         @keyframes pulseGold { 0% { box-shadow: 0 0 5px #ffd700; } 50% { box-shadow: 0 0 20px #ffd700; } 100% { box-shadow: 0 0 5px #ffd700; } }
 
@@ -109,15 +117,12 @@
         .admin-table tr:hover { background: rgba(244, 117, 33, 0.1); cursor: pointer; }
         .admin-table tr.selected { background: rgba(244, 117, 33, 0.3); border-left: 3px solid var(--orange-cr); }
 
-        /* --- Ocultar secciones --- */
         .hidden-section { display: none; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-    <!-- ======================= -->
-    <!-- 1. SECCIÓN DE LOGIN/AUTH -->
-    <!-- ======================= -->
+    <!-- LOGIN/AUTH -->
     <div id="auth-container" class="w-full max-w-md animate-enter">
         <div class="text-center mb-8">
             <h1 class="text-4xl font-black italic tracking-tighter mb-2">COMIC<span class="text-[#F47521]">VERSE</span></h1>
@@ -144,9 +149,7 @@
             </form>
 
             <div class="my-6 flex items-center justify-between text-gray-500 text-xs uppercase">
-                <span class="w-1/3 h-px bg-white/10"></span>
-                <span>O conecta con</span>
-                <span class="w-1/3 h-px bg-white/10"></span>
+                <span class="w-1/3 h-px bg-white/10"></span><span>O conecta con</span><span class="w-1/3 h-px bg-white/10"></span>
             </div>
 
             <button onclick="googleLogin()" class="w-full bg-black border border-white/20 hover:border-white text-white font-bold py-3 rounded flex items-center justify-center gap-3 transition">
@@ -155,9 +158,7 @@
         </div>
     </div>
 
-    <!-- ======================= -->
-    <!-- 2. SECCIÓN DE PERFIL -->
-    <!-- ======================= -->
+    <!-- PERFIL -->
     <div id="profile-container" class="w-full max-w-4xl hidden-section animate-enter">
         
         <div class="flex justify-between items-end mb-6">
@@ -175,14 +176,25 @@
                 <!-- Tarjeta 3D -->
                 <div class="card-scene" onclick="this.querySelector('.card-obj').classList.toggle('is-flipped')">
                     <div class="card-obj" id="membership-card">
+                        <!-- Frente -->
                         <div class="card-face card-front">
                             <div class="relative mb-4">
-                                <img id="display-avatar" src="https://via.placeholder.com/150" class="w-24 h-24 rounded-full border-2 border-white object-cover">
-                                <button onclick="toggleEditMode()" class="absolute bottom-0 right-0 bg-[#F47521] text-black w-8 h-8 rounded-full flex items-center justify-center hover:scale-110 transition shadow-lg"><i class="fa-solid fa-pen"></i></button>
+                                <div id="avatar-frame" class="avatar-container">
+                                    <img id="display-avatar" src="https://via.placeholder.com/150" class="profile-img">
+                                </div>
+                                <button onclick="event.stopPropagation(); toggleEditMode()" class="absolute bottom-0 right-0 bg-[#F47521] text-black w-8 h-8 rounded-full flex items-center justify-center hover:scale-110 transition shadow-lg z-10"><i class="fa-solid fa-pen"></i></button>
                             </div>
                             <h3 id="display-username" class="text-xl font-bold text-white">Usuario</h3>
-                            <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest"><i class="fa-solid fa-rotate mr-1"></i> Toca para ver Membresía</p>
+                            
+                            <!-- Redes Sociales (Solo Creador) -->
+                            <div id="social-buttons" class="flex gap-2 mt-3 hidden-section">
+                                <a id="btn-tiktok" href="#" target="_blank" class="text-white hover:text-pink-500 text-lg transition"><i class="fa-brands fa-tiktok"></i></a>
+                                <a id="btn-insta" href="#" target="_blank" class="text-white hover:text-purple-500 text-lg transition"><i class="fa-brands fa-instagram"></i></a>
+                            </div>
+
+                            <p class="text-xs text-gray-400 mt-2 uppercase tracking-widest"><i class="fa-solid fa-rotate mr-1"></i> Toca para ver Membresía</p>
                         </div>
+                        <!-- Atrás -->
                         <div class="card-face card-back status-basic" id="card-back-style">
                             <i id="badge-icon" class="fa-solid fa-user text-4xl mb-2 text-gray-500"></i>
                             <h3 id="membership-type" class="text-2xl font-black uppercase text-gray-400">Básico</h3>
@@ -195,11 +207,32 @@
                 <div class="bg-[#111] p-4 rounded-lg border border-white/5">
                     <h4 class="text-[#F47521] text-xs font-bold uppercase mb-2">Biografía</h4>
                     <p id="display-bio" class="text-sm text-gray-300 italic">Sin biografía.</p>
+                    
+                    <!-- AREA EDICIÓN -->
                     <div id="editor-area" class="hidden mt-4 pt-4 border-t border-white/10">
-                        <label class="text-[10px] text-gray-500 uppercase mb-1 block">URL Foto Perfil</label>
-                        <input type="text" id="edit-photo" placeholder="https://..." class="input-cr mb-2 text-xs">
+                        <label class="text-[10px] text-gray-500 uppercase mb-1 block">Foto de Perfil</label>
+                        <input type="text" id="edit-photo" placeholder="Pegar URL..." class="input-cr mb-2 text-xs">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-[10px] text-gray-500">O subir:</span>
+                            <input type="file" id="file-upload" accept="image/*" class="text-xs text-gray-400">
+                        </div>
+                        
+                        <label class="text-[10px] text-gray-500 uppercase mb-1 block">Biografía</label>
                         <textarea id="edit-bio" placeholder="Escribe tu bio..." class="input-cr h-20 text-xs mb-2"></textarea>
-                        <button onclick="guardarPerfil()" class="w-full bg-green-600 hover:bg-green-500 text-white text-xs font-bold py-2 rounded">GUARDAR CAMBIOS</button>
+                        
+                        <!-- Inputs Creador (Ocultos por defecto) -->
+                        <div id="creator-inputs" class="hidden-section border-t border-white/5 pt-2 mt-2">
+                            <label class="text-[10px] text-[#F47521] uppercase mb-1 block font-bold">Zona Creador</label>
+                            <input type="text" id="edit-tiktok" placeholder="URL TikTok" class="input-cr mb-2 text-xs">
+                            <input type="text" id="edit-insta" placeholder="URL Instagram" class="input-cr mb-2 text-xs">
+                        </div>
+
+                        <div class="flex gap-2 mt-2">
+                            <button onclick="guardarPerfil()" class="flex-1 bg-green-600 hover:bg-green-500 text-white text-xs font-bold py-2 rounded">GUARDAR</button>
+                            <button onclick="toggleEditMode()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white text-xs font-bold py-2 rounded">CANCELAR</button>
+                        </div>
+                        
+                        <button onclick="confirmarBorrar()" class="w-full mt-4 bg-red-900/30 border border-red-800 text-red-500 hover:bg-red-900 hover:text-white text-xs font-bold py-2 rounded transition">[BORRAR CUENTA]</button>
                     </div>
                 </div>
             </div>
@@ -207,7 +240,6 @@
             <!-- COLUMNA DERECHA -->
             <div class="md:col-span-2 space-y-6">
                 
-                <!-- Títulos (Todos mostrados, bloqueados o desbloqueados) -->
                 <div class="bg-[#1a1a1a] p-6 rounded-xl border border-white/10">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-bold text-white flex items-center gap-2">
@@ -216,12 +248,10 @@
                         <span id="titles-count" class="text-xs bg-[#333] px-2 py-1 rounded text-white">0 / 20</span>
                     </div>
                     <div class="text-xs text-gray-500 mb-2 italic" id="default-title-msg"></div>
-                    <div class="badge-grid" id="titles-container">
-                        <!-- Se llenan con JS dinámicamente -->
-                    </div>
+                    <div class="badge-grid" id="titles-container"></div>
                 </div>
 
-                <!-- Panel de Administrador (Tabla + Buscador) -->
+                <!-- ADMIN ZONE -->
                 <div class="bg-black p-6 rounded-xl border border-red-900/30">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-sm font-bold text-red-500 uppercase tracking-widest"><i class="fa-solid fa-user-secret"></i> Zona Admin</h3>
@@ -229,25 +259,18 @@
                     </div>
 
                     <div id="admin-controls" class="hidden-section border-t border-red-900/20 pt-4">
-                        
-                        <!-- Buscador y Tabla -->
                         <div class="mb-4">
                             <input type="text" id="admin-search" placeholder="Buscar Gmail..." class="w-full bg-[#111] border border-gray-700 text-white text-xs p-2 rounded mb-2" onkeyup="filtrarUsuarios()">
                             <div class="admin-table-container custom-scroll">
                                 <table class="admin-table">
                                     <thead><tr><th>Usuario / Email</th><th>ID</th></tr></thead>
-                                    <tbody id="users-table-body">
-                                        <!-- JS llena esto -->
-                                        <tr><td colspan="2" class="text-center py-2">Cargando...</td></tr>
-                                    </tbody>
+                                    <tbody id="users-table-body"><tr><td colspan="2" class="text-center py-2">Cargando...</td></tr></tbody>
                                 </table>
                             </div>
                         </div>
 
-                        <!-- Panel de Acción para Usuario Seleccionado -->
                         <div id="admin-actions-panel" class="bg-[#1a1a1a] p-4 rounded border border-gray-700 opacity-50 pointer-events-none transition-opacity">
-                            <p class="text-xs text-[#F47521] font-bold mb-2">Editando a: <span id="selected-user-email" class="text-white">Nadie seleccionado</span></p>
-                            
+                            <p class="text-xs text-[#F47521] font-bold mb-2">Editando a: <span id="selected-user-email" class="text-white">Nadie</span></p>
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-[10px] text-gray-500 mb-1">Membresía</label>
@@ -256,14 +279,30 @@
                                 </div>
                                 <div>
                                     <label class="block text-[10px] text-gray-500 mb-1">Asignar Título</label>
-                                    <select id="admin-title-select" class="w-full bg-[#111] text-white text-xs p-1 rounded border border-gray-700 mb-2">
-                                        <!-- JS llena esto -->
-                                    </select>
+                                    <select id="admin-title-select" class="w-full bg-[#111] text-white text-xs p-1 rounded border border-gray-700 mb-2"></select>
                                     <button onclick="adminAddTitle()" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-1 rounded">Asignar</button>
                                 </div>
                             </div>
+                            <div class="mt-4 border-t border-white/5 pt-2">
+                                <label class="block text-[10px] text-gray-500 mb-1">Marco de Perfil (Frame)</label>
+                                <div class="flex gap-2">
+                                    <select id="admin-frame-select" class="flex-1 bg-[#111] text-white text-xs p-1 rounded border border-gray-700">
+                                        <option value="">Ninguno</option>
+                                        <option value="frame-gold">Golden God</option>
+                                        <option value="frame-neon">Neon Cyber</option>
+                                        <option value="frame-fire">Hell Fire</option>
+                                        <option value="frame-glitch">Glitch Tech</option>
+                                        <option value="frame-royal">Royal Purple</option>
+                                        <option value="frame-toxic">Toxic Green</option>
+                                        <option value="frame-love">Love Aura</option>
+                                        <option value="frame-void">Void Darkness</option>
+                                        <option value="frame-rainbow">Rainbow RGB</option>
+                                        <option value="frame-diamond">Diamond Ice</option>
+                                    </select>
+                                    <button onclick="adminSetFrame()" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold py-1 px-3 rounded">Aplicar</button>
+                                </div>
+                            </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -271,11 +310,11 @@
         </div>
     </div>
 
-    <!-- LOGICA FIREBASE -->
+    <!-- LOGICA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, deleteUser } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBf9ATqgErKQKpzKpFXsUu4BHmFcNSLzOE",
@@ -292,237 +331,190 @@
         const provider = new GoogleAuthProvider();
 
         let currentUserUid = null;
-        let allUsersCache = []; // Cache para la tabla de admin
-        let selectedUserId = null; // ID del usuario seleccionado en la tabla
+        let allUsersCache = [];
+        let selectedUserId = null;
 
-        // --- DEFINICIÓN DE TÍTULOS Y RAREZAS ---
         const ALL_TITLES = [
-            { name: "Creador", type: "legendary" },
-            { name: "Dios", type: "legendary" },
-            { name: "Leyenda", type: "legendary" },
-            { name: "Fan #1", type: "legendary" },
-            { name: "Héroe", type: "epic" },
-            { name: "Villano", type: "epic" },
-            { name: "VIP", type: "epic" },
-            { name: "Donador", type: "epic" },
-            { name: "Maestro", type: "epic" },
-            { name: "Moderador", type: "rare" },
-            { name: "Artista", type: "rare" },
-            { name: "Editor", type: "rare" },
-            { name: "Guionista", type: "rare" },
-            { name: "Traductor", type: "rare" },
-            { name: "Crítico", type: "common" },
-            { name: "Votante", type: "common" },
-            { name: "Beta Tester", type: "common" },
-            { name: "Otaku", type: "common" },
-            { name: "Explorador", type: "common" },
-            { name: "Coleccionista", type: "common" }
+            { name: "Creador", type: "legendary" }, { name: "Dios", type: "legendary" }, { name: "Leyenda", type: "legendary" }, { name: "Fan #1", type: "legendary" },
+            { name: "Héroe", type: "epic" }, { name: "Villano", type: "epic" }, { name: "VIP", type: "epic" }, { name: "Donador", type: "epic" }, { name: "Maestro", type: "epic" },
+            { name: "Moderador", type: "rare" }, { name: "Artista", type: "rare" }, { name: "Editor", type: "rare" }, { name: "Guionista", type: "rare" }, { name: "Traductor", type: "rare" },
+            { name: "Crítico", type: "common" }, { name: "Votante", type: "common" }, { name: "Beta Tester", type: "common" }, { name: "Otaku", type: "common" }, { name: "Explorador", type: "common" }, { name: "Coleccionista", type: "common" }
         ];
 
-        // Inicializar dropdown de admin y grid de perfil
         const adminSelect = document.getElementById('admin-title-select');
         const titlesContainer = document.getElementById('titles-container');
-        
         ALL_TITLES.forEach(t => {
-            // Dropdown
-            const opt = document.createElement('option');
-            opt.value = t.name; opt.innerText = t.name;
-            adminSelect.appendChild(opt);
-            
-            // Grid (Visualmente todos existen, estado locked por defecto)
-            const badge = document.createElement('span');
-            badge.className = `badge ${t.type}`;
-            badge.dataset.title = t.name;
-            badge.innerText = t.name;
-            titlesContainer.appendChild(badge);
+            const opt = document.createElement('option'); opt.value = t.name; opt.innerText = t.name; adminSelect.appendChild(opt);
+            const badge = document.createElement('span'); badge.className = `badge ${t.type}`; badge.dataset.title = t.name; badge.innerText = t.name; titlesContainer.appendChild(badge);
         });
 
-        // --- AUTH ---
         onAuthStateChanged(auth, async (user) => {
-            const authContainer = document.getElementById('auth-container');
-            const profileContainer = document.getElementById('profile-container');
-
             if (user) {
                 currentUserUid = user.uid;
-                authContainer.classList.add('hidden-section');
-                profileContainer.classList.remove('hidden-section');
+                document.getElementById('auth-container').classList.add('hidden-section');
+                document.getElementById('profile-container').classList.remove('hidden-section');
                 await cargarDatosPerfil(user);
             } else {
                 currentUserUid = null;
-                authContainer.classList.remove('hidden-section');
-                profileContainer.classList.add('hidden-section');
+                document.getElementById('auth-container').classList.remove('hidden-section');
+                document.getElementById('profile-container').classList.add('hidden-section');
             }
         });
 
-        window.switchTab = (tab) => { /* ... (mismo código tabs) ... */ 
-            const loginForm = document.getElementById('login-form');
-            const regForm = document.getElementById('register-form');
-            const tabLogin = document.getElementById('tab-login');
-            const tabReg = document.getElementById('tab-register');
+        window.switchTab = (tab) => {
             if (tab === 'login') {
-                loginForm.classList.remove('hidden-section'); regForm.classList.add('hidden-section');
-                tabLogin.className = "flex-1 pb-2 font-bold text-[#F47521] border-b-2 border-[#F47521]";
-                tabReg.className = "flex-1 pb-2 font-bold text-gray-500 hover:text-white transition";
+                document.getElementById('login-form').classList.remove('hidden-section');
+                document.getElementById('register-form').classList.add('hidden-section');
+                document.getElementById('tab-login').className = "flex-1 pb-2 font-bold text-[#F47521] border-b-2 border-[#F47521]";
+                document.getElementById('tab-register').className = "flex-1 pb-2 font-bold text-gray-500 hover:text-white transition";
             } else {
-                loginForm.classList.add('hidden-section'); regForm.classList.remove('hidden-section');
-                tabReg.className = "flex-1 pb-2 font-bold text-[#F47521] border-b-2 border-[#F47521]";
-                tabLogin.className = "flex-1 pb-2 font-bold text-gray-500 hover:text-white transition";
+                document.getElementById('login-form').classList.add('hidden-section');
+                document.getElementById('register-form').classList.remove('hidden-section');
+                document.getElementById('tab-register').className = "flex-1 pb-2 font-bold text-[#F47521] border-b-2 border-[#F47521]";
+                document.getElementById('tab-login').className = "flex-1 pb-2 font-bold text-gray-500 hover:text-white transition";
             }
         };
 
-        // Handlers Login/Register/Google (Igual que antes)
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            try { await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-pass').value); }
-            catch (e) { alert("Error: " + e.message); }
-        });
-        document.getElementById('register-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const userVal = document.getElementById('reg-username').value;
-            const emailVal = document.getElementById('reg-email').value;
-            try {
-                const cred = await createUserWithEmailAndPassword(auth, emailVal, document.getElementById('reg-pass').value);
-                await updateProfile(cred.user, { displayName: userVal });
-                await setDoc(doc(db, "users", cred.user.uid), { username: userVal, email: emailVal, photoURL: "https://via.placeholder.com/150", bio: "Nuevo en ComicVerse", titles: [], isPremium: false });
-            } catch (e) { alert("Error: " + e.message); }
-        });
-        window.googleLogin = async () => {
-            try {
-                const res = await signInWithPopup(auth, provider);
-                const userRef = doc(db, "users", res.user.uid);
-                const snap = await getDoc(userRef);
-                if(!snap.exists()) {
-                    await setDoc(userRef, { username: res.user.displayName, email: res.user.email, photoURL: res.user.photoURL, bio: "Nuevo en ComicVerse", titles: [], isPremium: false });
-                }
-            } catch (e) { alert(e.message); }
-        };
+        document.getElementById('login-form').addEventListener('submit', async (e) => { e.preventDefault(); try { await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-pass').value); } catch (e) { alert(e.message); } });
+        document.getElementById('register-form').addEventListener('submit', async (e) => { e.preventDefault(); const userVal = document.getElementById('reg-username').value; const emailVal = document.getElementById('reg-email').value; try { const cred = await createUserWithEmailAndPassword(auth, emailVal, document.getElementById('reg-pass').value); await updateProfile(cred.user, { displayName: userVal }); await setDoc(doc(db, "users", cred.user.uid), { username: userVal, email: emailVal, photoURL: "https://via.placeholder.com/150", bio: "Nuevo en ComicVerse", titles: [], isPremium: false }); } catch (e) { alert(e.message); } });
+        window.googleLogin = async () => { try { const res = await signInWithPopup(auth, provider); const userRef = doc(db, "users", res.user.uid); const snap = await getDoc(userRef); if(!snap.exists()) { await setDoc(userRef, { username: res.user.displayName, email: res.user.email, photoURL: res.user.photoURL, bio: "Nuevo en ComicVerse", titles: [], isPremium: false }); } } catch (e) { alert(e.message); } };
         window.cerrarSesion = () => signOut(auth);
 
-        // --- PERFIL ---
         async function cargarDatosPerfil(user) {
             document.getElementById('profile-id').innerText = "ID: " + user.uid.substring(0, 8) + "...";
             const snap = await getDoc(doc(db, "users", user.uid));
-            
             if (snap.exists()) {
                 const data = snap.data();
                 document.getElementById('display-username').innerText = data.username;
                 document.getElementById('display-bio').innerText = data.bio || "Sin bio.";
-                document.getElementById('display-avatar').src = data.photoURL || "https://via.placeholder.com/150";
                 
-                // Guardar foto local para usar en otras páginas
-                localStorage.setItem('userAvatar', data.photoURL);
+                const photo = (data.photoURL && data.photoURL.trim() !== "") ? data.photoURL : "https://via.placeholder.com/150";
+                document.getElementById('display-avatar').src = photo;
+                localStorage.setItem('userAvatar', photo);
+
+                // Marcos
+                document.getElementById('avatar-frame').className = `avatar-container ${data.frame || ''}`;
 
                 renderCardStatus(data.isPremium);
                 
-                // Renderizar Títulos
                 const userTitles = data.titles || [];
                 const badges = document.querySelectorAll('.badge');
                 let count = 0;
-                
-                // Mensaje si es nuevo
                 const msgEl = document.getElementById('default-title-msg');
-                if (userTitles.length === 0) {
-                    msgEl.innerText = "Nuevo usuario (Aún no tienes títulos)";
+                msgEl.innerText = userTitles.length === 0 ? "Nuevo usuario (Aún no tienes títulos)" : "";
+                badges.forEach(b => { if (userTitles.includes(b.dataset.title)) { b.classList.add('owned'); count++; } else { b.classList.remove('owned'); } });
+                document.getElementById('titles-count').innerText = `${count} / ${ALL_TITLES.length}`;
+
+                // Creator Logic
+                if (userTitles.includes("Creador")) {
+                    document.getElementById('creator-inputs').classList.remove('hidden-section');
+                    document.getElementById('social-buttons').classList.remove('hidden-section');
+                    document.getElementById('edit-tiktok').value = data.tiktok || "";
+                    document.getElementById('edit-insta').value = data.insta || "";
+                    document.getElementById('btn-tiktok').href = data.tiktok || "#";
+                    document.getElementById('btn-insta').href = data.insta || "#";
                 } else {
-                    msgEl.innerText = "";
+                    document.getElementById('creator-inputs').classList.add('hidden-section');
+                    document.getElementById('social-buttons').classList.add('hidden-section');
                 }
 
-                badges.forEach(b => {
-                    if (userTitles.includes(b.dataset.title)) {
-                        b.classList.add('owned');
-                        count++;
-                    } else {
-                        b.classList.remove('owned');
-                    }
-                });
-                document.getElementById('titles-count').innerText = `${count} / ${ALL_TITLES.length}`;
+                document.getElementById('edit-bio').value = data.bio || "";
+                document.getElementById('edit-photo').value = data.photoURL || "";
             }
         }
 
         function renderCardStatus(isPremium) {
             const cardBack = document.getElementById('card-back-style');
-            const typeText = document.getElementById('membership-type');
-            const icon = document.getElementById('badge-icon');
-            if (isPremium) {
-                cardBack.className = "card-face card-back status-premium";
-                typeText.innerText = "PREMIUM"; typeText.className = "text-2xl font-black uppercase text-[#F47521] drop-shadow-md";
-                icon.className = "fa-solid fa-crown text-5xl mb-2 text-yellow-400 animate-pulse";
-            } else {
-                cardBack.className = "card-face card-back status-basic";
-                typeText.innerText = "BÁSICO"; typeText.className = "text-2xl font-black uppercase text-gray-400";
-                icon.className = "fa-solid fa-user text-4xl mb-2 text-gray-500";
-            }
+            if (isPremium) { cardBack.className = "card-face card-back status-premium"; document.getElementById('membership-type').innerText = "PREMIUM"; document.getElementById('membership-type').className = "text-2xl font-black uppercase text-[#F47521] drop-shadow-md"; document.getElementById('badge-icon').className = "fa-solid fa-crown text-5xl mb-2 text-yellow-400 animate-pulse"; } 
+            else { cardBack.className = "card-face card-back status-basic"; document.getElementById('membership-type').innerText = "BÁSICO"; document.getElementById('membership-type').className = "text-2xl font-black uppercase text-gray-400"; document.getElementById('badge-icon').className = "fa-solid fa-user text-4xl mb-2 text-gray-500"; }
         }
 
         window.toggleEditMode = () => document.getElementById('editor-area').classList.toggle('hidden');
+        
+        // --- SUBIDA FOTO ARCHIVO ---
+        document.getElementById('file-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 100000) { // Limit 100kb
+                    alert("La imagen es muy pesada. Máximo 100KB.");
+                    this.value = "";
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    document.getElementById('edit-photo').value = reader.result; // Put Base64 in URL input
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
         window.guardarPerfil = async () => {
             if(!currentUserUid) return;
+            const newBio = document.getElementById('edit-bio').value;
+            let newPhoto = document.getElementById('edit-photo').value;
+            if(!newPhoto || newPhoto.trim() === "") newPhoto = "https://via.placeholder.com/150";
+
+            const updates = { bio: newBio, photoURL: newPhoto };
+            // Creator fields
+            if(!document.getElementById('creator-inputs').classList.contains('hidden-section')){
+                updates.tiktok = document.getElementById('edit-tiktok').value;
+                updates.insta = document.getElementById('edit-insta').value;
+            }
+
             try {
-                await updateDoc(doc(db, "users", currentUserUid), {
-                    bio: document.getElementById('edit-bio').value,
-                    photoURL: document.getElementById('edit-photo').value
-                });
+                await updateDoc(doc(db, "users", currentUserUid), updates);
                 await cargarDatosPerfil(auth.currentUser);
                 window.toggleEditMode();
                 alert("Perfil actualizado");
             } catch(e) { alert("Error: " + e.message); }
         };
 
-        // --- ADMIN ZONE ---
+        window.confirmarBorrar = async () => {
+            if(confirm("¿ESTÁS SEGURO? Esta acción es irreversible. Se borrará tu cuenta y tus datos.")) {
+                if(confirm("Última advertencia. Se borrará todo.")) {
+                    try {
+                        const user = auth.currentUser;
+                        await deleteDoc(doc(db, "users", user.uid));
+                        await deleteUser(user);
+                        alert("Cuenta eliminada. Hasta luego.");
+                        window.location.reload();
+                    } catch(e) { alert("Error (Requiere login reciente): " + e.message); }
+                }
+            }
+        };
+
         window.checkAdmin = async () => {
             const key = document.getElementById('admin-key').value;
             if (key === "#Lau3700#") {
                 document.getElementById('admin-controls').classList.remove('hidden-section');
-                await loadAllUsers(); // Cargar tabla al entrar
-            } else {
-                document.getElementById('admin-controls').classList.add('hidden-section');
-            }
+                await loadAllUsers();
+            } else { document.getElementById('admin-controls').classList.add('hidden-section'); }
         };
 
         async function loadAllUsers() {
             const tbody = document.getElementById('users-table-body');
-            tbody.innerHTML = '<tr><td colspan="2" class="text-center">Cargando datos...</td></tr>';
-            
+            tbody.innerHTML = '<tr><td colspan="2" class="text-center">Cargando...</td></tr>';
             try {
                 const querySnapshot = await getDocs(collection(db, "users"));
                 allUsersCache = [];
-                querySnapshot.forEach((doc) => {
-                    allUsersCache.push({ id: doc.id, ...doc.data() });
-                });
+                querySnapshot.forEach((doc) => { allUsersCache.push({ id: doc.id, ...doc.data() }); });
                 renderUserTable(allUsersCache);
-            } catch (e) {
-                console.error("Error cargando usuarios:", e);
-                tbody.innerHTML = '<tr><td colspan="2" class="text-red-500">Error al cargar (Ver consola)</td></tr>';
-            }
+            } catch (e) { tbody.innerHTML = '<tr><td colspan="2" class="text-red-500">Error</td></tr>'; }
         }
 
         window.filtrarUsuarios = () => {
             const term = document.getElementById('admin-search').value.toLowerCase();
-            const filtered = allUsersCache.filter(u => 
-                (u.email && u.email.toLowerCase().includes(term)) || 
-                (u.username && u.username.toLowerCase().includes(term))
-            );
+            const filtered = allUsersCache.filter(u => (u.email && u.email.toLowerCase().includes(term)) || (u.username && u.username.toLowerCase().includes(term)));
             renderUserTable(filtered);
         };
 
         function renderUserTable(users) {
             const tbody = document.getElementById('users-table-body');
             tbody.innerHTML = '';
-            
-            if (users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="2" class="text-center text-gray-500">No hay resultados</td></tr>';
-                return;
-            }
-
+            if (users.length === 0) { tbody.innerHTML = '<tr><td colspan="2" class="text-center text-gray-500">Sin resultados</td></tr>'; return; }
             users.forEach(u => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>
-                        <div class="font-bold text-white">${u.username || 'Sin nombre'}</div>
-                        <div class="text-gray-500 text-[10px]">${u.email || 'No Email'}</div>
-                    </td>
-                    <td class="font-mono text-xs text-gray-600">${u.id.substring(0,6)}...</td>
-                `;
+                tr.innerHTML = `<td><div class="font-bold text-white">${u.username || 'Sin nombre'}</div><div class="text-gray-500 text-[10px]">${u.email || 'No Email'}</div></td><td class="font-mono text-xs text-gray-600">${u.id.substring(0,6)}...</td>`;
                 tr.onclick = () => selectUserForAdmin(u.id, u.email);
                 tbody.appendChild(tr);
             });
@@ -530,39 +522,25 @@
 
         function selectUserForAdmin(uid, email) {
             selectedUserId = uid;
-            
-            // UI Feedback visual en tabla
-            const rows = document.querySelectorAll('.admin-table tr');
-            rows.forEach(r => r.classList.remove('selected'));
-            // (Nota: para añadir clase 'selected' al clickeado se requeriría pasar 'this' o evento, simplificamos por ID)
-            
-            // Activar panel
-            const panel = document.getElementById('admin-actions-panel');
-            panel.classList.remove('opacity-50', 'pointer-events-none');
+            const rows = document.querySelectorAll('.admin-table tr'); rows.forEach(r => r.classList.remove('selected'));
+            const panel = document.getElementById('admin-actions-panel'); panel.classList.remove('opacity-50', 'pointer-events-none');
             document.getElementById('selected-user-email').innerText = email || uid;
         }
 
-        // Acciones Admin (Usan selectedUserId)
         window.adminSetPremium = async (status) => {
-            if (!selectedUserId) return alert("Selecciona un usuario de la tabla primero");
-            try {
-                await updateDoc(doc(db, "users", selectedUserId), { isPremium: status });
-                alert(`Usuario ${selectedUserId.substring(0,4)}... ahora es ${status ? 'PREMIUM' : 'BÁSICO'}`);
-                // Si me edité a mí mismo, recargar mi vista
-                if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser);
-            } catch(e) { alert(e.message); }
+            if (!selectedUserId) return alert("Selecciona usuario");
+            try { await updateDoc(doc(db, "users", selectedUserId), { isPremium: status }); alert("Estado actualizado"); if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser); } catch(e) { alert(e.message); }
         };
-
         window.adminAddTitle = async () => {
-            if (!selectedUserId) return alert("Selecciona un usuario de la tabla primero");
-            const title = document.getElementById('admin-title-select').value;
-            try {
-                await updateDoc(doc(db, "users", selectedUserId), { titles: arrayUnion(title) });
-                alert(`Título "${title}" añadido al usuario.`);
-                if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser);
-            } catch(e) { alert(e.message); }
+            if (!selectedUserId) return alert("Selecciona usuario");
+            try { await updateDoc(doc(db, "users", selectedUserId), { titles: arrayUnion(document.getElementById('admin-title-select').value) }); alert("Título asignado"); if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser); } catch(e) { alert(e.message); }
+        };
+        window.adminSetFrame = async () => {
+            if (!selectedUserId) return alert("Selecciona usuario");
+            try { await updateDoc(doc(db, "users", selectedUserId), { frame: document.getElementById('admin-frame-select').value }); alert("Marco aplicado"); if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser); } catch(e) { alert(e.message); }
         };
 
     </script>
 </body>
 </html>
+
