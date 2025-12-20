@@ -24,8 +24,9 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-enter { animation: fadeIn 0.5s ease-out forwards; }
         @keyframes bounceIn { 0% { transform: scale(0.8); opacity: 0; } 60% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); } }
+        @keyframes holoShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* --- MARCOS DE PERFIL (COLECCIÓN ULTIMATE & LEGENDARY) --- */
+        /* --- MARCOS DE PERFIL (COLECCIÓN ULTIMATE & LEGENDARY PRO) --- */
         .avatar-container { position: relative; display: inline-block; padding: 6px; border-radius: 50%; box-sizing: border-box; }
         .profile-img { border-radius: 50%; border: 3px solid #1a1a1a; position: relative; z-index: 10; width: 6rem; height: 6rem; object-fit: cover; }
 
@@ -34,8 +35,6 @@
         .frame-neon { background: linear-gradient(90deg, #00f2ff, #001eff); animation: pulse-blue 2s infinite; box-shadow: 0 0 15px #00f2ff; }
         .frame-fire { background: linear-gradient(0deg, #ff0000, #ffae00); box-shadow: 0 -5px 20px #ff4500; animation: shake 3s infinite; }
         .frame-glitch { border: 3px solid #00ff00; box-shadow: 2px 2px #ff00de, -2px -2px #00ffff; }
-
-        /* NEW FRAMES */
         .frame-cosmic { background: linear-gradient(135deg, #663399, #000000, #4b0082); box-shadow: 0 0 20px #9400d3; animation: spin-slow 8s linear infinite; border: 2px dashed rgba(255,255,255,0.5); }
         .frame-plasma { background: conic-gradient(#ff00ff, #00ffff, #ff00ff); animation: spin 2s linear infinite; filter: blur(1px); }
         .frame-matrix { background: #000; border: 2px solid #0f0; box-shadow: inset 0 0 10px #0f0, 0 0 10px #0f0; }
@@ -48,7 +47,6 @@
         .frame-angel { background: white; box-shadow: 0 0 25px white, 0 0 50px #fffacd; border: 2px solid #fffacd; }
 
         /* --- LEGENDARY GOLD FRAMES (SHAPES) --- */
-        /* Angel Wings Gold */
         .frame-angel-gold { border: 3px solid #FFD700; box-shadow: 0 0 20px #FFD700; }
         .frame-angel-gold::before, .frame-angel-gold::after {
             content: ''; position: absolute; top: 10%; width: 60px; height: 100px;
@@ -59,7 +57,6 @@
         .frame-angel-gold::before { left: -40px; transform: rotate(-30deg); border-left: 4px solid #fff; }
         .frame-angel-gold::after { right: -40px; transform: rotate(30deg); border-right: 4px solid #fff; }
 
-        /* Demon Horns Gold */
         .frame-demon-gold { border: 3px solid #b8860b; box-shadow: 0 0 15px #FFD700; }
         .frame-demon-gold::before, .frame-demon-gold::after {
             content: ''; position: absolute; top: -30px; width: 20px; height: 50px;
@@ -70,36 +67,69 @@
         .frame-demon-gold::before { left: 0; transform: rotate(-25deg); }
         .frame-demon-gold::after { right: 0; transform: rotate(25deg); }
 
-        /* God Aura */
-        .frame-aura-god {
-            background: transparent; border: 2px solid #fff;
-            box-shadow: 0 0 30px #FFD700, 0 0 60px #FFD700, inset 0 0 20px #FFD700;
-            animation: pulse-gold 2s infinite;
-        }
-
-        /* Crown Gold */
+        .frame-aura-god { background: transparent; border: 2px solid #fff; box-shadow: 0 0 30px #FFD700, 0 0 60px #FFD700, inset 0 0 20px #FFD700; animation: pulse-gold 2s infinite; }
         .frame-crown-gold { border: 4px double #FFD700; }
-        .frame-crown-gold::before {
-            content: '👑'; position: absolute; top: -45px; left: 50%; transform: translateX(-50%);
-            font-size: 3rem; filter: drop-shadow(0 0 10px #FFD700); z-index: 20;
-        }
+        .frame-crown-gold::before { content: '👑'; position: absolute; top: -45px; left: 50%; transform: translateX(-50%); font-size: 3rem; filter: drop-shadow(0 0 10px #FFD700); z-index: 20; }
+        .frame-spike-gold { background: #FFD700; padding: 4px; clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%); animation: spin 6s linear infinite; }
 
-        /* Spike Gold */
-        .frame-spike-gold {
-            background: #FFD700; padding: 4px;
-            clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
-            animation: spin 6s linear infinite;
-        }
+        /* --- NEW LEGENDARY PRO FRAMES --- */
+        /* 1. Anime Hero (Pelo + Espada) */
+        .frame-anime-hero { border: 3px solid #3b82f6; box-shadow: 0 0 20px #3b82f6; }
+        .frame-anime-hero::before { content: '⚔️'; position: absolute; bottom: -10px; right: -20px; font-size: 3rem; transform: rotate(-45deg); z-index: 20; filter: drop-shadow(0 0 5px #000); }
+        .frame-anime-hero::after { content: ''; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 80px; height: 40px; background: #facc15; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); z-index: 20; }
+
+        /* 2. Gangster (Lentes + Arma) */
+        .frame-gangster { border: 3px solid #111; box-shadow: 0 0 10px #fff; background: #333; }
+        .frame-gangster::before { content: '🕶️'; position: absolute; top: 25%; left: 50%; transform: translateX(-50%); font-size: 3rem; z-index: 20; }
+        .frame-gangster::after { content: '🔫'; position: absolute; bottom: -5px; right: -25px; font-size: 2.5rem; transform: rotate(-10deg); z-index: 20; }
+
+        /* 3. Necromancer */
+        .frame-necromancer { border: 3px solid #10b981; box-shadow: 0 0 20px #10b981, inset 0 0 10px #000; animation: pulse-green 3s infinite; }
+        .frame-necromancer::before { content: '💀'; position: absolute; bottom: -15px; left: -10px; font-size: 2rem; z-index: 20; }
+        .frame-necromancer::after { content: '💀'; position: absolute; bottom: -15px; right: -10px; font-size: 2rem; z-index: 20; transform: scaleX(-1); }
+
+        /* 4. Cyber Samurai */
+        .frame-cyber-samurai { border: 2px solid #ec4899; box-shadow: 0 0 15px #ec4899; }
+        .frame-cyber-samurai::before { content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 120%; height: 5px; background: #ec4899; box-shadow: 0 0 10px #ec4899; }
+        .frame-cyber-samurai::after { content: '👺'; position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 2rem; }
+
+        /* 5. Phoenix */
+        .frame-phoenix { border: 3px solid #f97316; box-shadow: 0 0 25px #f97316; }
+        .frame-phoenix::before { content: '🔥'; position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 2.5rem; animation: float 2s infinite; }
+        .frame-phoenix::after { content: ''; position: absolute; inset: -10px; border: 2px dashed #f97316; border-radius: 50%; animation: spin-slow 10s linear infinite; }
+
+        /* 6. Void Walker */
+        .frame-void-walker { background: #000; border: 1px solid #555; box-shadow: 0 0 30px #000; }
+        .frame-void-walker::before { content: ''; position: absolute; inset: -5px; border: 1px solid #fff; border-radius: 50%; opacity: 0.3; animation: pulse 2s infinite; }
+
+        /* 7. King Slayer */
+        .frame-king-slayer { border: 3px solid #7f1d1d; box-shadow: 0 0 15px #ef4444; }
+        .frame-king-slayer::before { content: '🗡️'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(45deg); font-size: 4rem; opacity: 0.3; pointer-events: none; }
+        
+        /* 8. Mecha Pilot */
+        .frame-mecha { border: 4px solid #3b82f6; clip-path: polygon(10% 0, 90% 0, 100% 25%, 100% 75%, 90% 100%, 10% 100%, 0 75%, 0 25%); background: #1e3a8a; }
+        .frame-mecha::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(transparent 50%, rgba(59, 130, 246, 0.3) 50%); background-size: 100% 4px; pointer-events: none; }
+
+        /* 9. Wizard Supreme */
+        .frame-wizard { border: 3px solid #8b5cf6; box-shadow: 0 0 15px #8b5cf6; }
+        .frame-wizard::before { content: '✨'; position: absolute; top: 0; left: -10px; font-size: 1.5rem; animation: pulse 1s infinite; }
+        .frame-wizard::after { content: '🎩'; position: absolute; top: -35px; right: 0; font-size: 2.5rem; transform: rotate(15deg); }
+
+        /* 10. Dragon Lord */
+        .frame-dragon { border: 3px solid #ef4444; }
+        .frame-dragon::before { content: '🐉'; position: absolute; bottom: -10px; left: -20px; font-size: 3rem; z-index: 20; filter: drop-shadow(2px 2px 0 #000); }
+
 
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes spin-slow { 100% { transform: rotate(360deg); } }
         @keyframes pulse-blue { 0% { box-shadow: 0 0 10px #00f2ff; } 50% { box-shadow: 0 0 25px #00f2ff; } 100% { box-shadow: 0 0 10px #00f2ff; } }
         @keyframes pulse-red { 0% { box-shadow: 0 0 5px #ff0000; } 50% { box-shadow: 0 0 25px #ff0000; } 100% { box-shadow: 0 0 5px #ff0000; } }
+        @keyframes pulse-green { 0% { box-shadow: 0 0 5px #10b981; } 50% { box-shadow: 0 0 25px #10b981; } 100% { box-shadow: 0 0 5px #10b981; } }
         @keyframes pulse-gold { 0% { box-shadow: 0 0 20px #FFD700; } 50% { box-shadow: 0 0 50px #FFD700; } 100% { box-shadow: 0 0 20px #FFD700; } }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
         /* --- Tarjeta 3D (Flip Card) --- */
-        .card-scene { perspective: 1000px; width: 100%; height: 280px; cursor: grab; } /* Aumenté altura para info extra */
+        .card-scene { perspective: 1000px; width: 100%; height: 280px; cursor: grab; }
         .card-obj {
             width: 100%; height: 100%; position: relative;
             transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
@@ -111,21 +141,36 @@
             -webkit-backface-visibility: hidden; backface-visibility: hidden;
             border-radius: 16px; display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5); 
         }
-        .card-front { background: linear-gradient(135deg, #1a1a1a, #0d0d0d); border-bottom: 4px solid var(--orange-cr); }
-        .card-back { background: linear-gradient(135deg, #000000, #1a1a1a); transform: rotateY(180deg); position: relative; overflow: hidden; }
+        .card-front { 
+            background: linear-gradient(135deg, #1a1a1a, #0d0d0d); 
+            border: 1px solid rgba(255,255,255,0.1); border-bottom: 4px solid var(--orange-cr); 
+        }
+        /* REVERSO MEJORADO */
+        .card-back { 
+            background: linear-gradient(135deg, #0a0a0a, #111); 
+            transform: rotateY(180deg); position: relative; overflow: hidden;
+            border: 1px solid #333;
+        }
+        /* Holograma de fondo */
+        .card-back::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.05) 40%, transparent 50%);
+            background-size: 200% 100%; animation: holoShift 3s infinite linear; pointer-events: none;
+        }
+        .chip {
+            width: 40px; height: 30px; background: linear-gradient(135deg, #d4af37, #f9f295);
+            border-radius: 4px; margin-bottom: 10px; position: relative; overflow: hidden;
+        }
+        .chip::before {
+            content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: #b8860b;
+        }
         
-        .status-premium { border: 2px solid #fbbf24; box-shadow: 0 0 20px rgba(251, 191, 36, 0.3); }
-        .status-premium::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(251,191,36,0.1) 0%, transparent 70%);
-            animation: rotateBg 10s linear infinite; pointer-events: none;
-        }
+        .status-premium { border: 2px solid #fbbf24; box-shadow: 0 0 25px rgba(251, 191, 36, 0.2); }
         .status-basic { border: 2px solid #525252; }
-        @keyframes rotateBg { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- Badges / Títulos Mejorados --- */
+        /* --- Badges --- */
         .badge-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
         .badge {
             font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
@@ -133,27 +178,11 @@
             background: #0a0a0a; color: #444; transition: all 0.3s;
             filter: grayscale(100%); opacity: 0.5;
         }
-        
         .badge.owned { filter: grayscale(0%); opacity: 1; border-color: transparent; color: white; transform: scale(1.05); }
-        
+        /* Badge Colors from previous */
         .badge[data-title="Creador"].owned { background: linear-gradient(90deg, #F47521, #ff4500); box-shadow: 0 0 10px #ff4500; }
         .badge[data-title="Dios"].owned { background: linear-gradient(90deg, #fff, #ffd700); color: black; box-shadow: 0 0 15px white; animation: pulseGold 2s infinite; }
-        .badge[data-title="VIP"].owned { background: #6d28d9; border: 1px solid #a78bfa; }
-        .badge[data-title="Artista"].owned { background: #ec4899; }
-        .badge[data-title="Héroe"].owned { background: #3b82f6; }
-        .badge[data-title="Villano"].owned { background: #ef4444; }
-
-        @keyframes pulseGold { 0% { box-shadow: 0 0 5px #ffd700; } 50% { box-shadow: 0 0 20px #ffd700; } 100% { box-shadow: 0 0 5px #ffd700; } }
-
-        /* --- Inputs --- */
-        .input-cr {
-            width: 100%; padding: 12px; background: #111; border: 1px solid #333;
-            color: white; border-radius: 4px; outline: none; transition: 0.3s;
-        }
-        .input-cr:focus { border-color: var(--orange-cr); }
-        
-        /* Select Dark */
-        select.input-cr { appearance: none; cursor: pointer; }
+        /* ... more badges ... */
 
         /* --- Tabla Admin --- */
         .admin-table-container { max-height: 200px; overflow-y: auto; margin-top: 10px; border: 1px solid #333; border-radius: 4px; }
@@ -163,70 +192,51 @@
         .admin-table tr:hover { background: rgba(244, 117, 33, 0.1); cursor: pointer; }
         .admin-table tr.selected { background: rgba(244, 117, 33, 0.3); border-left: 3px solid var(--orange-cr); }
 
-        /* --- Paneles Modales --- */
-        .modal-overlay { 
-            position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
-            display: flex; align-items: center; justify-content: center; z-index: 100;
-        }
-        .modal-content {
-            background: #111; border: 2px solid #333; padding: 2rem; border-radius: 1rem;
-            max-width: 400px; width: 90%; text-align: center; animation: bounceIn 0.3s;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
-        }
+        /* --- Modales --- */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 100; }
+        .modal-content { background: #111; border: 2px solid #333; padding: 2rem; border-radius: 1rem; max-width: 400px; width: 90%; text-align: center; animation: bounceIn 0.3s; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
         .hidden-section { display: none; }
+        .input-cr { width: 100%; padding: 12px; background: #111; border: 1px solid #333; color: white; border-radius: 4px; outline: none; transition: 0.3s; }
+        .input-cr:focus { border-color: var(--orange-cr); }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-    <!-- LOGIN/AUTH -->
+    <!-- LOGIN -->
     <div id="auth-container" class="w-full max-w-md animate-enter">
         <div class="text-center mb-8">
             <h1 class="text-4xl font-black italic tracking-tighter mb-2">COMIC<span class="text-[#F47521]">VERSE</span></h1>
             <p class="text-gray-400 text-sm">Identifícate para acceder al Multiverso</p>
         </div>
-
         <div class="bg-[#1a1a1a] p-8 rounded-xl border border-white/10 shadow-2xl relative overflow-hidden">
             <div class="flex mb-6 border-b border-white/10">
                 <button onclick="switchTab('login')" id="tab-login" class="flex-1 pb-2 font-bold text-[#F47521] border-b-2 border-[#F47521]">LOGIN</button>
                 <button onclick="switchTab('register')" id="tab-register" class="flex-1 pb-2 font-bold text-gray-500 hover:text-white transition">REGISTRO</button>
             </div>
-
             <form id="login-form" class="space-y-4">
                 <input type="email" id="login-email" placeholder="Correo Electrónico" class="input-cr" required>
                 <input type="password" id="login-pass" placeholder="Contraseña" class="input-cr" required>
                 <button type="submit" class="w-full bg-[#F47521] hover:bg-orange-600 text-black font-black uppercase py-3 rounded transition hover:scale-[1.02]">Ingresar</button>
             </form>
-
             <form id="register-form" class="space-y-4 hidden-section">
                 <input type="text" id="reg-username" placeholder="Nombre de Usuario (Único)" class="input-cr" required>
                 <input type="email" id="reg-email" placeholder="Correo Electrónico" class="input-cr" required>
                 <input type="password" id="reg-pass" placeholder="Contraseña (Mín 6 caracteres)" class="input-cr" required>
                 <button type="submit" class="w-full bg-white hover:bg-gray-200 text-black font-black uppercase py-3 rounded transition hover:scale-[1.02]">Crear Cuenta</button>
             </form>
-
-            <div class="my-6 flex items-center justify-between text-gray-500 text-xs uppercase">
-                <span class="w-1/3 h-px bg-white/10"></span><span>O conecta con</span><span class="w-1/3 h-px bg-white/10"></span>
-            </div>
-
-            <button onclick="googleLogin()" class="w-full bg-black border border-white/20 hover:border-white text-white font-bold py-3 rounded flex items-center justify-center gap-3 transition">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5"> Google
-            </button>
+            <div class="my-6 flex items-center justify-between text-gray-500 text-xs uppercase"><span class="w-1/3 h-px bg-white/10"></span><span>O conecta con</span><span class="w-1/3 h-px bg-white/10"></span></div>
+            <button onclick="googleLogin()" class="w-full bg-black border border-white/20 hover:border-white text-white font-bold py-3 rounded flex items-center justify-center gap-3 transition"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5"> Google</button>
         </div>
     </div>
 
     <!-- PERFIL -->
     <div id="profile-container" class="w-full max-w-4xl hidden-section animate-enter">
-        
         <div class="flex justify-between items-end mb-6">
-            <div>
-                <h2 class="text-3xl font-black italic uppercase">Mi <span class="text-[#F47521]">Perfil</span></h2>
-                <p class="text-xs text-gray-500 font-mono" id="profile-id">ID: Cargando...</p>
-            </div>
+            <div><h2 class="text-3xl font-black italic uppercase">Mi <span class="text-[#F47521]">Perfil</span></h2><p class="text-xs text-gray-500 font-mono" id="profile-id">ID: Cargando...</p></div>
             <button onclick="cerrarSesion()" class="text-red-500 text-xs font-bold uppercase hover:underline"><i class="fa-solid fa-power-off"></i> Cerrar Sesión</button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
             <!-- COLUMNA IZQUIERDA -->
             <div class="md:col-span-1 space-y-6">
                 <!-- Tarjeta 3D -->
@@ -242,35 +252,33 @@
                             </div>
                             <h3 id="display-username" class="text-xl font-bold text-white">Usuario</h3>
                             
-                            <!-- Estado y Fecha (NUEVO) -->
-                            <div id="user-status-display" class="bg-white/10 px-3 py-1 rounded-full text-[10px] uppercase font-bold text-[#F47521] mt-1 mb-1">
-                                Estado: Conectado
-                            </div>
+                            <!-- Estado (Coloreado) -->
+                            <div id="user-status-display" class="px-3 py-1 rounded-full text-[10px] uppercase font-bold mt-1 mb-1 bg-white/10 text-white">Estado: Conectado</div>
                             <p id="join-date" class="text-[9px] text-gray-500 font-mono">Unido: -</p>
 
-                            <!-- Redes Sociales (Solo Creador) -->
                             <div id="social-buttons" class="flex gap-2 mt-3 hidden-section justify-center relative z-20">
                                 <a id="btn-tiktok" href="#" target="_blank" class="text-white hover:text-pink-500 text-lg transition p-2 bg-black/50 rounded-full border border-white/10"><i class="fa-brands fa-tiktok"></i></a>
                                 <a id="btn-insta" href="#" target="_blank" class="text-white hover:text-purple-500 text-lg transition p-2 bg-black/50 rounded-full border border-white/10"><i class="fa-brands fa-instagram"></i></a>
                             </div>
-
-                            <p class="text-xs text-gray-400 mt-2 uppercase tracking-widest"><i class="fa-solid fa-rotate mr-1"></i> Ver Membresía</p>
+                            <p class="text-xs text-gray-400 mt-2 uppercase tracking-widest"><i class="fa-solid fa-rotate mr-1"></i> Ver Credencial</p>
                         </div>
-                        <!-- Atrás -->
+                        <!-- Atrás (Mejorado) -->
                         <div class="card-face card-back status-basic" id="card-back-style">
+                            <div class="chip"></div>
                             <i id="badge-icon" class="fa-solid fa-user text-4xl mb-2 text-gray-500"></i>
                             <h3 id="membership-type" class="text-2xl font-black uppercase text-gray-400">Básico</h3>
-                            <p class="text-[10px] text-gray-500 mt-2 px-4 text-center">Mejora a Premium para desbloquear contenido exclusivo.</p>
+                            <p class="text-[10px] text-gray-500 mt-2 px-4 text-center font-mono">ID: <span id="card-id-back">000000</span></p>
+                            <div class="absolute bottom-4 text-xs tracking-[0.3em] opacity-30">COMICVERSE</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Bio / Editor -->
+                <!-- Bio -->
                 <div class="bg-[#111] p-4 rounded-lg border border-white/5">
                     <h4 class="text-[#F47521] text-xs font-bold uppercase mb-2">Biografía</h4>
                     <p id="display-bio" class="text-sm text-gray-300 italic">Sin biografía.</p>
                     
-                    <!-- AREA EDICIÓN -->
+                    <!-- EDITOR -->
                     <div id="editor-area" class="hidden mt-4 pt-4 border-t border-white/10">
                         <label class="text-[10px] text-gray-500 uppercase mb-1 block">Estado Actual</label>
                         <select id="edit-status" class="input-cr mb-2 text-xs">
@@ -285,29 +293,24 @@
                             <option value="Modo Zen">Modo Zen</option>
                             <option value="Salvando el mundo">Salvando el mundo</option>
                         </select>
-
                         <label class="text-[10px] text-gray-500 uppercase mb-1 block">Foto de Perfil</label>
                         <input type="text" id="edit-photo" placeholder="Pegar URL..." class="input-cr mb-2 text-xs">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="text-[10px] text-gray-500">O subir:</span>
                             <input type="file" id="file-upload" accept="image/*" class="text-xs text-gray-400">
                         </div>
-                        
                         <label class="text-[10px] text-gray-500 uppercase mb-1 block">Biografía</label>
                         <textarea id="edit-bio" placeholder="Escribe tu bio..." class="input-cr h-20 text-xs mb-2"></textarea>
                         
-                        <!-- Inputs Creador -->
                         <div id="creator-inputs" class="hidden-section border-t border-white/5 pt-2 mt-2">
                             <label class="text-[10px] text-[#F47521] uppercase mb-1 block font-bold">Zona Creador</label>
                             <input type="text" id="edit-tiktok" placeholder="URL TikTok" class="input-cr mb-2 text-xs">
                             <input type="text" id="edit-insta" placeholder="URL Instagram" class="input-cr mb-2 text-xs">
                         </div>
-
                         <div class="flex gap-2 mt-2">
                             <button onclick="guardarPerfil()" class="flex-1 bg-green-600 hover:bg-green-500 text-white text-xs font-bold py-2 rounded">GUARDAR</button>
                             <button onclick="toggleEditMode()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white text-xs font-bold py-2 rounded">CANCELAR</button>
                         </div>
-                        
                         <button onclick="confirmarBorrar()" class="w-full mt-4 bg-red-900/30 border border-red-800 text-red-500 hover:bg-red-900 hover:text-white text-xs font-bold py-2 rounded transition">[BORRAR CUENTA]</button>
                     </div>
                 </div>
@@ -315,12 +318,9 @@
 
             <!-- COLUMNA DERECHA -->
             <div class="md:col-span-2 space-y-6">
-                
                 <div class="bg-[#1a1a1a] p-6 rounded-xl border border-white/10">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-medal text-yellow-500"></i> Títulos Obtenidos
-                        </h3>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fa-solid fa-medal text-yellow-500"></i> Títulos Obtenidos</h3>
                         <span id="titles-count" class="text-xs bg-[#333] px-2 py-1 rounded text-white">0 / 25</span>
                     </div>
                     <div class="text-xs text-gray-500 mb-2 italic" id="default-title-msg"></div>
@@ -333,25 +333,19 @@
                         <h3 class="text-sm font-bold text-red-500 uppercase tracking-widest"><i class="fa-solid fa-user-secret"></i> Zona Admin</h3>
                         <input type="password" id="admin-key" placeholder="Clave" class="bg-[#111] border border-red-900/50 text-red-500 text-xs px-2 py-1 rounded w-24 text-center" onkeyup="checkAdmin()">
                     </div>
-
                     <div id="admin-controls" class="hidden-section border-t border-red-900/20 pt-4">
                         <div class="mb-4">
                             <input type="text" id="admin-search" placeholder="Buscar Gmail..." class="w-full bg-[#111] border border-gray-700 text-white text-xs p-2 rounded mb-2" onkeyup="filtrarUsuarios()">
                             <div class="admin-table-container custom-scroll">
-                                <table class="admin-table">
-                                    <thead><tr><th>Usuario / Email</th><th>ID</th></tr></thead>
-                                    <tbody id="users-table-body"><tr><td colspan="2" class="text-center py-2">Cargando...</td></tr></tbody>
-                                </table>
+                                <table class="admin-table"><thead><tr><th>Usuario / Email</th><th>ID</th></tr></thead><tbody id="users-table-body"><tr><td colspan="2" class="text-center py-2">Cargando...</td></tr></tbody></table>
                             </div>
                         </div>
-
                         <div id="admin-actions-panel" class="bg-[#1a1a1a] p-4 rounded border border-gray-700 opacity-50 pointer-events-none transition-opacity">
                             <p class="text-xs text-[#F47521] font-bold mb-2">Editando a: <span id="selected-user-email" class="text-white">Nadie</span></p>
                             <div class="flex gap-2 mb-4">
                                 <button onclick="adminViewData()" class="flex-1 bg-blue-900/30 text-blue-400 border border-blue-500/30 text-xs font-bold py-2 rounded hover:bg-blue-600 hover:text-white"><i class="fa-solid fa-eye"></i> Ver Datos</button>
                                 <button onclick="adminDeleteUser()" class="flex-1 bg-red-900/30 text-red-500 border border-red-500/30 text-xs font-bold py-2 rounded hover:bg-red-600 hover:text-white"><i class="fa-solid fa-trash"></i> Borrar Usuario</button>
                             </div>
-
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-[10px] text-gray-500 mb-1">Membresía</label>
@@ -359,9 +353,12 @@
                                     <button onclick="adminSetPremium(false)" class="w-full bg-gray-800 text-gray-400 border border-gray-600 text-xs font-bold py-1 rounded hover:bg-white hover:text-black">Hacer BÁSICO</button>
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] text-gray-500 mb-1">Asignar Título</label>
+                                    <label class="block text-[10px] text-gray-500 mb-1">Títulos</label>
                                     <select id="admin-title-select" class="w-full bg-[#111] text-white text-xs p-1 rounded border border-gray-700 mb-2"></select>
-                                    <button onclick="adminAddTitle()" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-1 rounded">Asignar</button>
+                                    <div class="flex gap-1">
+                                        <button onclick="adminAddTitle()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-1 rounded">Asignar</button>
+                                        <button onclick="adminRemoveTitle()" class="flex-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold py-1 rounded">Quitar</button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mt-4 border-t border-white/5 pt-2">
@@ -369,17 +366,21 @@
                                 <div class="flex gap-2">
                                     <select id="admin-frame-select" class="flex-1 bg-[#111] text-white text-xs p-1 rounded border border-gray-700">
                                         <option value="">Ninguno</option>
+                                        <option value="frame-anime-hero">Anime Hero</option>
+                                        <option value="frame-gangster">Gangster</option>
                                         <option value="frame-angel-gold">Angel Gold</option>
                                         <option value="frame-demon-gold">Demon Gold</option>
                                         <option value="frame-crown-gold">Crown Gold</option>
                                         <option value="frame-spike-gold">Spike Gold</option>
                                         <option value="frame-aura-god">God Aura</option>
-                                        <!-- Old but gold -->
-                                        <option value="frame-cosmic">Cosmic</option>
-                                        <option value="frame-plasma">Plasma</option>
-                                        <option value="frame-matrix">Matrix</option>
-                                        <option value="frame-blood">Blood</option>
-                                        <option value="frame-holo">Holo</option>
+                                        <option value="frame-necromancer">Necromancer</option>
+                                        <option value="frame-cyber-samurai">Cyber Samurai</option>
+                                        <option value="frame-phoenix">Phoenix</option>
+                                        <option value="frame-void-walker">Void Walker</option>
+                                        <option value="frame-king-slayer">King Slayer</option>
+                                        <option value="frame-mecha">Mecha Pilot</option>
+                                        <option value="frame-wizard">Wizard</option>
+                                        <option value="frame-dragon">Dragon Lord</option>
                                     </select>
                                     <button onclick="adminSetFrame()" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold py-1 px-3 rounded">Aplicar</button>
                                 </div>
@@ -387,22 +388,21 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 
-    <!-- MODAL DE NOTIFICACIÓN -->
+    <!-- NOTIFICACIÓN -->
     <div id="notification-modal" class="hidden-section modal-overlay">
         <div class="modal-content border-green-500 shadow-green-500/20">
             <i id="notif-icon" class="fa-solid fa-check-circle text-5xl text-green-500 mb-4"></i>
             <h3 id="notif-title" class="text-2xl font-black text-white uppercase mb-2">Sistema</h3>
-            <p id="notif-msg" class="text-gray-400 mb-6">Cambios guardados con éxito.</p>
+            <p id="notif-msg" class="text-gray-400 mb-6">Cambios guardados.</p>
             <button onclick="closeNotification()" class="bg-white text-black font-bold py-2 px-6 rounded uppercase hover:bg-gray-200">Aceptar</button>
         </div>
     </div>
-
-    <!-- MODAL "TRAMPOSILLO" -->
+    
+    <!-- TRAMPOSILLO -->
     <div id="cheat-modal" class="hidden-section modal-overlay">
         <div class="modal-content border-red-600 shadow-red-600/30">
             <i class="fa-solid fa-ban text-5xl text-red-600 mb-4 animate-pulse"></i>
@@ -412,11 +412,10 @@
         </div>
     </div>
 
-    <!-- LOGICA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, deleteUser } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBf9ATqgErKQKpzKpFXsUu4BHmFcNSLzOE",
@@ -436,14 +435,14 @@
         let allUsersCache = [];
         let selectedUserId = null;
 
-        // UI HELPERS
+        // UI
         window.showNotification = (title, msg, type = 'success') => {
             const modal = document.getElementById('notification-modal');
-            const content = modal.querySelector('.modal-content');
-            const icon = document.getElementById('notif-icon');
             document.getElementById('notif-title').innerText = title;
             document.getElementById('notif-msg').innerText = msg;
-            if(type === 'success') { content.className = "modal-content border-green-500 shadow-green-500/20"; icon.className = "fa-solid fa-check-circle text-5xl text-green-500 mb-4"; } 
+            const content = modal.querySelector('.modal-content');
+            const icon = document.getElementById('notif-icon');
+            if(type === 'success') { content.className = "modal-content border-green-500 shadow-green-500/20"; icon.className = "fa-solid fa-check-circle text-5xl text-green-500 mb-4"; }
             else { content.className = "modal-content border-red-500 shadow-red-500/20"; icon.className = "fa-solid fa-triangle-exclamation text-5xl text-red-500 mb-4"; }
             modal.classList.remove('hidden-section');
         };
@@ -504,25 +503,32 @@
                 const data = snap.data();
                 document.getElementById('display-username').innerText = data.username;
                 document.getElementById('display-bio').innerText = data.bio || "Sin bio.";
-                
                 const photo = (data.photoURL && data.photoURL.trim() !== "") ? data.photoURL : "https://via.placeholder.com/150";
                 document.getElementById('display-avatar').src = photo;
-                
                 if(auth.currentUser && auth.currentUser.uid === user.uid) { localStorage.setItem('userAvatar', photo); }
 
                 document.getElementById('avatar-frame').className = `avatar-container ${data.frame || ''}`;
                 renderCardStatus(data.isPremium);
-                
-                // Nuevos campos
-                document.getElementById('join-date').innerText = "Unido: " + (data.joinDate || "Veterano");
+                if(data.isPremium) document.getElementById('card-id-back').innerText = user.uid.substring(0,8).toUpperCase();
+
+                // Status y Color
                 const statusText = data.userStatus || "Conectado";
-                document.getElementById('user-status-display').innerText = `Estado: ${statusText}`;
+                const statusEl = document.getElementById('user-status-display');
+                statusEl.innerText = `Estado: ${statusText}`;
+                
+                let stColor = "bg-white/10 text-white";
+                if(statusText.includes("mazmorra")) stColor = "bg-red-900/50 text-red-200 border border-red-500/30";
+                else if(statusText.includes("Zen")) stColor = "bg-green-900/50 text-green-200 border border-green-500/30";
+                else if(statusText.includes("Leyendo")) stColor = "bg-blue-900/50 text-blue-200 border border-blue-500/30";
+                else if(statusText.includes("Salvando")) stColor = "bg-yellow-900/50 text-yellow-200 border border-yellow-500/30";
+                statusEl.className = `px-3 py-1 rounded-full text-[10px] uppercase font-bold mt-1 mb-1 ${stColor}`;
+
+                document.getElementById('join-date').innerText = "Unido: " + (data.joinDate || "Veterano");
 
                 const userTitles = data.titles || [];
                 const badges = document.querySelectorAll('.badge');
                 let count = 0;
-                const msgEl = document.getElementById('default-title-msg');
-                msgEl.innerText = userTitles.length === 0 ? "Nuevo usuario (Aún no tienes títulos)" : "";
+                document.getElementById('default-title-msg').innerText = userTitles.length === 0 ? "Nuevo usuario (Aún no tienes títulos)" : "";
                 badges.forEach(b => { if (userTitles.includes(b.dataset.title)) { b.classList.add('owned'); count++; } else { b.classList.remove('owned'); } });
                 document.getElementById('titles-count').innerText = `${count} / ${ALL_TITLES.length}`;
 
@@ -539,7 +545,6 @@
                     document.getElementById('creator-inputs').classList.add('hidden-section');
                     document.getElementById('social-buttons').classList.add('hidden-section');
                 }
-
                 document.getElementById('edit-bio').value = data.bio || "";
                 document.getElementById('edit-photo').value = data.photoURL || "";
                 document.getElementById('edit-status').value = data.userStatus || "Conectado";
@@ -553,7 +558,6 @@
         }
 
         window.toggleEditMode = () => document.getElementById('editor-area').classList.toggle('hidden');
-        
         document.getElementById('file-upload').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -569,118 +573,46 @@
             const newBio = document.getElementById('edit-bio').value;
             let newPhoto = document.getElementById('edit-photo').value;
             const newStatus = document.getElementById('edit-status').value;
-            
             const tiktokVal = document.getElementById('edit-tiktok').value;
             const instaVal = document.getElementById('edit-insta').value;
 
             if (tiktokVal && !tiktokVal.includes('tiktok.com')) { showCheatModal(); return; }
             if (instaVal && !instaVal.includes('instagram.com')) { showCheatModal(); return; }
-
             if(!newPhoto || newPhoto.trim() === "") newPhoto = "https://via.placeholder.com/150";
 
             const updates = { bio: newBio, photoURL: newPhoto, userStatus: newStatus };
-            if(!document.getElementById('creator-inputs').classList.contains('hidden-section')){
-                updates.tiktok = tiktokVal;
-                updates.insta = instaVal;
-            }
+            if(!document.getElementById('creator-inputs').classList.contains('hidden-section')){ updates.tiktok = tiktokVal; updates.insta = instaVal; }
 
-            try {
-                await updateDoc(doc(db, "users", currentUserUid), updates);
-                await cargarDatosPerfil(auth.currentUser); 
-                window.toggleEditMode();
-                showNotification("Sistema", "Perfil actualizado correctamente.", "success");
-            } catch(e) { showNotification("Error", e.message, "error"); }
+            try { await updateDoc(doc(db, "users", currentUserUid), updates); await cargarDatosPerfil(auth.currentUser); window.toggleEditMode(); showNotification("Sistema", "Perfil actualizado correctamente.", "success"); } catch(e) { showNotification("Error", e.message, "error"); }
         };
 
         window.confirmarBorrar = async () => {
             if(confirm("¿ESTÁS SEGURO? Esta acción es irreversible.")) {
                 if(confirm("Última advertencia.")) {
-                    try {
-                        const user = auth.currentUser;
-                        await deleteDoc(doc(db, "users", user.uid));
-                        await deleteUser(user);
-                        showNotification("Sistema", "Cuenta eliminada. Adiós.", "success");
-                        setTimeout(() => window.location.reload(), 2000);
-                    } catch(e) { showNotification("Error", "Requiere login reciente. Cierra y vuelve a entrar.", "error"); }
+                    try { const user = auth.currentUser; await deleteDoc(doc(db, "users", user.uid)); await deleteUser(user); showNotification("Sistema", "Cuenta eliminada. Adiós.", "success"); setTimeout(() => window.location.reload(), 2000); } catch(e) { showNotification("Error", "Requiere login reciente. Cierra y vuelve a entrar.", "error"); }
                 }
             }
         };
 
-        window.checkAdmin = async () => {
-            const key = document.getElementById('admin-key').value;
-            if (key === "#Lau3700#") {
-                document.getElementById('admin-controls').classList.remove('hidden-section');
-                await loadAllUsers();
-            } else { document.getElementById('admin-controls').classList.add('hidden-section'); }
-        };
-
+        window.checkAdmin = async () => { const key = document.getElementById('admin-key').value; if (key === "#Lau3700#") { document.getElementById('admin-controls').classList.remove('hidden-section'); await loadAllUsers(); } else { document.getElementById('admin-controls').classList.add('hidden-section'); } };
         async function loadAllUsers() {
-            const tbody = document.getElementById('users-table-body');
-            tbody.innerHTML = '<tr><td colspan="2" class="text-center">Cargando...</td></tr>';
-            try {
-                const querySnapshot = await getDocs(collection(db, "users"));
-                allUsersCache = [];
-                querySnapshot.forEach((doc) => { allUsersCache.push({ id: doc.id, ...doc.data() }); });
-                renderUserTable(allUsersCache);
-            } catch (e) { tbody.innerHTML = '<tr><td colspan="2" class="text-red-500">Error</td></tr>'; }
+            const tbody = document.getElementById('users-table-body'); tbody.innerHTML = '<tr><td colspan="2" class="text-center">Cargando...</td></tr>';
+            try { const querySnapshot = await getDocs(collection(db, "users")); allUsersCache = []; querySnapshot.forEach((doc) => { allUsersCache.push({ id: doc.id, ...doc.data() }); }); renderUserTable(allUsersCache); } catch (e) { tbody.innerHTML = '<tr><td colspan="2" class="text-red-500">Error</td></tr>'; }
         }
-
-        window.filtrarUsuarios = () => {
-            const term = document.getElementById('admin-search').value.toLowerCase();
-            const filtered = allUsersCache.filter(u => (u.email && u.email.toLowerCase().includes(term)) || (u.username && u.username.toLowerCase().includes(term)));
-            renderUserTable(filtered);
-        };
-
+        window.filtrarUsuarios = () => { const term = document.getElementById('admin-search').value.toLowerCase(); const filtered = allUsersCache.filter(u => (u.email && u.email.toLowerCase().includes(term)) || (u.username && u.username.toLowerCase().includes(term))); renderUserTable(filtered); };
         function renderUserTable(users) {
-            const tbody = document.getElementById('users-table-body');
-            tbody.innerHTML = '';
+            const tbody = document.getElementById('users-table-body'); tbody.innerHTML = '';
             if (users.length === 0) { tbody.innerHTML = '<tr><td colspan="2" class="text-center text-gray-500">Sin resultados</td></tr>'; return; }
-            users.forEach(u => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td><div class="font-bold text-white">${u.username || 'Sin nombre'}</div><div class="text-gray-500 text-[10px]">${u.email || 'No Email'}</div></td><td class="font-mono text-xs text-gray-600">${u.id.substring(0,6)}...</td>`;
-                tr.onclick = () => selectUserForAdmin(u.id, u.email);
-                tbody.appendChild(tr);
-            });
+            users.forEach(u => { const tr = document.createElement('tr'); tr.innerHTML = `<td><div class="font-bold text-white">${u.username || 'Sin nombre'}</div><div class="text-gray-500 text-[10px]">${u.email || 'No Email'}</div></td><td class="font-mono text-xs text-gray-600">${u.id.substring(0,6)}...</td>`; tr.onclick = () => selectUserForAdmin(u.id, u.email); tbody.appendChild(tr); });
         }
+        function selectUserForAdmin(uid, email) { selectedUserId = uid; const rows = document.querySelectorAll('.admin-table tr'); rows.forEach(r => r.classList.remove('selected')); const panel = document.getElementById('admin-actions-panel'); panel.classList.remove('opacity-50', 'pointer-events-none'); document.getElementById('selected-user-email').innerText = email || uid; }
 
-        function selectUserForAdmin(uid, email) {
-            selectedUserId = uid;
-            const rows = document.querySelectorAll('.admin-table tr'); rows.forEach(r => r.classList.remove('selected'));
-            const panel = document.getElementById('admin-actions-panel'); panel.classList.remove('opacity-50', 'pointer-events-none');
-            document.getElementById('selected-user-email').innerText = email || uid;
-        }
-
-        // Acciones Admin
-        window.adminSetPremium = async (status) => {
-            if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error");
-            try { await updateDoc(doc(db, "users", selectedUserId), { isPremium: status }); showNotification("Admin", "Estado actualizado", "success"); if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser); } catch(e) { showNotification("Error", e.message, "error"); }
-        };
-        window.adminAddTitle = async () => {
-            if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error");
-            try { await updateDoc(doc(db, "users", selectedUserId), { titles: arrayUnion(document.getElementById('admin-title-select').value) }); showNotification("Admin", "Título asignado", "success"); if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser); } catch(e) { showNotification("Error", e.message, "error"); }
-        };
-        window.adminSetFrame = async () => {
-            if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error");
-            try { await updateDoc(doc(db, "users", selectedUserId), { frame: document.getElementById('admin-frame-select').value }); showNotification("Admin", "Marco aplicado", "success"); if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser); } catch(e) { showNotification("Error", e.message, "error"); }
-        };
-        
-        window.adminViewData = async () => {
-             if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error");
-             await cargarDatosPerfil({ uid: selectedUserId });
-             showNotification("Admin", "Datos cargados en vista previa.", "success");
-        };
-
-        window.adminDeleteUser = async () => {
-            if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error");
-            if (confirm(`¿Eliminar TODOS los datos de ${selectedUserId}?`)) {
-                 try {
-                     await deleteDoc(doc(db, "users", selectedUserId));
-                     showNotification("Admin", "Usuario eliminado de DB", "success");
-                     await loadAllUsers();
-                     document.getElementById('admin-actions-panel').classList.add('opacity-50', 'pointer-events-none');
-                 } catch(e) { showNotification("Error", e.message, "error"); }
-            }
-        };
+        window.adminSetPremium = async (status) => { if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error"); try { await updateDoc(doc(db, "users", selectedUserId), { isPremium: status }); showNotification("Admin", "Estado actualizado", "success"); if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser); } catch(e) { showNotification("Error", e.message, "error"); } };
+        window.adminAddTitle = async () => { if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error"); try { await updateDoc(doc(db, "users", selectedUserId), { titles: arrayUnion(document.getElementById('admin-title-select').value) }); showNotification("Admin", "Título asignado", "success"); if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser); } catch(e) { showNotification("Error", e.message, "error"); } };
+        window.adminRemoveTitle = async () => { if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error"); try { await updateDoc(doc(db, "users", selectedUserId), { titles: arrayRemove(document.getElementById('admin-title-select').value) }); showNotification("Admin", "Título removido", "success"); if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser); } catch(e) { showNotification("Error", e.message, "error"); } };
+        window.adminSetFrame = async () => { if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error"); try { await updateDoc(doc(db, "users", selectedUserId), { frame: document.getElementById('admin-frame-select').value }); showNotification("Admin", "Marco aplicado", "success"); if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser); } catch(e) { showNotification("Error", e.message, "error"); } };
+        window.adminViewData = async () => { if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error"); await cargarDatosPerfil({ uid: selectedUserId }); showNotification("Admin", "Datos cargados en vista previa.", "success"); };
+        window.adminDeleteUser = async () => { if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error"); if (confirm(`¿Eliminar TODOS los datos de ${selectedUserId}?`)) { try { await deleteDoc(doc(db, "users", selectedUserId)); showNotification("Admin", "Usuario eliminado de DB", "success"); await loadAllUsers(); document.getElementById('admin-actions-panel').classList.add('opacity-50', 'pointer-events-none'); } catch(e) { showNotification("Error", e.message, "error"); } } };
 
     </script>
 </body>
