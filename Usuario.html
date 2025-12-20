@@ -25,9 +25,9 @@
         .animate-enter { animation: fadeIn 0.5s ease-out forwards; }
         @keyframes bounceIn { 0% { transform: scale(0.8); opacity: 0; } 60% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); } }
 
-        /* --- MARCOS DE PERFIL (COLECCIÓN ULTIMATE) --- */
+        /* --- MARCOS DE PERFIL (COLECCIÓN ULTIMATE & LEGENDARY) --- */
         .avatar-container { position: relative; display: inline-block; padding: 6px; border-radius: 50%; box-sizing: border-box; }
-        .profile-img { border-radius: 50%; border: 3px solid #1a1a1a; position: relative; z-index: 2; width: 6rem; height: 6rem; object-fit: cover; }
+        .profile-img { border-radius: 50%; border: 3px solid #1a1a1a; position: relative; z-index: 10; width: 6rem; height: 6rem; object-fit: cover; }
 
         /* Legacy Keepers */
         .frame-gold { background: linear-gradient(45deg, #FFD700, #FDB931, #FFD700); animation: spin 4s linear infinite; box-shadow: 0 0 15px #FFD700; }
@@ -47,14 +47,59 @@
         .frame-pixel { border: 4px dashed #fff; box-shadow: 4px 4px 0 #F47521, -4px -4px 0 #00f2ff; }
         .frame-angel { background: white; box-shadow: 0 0 25px white, 0 0 50px #fffacd; border: 2px solid #fffacd; }
 
+        /* --- LEGENDARY GOLD FRAMES (SHAPES) --- */
+        /* Angel Wings Gold */
+        .frame-angel-gold { border: 3px solid #FFD700; box-shadow: 0 0 20px #FFD700; }
+        .frame-angel-gold::before, .frame-angel-gold::after {
+            content: ''; position: absolute; top: 10%; width: 60px; height: 100px;
+            background: linear-gradient(to bottom, #FFD700, transparent);
+            border-radius: 50% 50% 0 0; z-index: 1; opacity: 0.8;
+            filter: drop-shadow(0 0 10px #FFD700);
+        }
+        .frame-angel-gold::before { left: -40px; transform: rotate(-30deg); border-left: 4px solid #fff; }
+        .frame-angel-gold::after { right: -40px; transform: rotate(30deg); border-right: 4px solid #fff; }
+
+        /* Demon Horns Gold */
+        .frame-demon-gold { border: 3px solid #b8860b; box-shadow: 0 0 15px #FFD700; }
+        .frame-demon-gold::before, .frame-demon-gold::after {
+            content: ''; position: absolute; top: -30px; width: 20px; height: 50px;
+            background: linear-gradient(to top, #FFD700, #b8860b);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            z-index: 1; filter: drop-shadow(0 0 5px #ff0000);
+        }
+        .frame-demon-gold::before { left: 0; transform: rotate(-25deg); }
+        .frame-demon-gold::after { right: 0; transform: rotate(25deg); }
+
+        /* God Aura */
+        .frame-aura-god {
+            background: transparent; border: 2px solid #fff;
+            box-shadow: 0 0 30px #FFD700, 0 0 60px #FFD700, inset 0 0 20px #FFD700;
+            animation: pulse-gold 2s infinite;
+        }
+
+        /* Crown Gold */
+        .frame-crown-gold { border: 4px double #FFD700; }
+        .frame-crown-gold::before {
+            content: '👑'; position: absolute; top: -45px; left: 50%; transform: translateX(-50%);
+            font-size: 3rem; filter: drop-shadow(0 0 10px #FFD700); z-index: 20;
+        }
+
+        /* Spike Gold */
+        .frame-spike-gold {
+            background: #FFD700; padding: 4px;
+            clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
+            animation: spin 6s linear infinite;
+        }
+
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes spin-slow { 100% { transform: rotate(360deg); } }
         @keyframes pulse-blue { 0% { box-shadow: 0 0 10px #00f2ff; } 50% { box-shadow: 0 0 25px #00f2ff; } 100% { box-shadow: 0 0 10px #00f2ff; } }
         @keyframes pulse-red { 0% { box-shadow: 0 0 5px #ff0000; } 50% { box-shadow: 0 0 25px #ff0000; } 100% { box-shadow: 0 0 5px #ff0000; } }
+        @keyframes pulse-gold { 0% { box-shadow: 0 0 20px #FFD700; } 50% { box-shadow: 0 0 50px #FFD700; } 100% { box-shadow: 0 0 20px #FFD700; } }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
         /* --- Tarjeta 3D (Flip Card) --- */
-        .card-scene { perspective: 1000px; width: 100%; height: 250px; cursor: grab; }
+        .card-scene { perspective: 1000px; width: 100%; height: 280px; cursor: grab; } /* Aumenté altura para info extra */
         .card-obj {
             width: 100%; height: 100%; position: relative;
             transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
@@ -106,6 +151,9 @@
             color: white; border-radius: 4px; outline: none; transition: 0.3s;
         }
         .input-cr:focus { border-color: var(--orange-cr); }
+        
+        /* Select Dark */
+        select.input-cr { appearance: none; cursor: pointer; }
 
         /* --- Tabla Admin --- */
         .admin-table-container { max-height: 200px; overflow-y: auto; margin-top: 10px; border: 1px solid #333; border-radius: 4px; }
@@ -186,21 +234,27 @@
                     <div class="card-obj" id="membership-card">
                         <!-- Frente -->
                         <div class="card-face card-front">
-                            <div class="relative mb-4">
+                            <div class="relative mb-2">
                                 <div id="avatar-frame" class="avatar-container">
                                     <img id="display-avatar" src="https://via.placeholder.com/150" class="profile-img" onerror="this.src='https://via.placeholder.com/150'">
                                 </div>
-                                <button onclick="event.stopPropagation(); toggleEditMode()" class="absolute bottom-0 right-0 bg-[#F47521] text-black w-8 h-8 rounded-full flex items-center justify-center hover:scale-110 transition shadow-lg z-10"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="event.stopPropagation(); toggleEditMode()" class="absolute bottom-0 right-0 bg-[#F47521] text-black w-8 h-8 rounded-full flex items-center justify-center hover:scale-110 transition shadow-lg z-20"><i class="fa-solid fa-pen"></i></button>
                             </div>
                             <h3 id="display-username" class="text-xl font-bold text-white">Usuario</h3>
                             
+                            <!-- Estado y Fecha (NUEVO) -->
+                            <div id="user-status-display" class="bg-white/10 px-3 py-1 rounded-full text-[10px] uppercase font-bold text-[#F47521] mt-1 mb-1">
+                                Estado: Conectado
+                            </div>
+                            <p id="join-date" class="text-[9px] text-gray-500 font-mono">Unido: -</p>
+
                             <!-- Redes Sociales (Solo Creador) -->
-                            <div id="social-buttons" class="flex gap-2 mt-3 hidden-section justify-center">
-                                <a id="btn-tiktok" href="#" target="_blank" class="text-white hover:text-pink-500 text-lg transition p-2 bg-black/50 rounded-full"><i class="fa-brands fa-tiktok"></i></a>
-                                <a id="btn-insta" href="#" target="_blank" class="text-white hover:text-purple-500 text-lg transition p-2 bg-black/50 rounded-full"><i class="fa-brands fa-instagram"></i></a>
+                            <div id="social-buttons" class="flex gap-2 mt-3 hidden-section justify-center relative z-20">
+                                <a id="btn-tiktok" href="#" target="_blank" class="text-white hover:text-pink-500 text-lg transition p-2 bg-black/50 rounded-full border border-white/10"><i class="fa-brands fa-tiktok"></i></a>
+                                <a id="btn-insta" href="#" target="_blank" class="text-white hover:text-purple-500 text-lg transition p-2 bg-black/50 rounded-full border border-white/10"><i class="fa-brands fa-instagram"></i></a>
                             </div>
 
-                            <p class="text-xs text-gray-400 mt-2 uppercase tracking-widest"><i class="fa-solid fa-rotate mr-1"></i> Toca para ver Membresía</p>
+                            <p class="text-xs text-gray-400 mt-2 uppercase tracking-widest"><i class="fa-solid fa-rotate mr-1"></i> Ver Membresía</p>
                         </div>
                         <!-- Atrás -->
                         <div class="card-face card-back status-basic" id="card-back-style">
@@ -218,6 +272,20 @@
                     
                     <!-- AREA EDICIÓN -->
                     <div id="editor-area" class="hidden mt-4 pt-4 border-t border-white/10">
+                        <label class="text-[10px] text-gray-500 uppercase mb-1 block">Estado Actual</label>
+                        <select id="edit-status" class="input-cr mb-2 text-xs">
+                            <option value="Leyendo un cómic">Leyendo un cómic</option>
+                            <option value="Dibujando una obra maestra">Dibujando una obra maestra</option>
+                            <option value="Buscando inspiración">Buscando inspiración</option>
+                            <option value="En una mazmorra (AFK)">En una mazmorra (AFK)</option>
+                            <option value="Debatiendo en el foro">Debatiendo en el foro</option>
+                            <option value="Esperando actualización">Esperando actualización</option>
+                            <option value="Votando en el ranking">Votando en el ranking</option>
+                            <option value="Tomando un descanso">Tomando un descanso</option>
+                            <option value="Modo Zen">Modo Zen</option>
+                            <option value="Salvando el mundo">Salvando el mundo</option>
+                        </select>
+
                         <label class="text-[10px] text-gray-500 uppercase mb-1 block">Foto de Perfil</label>
                         <input type="text" id="edit-photo" placeholder="Pegar URL..." class="input-cr mb-2 text-xs">
                         <div class="flex items-center gap-2 mb-2">
@@ -253,7 +321,7 @@
                         <h3 class="text-lg font-bold text-white flex items-center gap-2">
                             <i class="fa-solid fa-medal text-yellow-500"></i> Títulos Obtenidos
                         </h3>
-                        <span id="titles-count" class="text-xs bg-[#333] px-2 py-1 rounded text-white">0 / 20</span>
+                        <span id="titles-count" class="text-xs bg-[#333] px-2 py-1 rounded text-white">0 / 25</span>
                     </div>
                     <div class="text-xs text-gray-500 mb-2 italic" id="default-title-msg"></div>
                     <div class="badge-grid" id="titles-container"></div>
@@ -297,24 +365,21 @@
                                 </div>
                             </div>
                             <div class="mt-4 border-t border-white/5 pt-2">
-                                <label class="block text-[10px] text-gray-500 mb-1">Marco de Perfil (Frame)</label>
+                                <label class="block text-[10px] text-gray-500 mb-1">Marco Legendario (Frame)</label>
                                 <div class="flex gap-2">
                                     <select id="admin-frame-select" class="flex-1 bg-[#111] text-white text-xs p-1 rounded border border-gray-700">
                                         <option value="">Ninguno</option>
-                                        <option value="frame-gold">Golden God</option>
-                                        <option value="frame-neon">Neon Cyber</option>
-                                        <option value="frame-fire">Hell Fire</option>
-                                        <option value="frame-glitch">Glitch Tech</option>
-                                        <option value="frame-cosmic">Cosmic Stardust</option>
-                                        <option value="frame-plasma">Plasma Flow</option>
-                                        <option value="frame-matrix">Matrix Code</option>
-                                        <option value="frame-blood">Blood Moon</option>
-                                        <option value="frame-holo">Holographic</option>
-                                        <option value="frame-steampunk">Steampunk</option>
-                                        <option value="frame-pixel">Pixel Art</option>
-                                        <option value="frame-radioactive">Radioactive</option>
-                                        <option value="frame-spirit">Spirit Fire</option>
-                                        <option value="frame-angel">Angel Wings</option>
+                                        <option value="frame-angel-gold">Angel Gold</option>
+                                        <option value="frame-demon-gold">Demon Gold</option>
+                                        <option value="frame-crown-gold">Crown Gold</option>
+                                        <option value="frame-spike-gold">Spike Gold</option>
+                                        <option value="frame-aura-god">God Aura</option>
+                                        <!-- Old but gold -->
+                                        <option value="frame-cosmic">Cosmic</option>
+                                        <option value="frame-plasma">Plasma</option>
+                                        <option value="frame-matrix">Matrix</option>
+                                        <option value="frame-blood">Blood</option>
+                                        <option value="frame-holo">Holo</option>
                                     </select>
                                     <button onclick="adminSetFrame()" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold py-1 px-3 rounded">Aplicar</button>
                                 </div>
@@ -376,29 +441,21 @@
             const modal = document.getElementById('notification-modal');
             const content = modal.querySelector('.modal-content');
             const icon = document.getElementById('notif-icon');
-            
             document.getElementById('notif-title').innerText = title;
             document.getElementById('notif-msg').innerText = msg;
-
-            if(type === 'success') {
-                content.className = "modal-content border-green-500 shadow-green-500/20";
-                icon.className = "fa-solid fa-check-circle text-5xl text-green-500 mb-4";
-            } else {
-                content.className = "modal-content border-red-500 shadow-red-500/20";
-                icon.className = "fa-solid fa-triangle-exclamation text-5xl text-red-500 mb-4";
-            }
+            if(type === 'success') { content.className = "modal-content border-green-500 shadow-green-500/20"; icon.className = "fa-solid fa-check-circle text-5xl text-green-500 mb-4"; } 
+            else { content.className = "modal-content border-red-500 shadow-red-500/20"; icon.className = "fa-solid fa-triangle-exclamation text-5xl text-red-500 mb-4"; }
             modal.classList.remove('hidden-section');
         };
         window.closeNotification = () => document.getElementById('notification-modal').classList.add('hidden-section');
-        
         window.showCheatModal = () => document.getElementById('cheat-modal').classList.remove('hidden-section');
         window.closeCheatModal = () => document.getElementById('cheat-modal').classList.add('hidden-section');
 
         const ALL_TITLES = [
-            { name: "Creador", type: "legendary" }, { name: "Dios", type: "legendary" }, { name: "Leyenda", type: "legendary" }, { name: "Fan #1", type: "legendary" },
-            { name: "Héroe", type: "epic" }, { name: "Villano", type: "epic" }, { name: "VIP", type: "epic" }, { name: "Donador", type: "epic" }, { name: "Maestro", type: "epic" },
-            { name: "Moderador", type: "rare" }, { name: "Artista", type: "rare" }, { name: "Editor", type: "rare" }, { name: "Guionista", type: "rare" }, { name: "Traductor", type: "rare" },
-            { name: "Crítico", type: "common" }, { name: "Votante", type: "common" }, { name: "Beta Tester", type: "common" }, { name: "Otaku", type: "common" }, { name: "Explorador", type: "common" }, { name: "Coleccionista", type: "common" }
+            { name: "Creador", type: "legendary" }, { name: "Dios", type: "legendary" }, { name: "Leyenda", type: "legendary" }, { name: "Fan #1", type: "legendary" }, { name: "Guardián", type: "legendary" },
+            { name: "Héroe", type: "epic" }, { name: "Villano", type: "epic" }, { name: "VIP", type: "epic" }, { name: "Donador", type: "epic" }, { name: "Maestro", type: "epic" }, { name: "Inmortal", type: "epic" },
+            { name: "Moderador", type: "rare" }, { name: "Artista", type: "rare" }, { name: "Editor", type: "rare" }, { name: "Guionista", type: "rare" }, { name: "Traductor", type: "rare" }, { name: "Oráculo", type: "rare" }, { name: "Vanguardia", type: "rare" },
+            { name: "Crítico", type: "common" }, { name: "Votante", type: "common" }, { name: "Beta Tester", type: "common" }, { name: "Otaku", type: "common" }, { name: "Explorador", type: "common" }, { name: "Coleccionista", type: "common" }, { name: "Arquitecto", type: "common" }
         ];
 
         const adminSelect = document.getElementById('admin-title-select');
@@ -436,16 +493,14 @@
         };
 
         document.getElementById('login-form').addEventListener('submit', async (e) => { e.preventDefault(); try { await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-pass').value); } catch (e) { showNotification("Error", e.message, "error"); } });
-        document.getElementById('register-form').addEventListener('submit', async (e) => { e.preventDefault(); const userVal = document.getElementById('reg-username').value; const emailVal = document.getElementById('reg-email').value; try { const cred = await createUserWithEmailAndPassword(auth, emailVal, document.getElementById('reg-pass').value); await updateProfile(cred.user, { displayName: userVal }); await setDoc(doc(db, "users", cred.user.uid), { username: userVal, email: emailVal, photoURL: "https://via.placeholder.com/150", bio: "Nuevo en ComicVerse", titles: [], isPremium: false }); } catch (e) { showNotification("Error", e.message, "error"); } });
-        window.googleLogin = async () => { try { const res = await signInWithPopup(auth, provider); const userRef = doc(db, "users", res.user.uid); const snap = await getDoc(userRef); if(!snap.exists()) { await setDoc(userRef, { username: res.user.displayName, email: res.user.email, photoURL: res.user.photoURL, bio: "Nuevo en ComicVerse", titles: [], isPremium: false }); } } catch (e) { showNotification("Error", e.message, "error"); } };
+        document.getElementById('register-form').addEventListener('submit', async (e) => { e.preventDefault(); const userVal = document.getElementById('reg-username').value; const emailVal = document.getElementById('reg-email').value; try { const cred = await createUserWithEmailAndPassword(auth, emailVal, document.getElementById('reg-pass').value); await updateProfile(cred.user, { displayName: userVal }); await setDoc(doc(db, "users", cred.user.uid), { username: userVal, email: emailVal, photoURL: "https://via.placeholder.com/150", bio: "Nuevo en ComicVerse", titles: [], isPremium: false, joinDate: new Date().toLocaleDateString() }); } catch (e) { showNotification("Error", e.message, "error"); } });
+        window.googleLogin = async () => { try { const res = await signInWithPopup(auth, provider); const userRef = doc(db, "users", res.user.uid); const snap = await getDoc(userRef); if(!snap.exists()) { await setDoc(userRef, { username: res.user.displayName, email: res.user.email, photoURL: res.user.photoURL, bio: "Nuevo en ComicVerse", titles: [], isPremium: false, joinDate: new Date().toLocaleDateString() }); } } catch (e) { showNotification("Error", e.message, "error"); } };
         window.cerrarSesion = () => signOut(auth);
 
         async function cargarDatosPerfil(user) {
             document.getElementById('profile-id').innerText = "ID: " + user.uid.substring(0, 8) + "...";
             const snap = await getDoc(doc(db, "users", user.uid));
             if (snap.exists()) {
-                // Si es admin cargando datos de otro, user no es auth.currentUser
-                // Usamos los datos pasados como parametro (si es el usuario actual) o los del snapshot
                 const data = snap.data();
                 document.getElementById('display-username').innerText = data.username;
                 document.getElementById('display-bio').innerText = data.bio || "Sin bio.";
@@ -453,14 +508,16 @@
                 const photo = (data.photoURL && data.photoURL.trim() !== "") ? data.photoURL : "https://via.placeholder.com/150";
                 document.getElementById('display-avatar').src = photo;
                 
-                // Solo guardar en local si es MI perfil
-                if(auth.currentUser && auth.currentUser.uid === user.uid) {
-                    localStorage.setItem('userAvatar', photo);
-                }
+                if(auth.currentUser && auth.currentUser.uid === user.uid) { localStorage.setItem('userAvatar', photo); }
 
                 document.getElementById('avatar-frame').className = `avatar-container ${data.frame || ''}`;
                 renderCardStatus(data.isPremium);
                 
+                // Nuevos campos
+                document.getElementById('join-date').innerText = "Unido: " + (data.joinDate || "Veterano");
+                const statusText = data.userStatus || "Conectado";
+                document.getElementById('user-status-display').innerText = `Estado: ${statusText}`;
+
                 const userTitles = data.titles || [];
                 const badges = document.querySelectorAll('.badge');
                 let count = 0;
@@ -476,7 +533,6 @@
                     document.getElementById('edit-insta').value = data.insta || "";
                     document.getElementById('btn-tiktok').href = data.tiktok || "#";
                     document.getElementById('btn-insta').href = data.insta || "#";
-                    // Validate visibility
                     document.getElementById('btn-tiktok').style.display = data.tiktok ? 'inline' : 'none';
                     document.getElementById('btn-insta').style.display = data.insta ? 'inline' : 'none';
                 } else {
@@ -486,6 +542,7 @@
 
                 document.getElementById('edit-bio').value = data.bio || "";
                 document.getElementById('edit-photo').value = data.photoURL || "";
+                document.getElementById('edit-status').value = data.userStatus || "Conectado";
             }
         }
 
@@ -511,18 +568,17 @@
             if(!currentUserUid) return;
             const newBio = document.getElementById('edit-bio').value;
             let newPhoto = document.getElementById('edit-photo').value;
+            const newStatus = document.getElementById('edit-status').value;
             
-            // VALIDACIÓN SOCIAL (Anti-Tramposillo)
             const tiktokVal = document.getElementById('edit-tiktok').value;
             const instaVal = document.getElementById('edit-insta').value;
 
             if (tiktokVal && !tiktokVal.includes('tiktok.com')) { showCheatModal(); return; }
             if (instaVal && !instaVal.includes('instagram.com')) { showCheatModal(); return; }
 
-            // Auto-restore photo
             if(!newPhoto || newPhoto.trim() === "") newPhoto = "https://via.placeholder.com/150";
 
-            const updates = { bio: newBio, photoURL: newPhoto };
+            const updates = { bio: newBio, photoURL: newPhoto, userStatus: newStatus };
             if(!document.getElementById('creator-inputs').classList.contains('hidden-section')){
                 updates.tiktok = tiktokVal;
                 updates.insta = instaVal;
@@ -530,7 +586,7 @@
 
             try {
                 await updateDoc(doc(db, "users", currentUserUid), updates);
-                await cargarDatosPerfil(auth.currentUser); // Recargar mis datos
+                await cargarDatosPerfil(auth.currentUser); 
                 window.toggleEditMode();
                 showNotification("Sistema", "Perfil actualizado correctamente.", "success");
             } catch(e) { showNotification("Error", e.message, "error"); }
@@ -608,23 +664,19 @@
             try { await updateDoc(doc(db, "users", selectedUserId), { frame: document.getElementById('admin-frame-select').value }); showNotification("Admin", "Marco aplicado", "success"); if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser); } catch(e) { showNotification("Error", e.message, "error"); }
         };
         
-        // ADMIN: VER DATOS (Carga en la vista principal para inspeccionar)
         window.adminViewData = async () => {
              if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error");
-             // Simulamos un objeto 'user' falso con solo el UID para que cargarDatosPerfil busque en DB
              await cargarDatosPerfil({ uid: selectedUserId });
              showNotification("Admin", "Datos cargados en vista previa.", "success");
         };
 
-        // ADMIN: BORRAR USUARIO
         window.adminDeleteUser = async () => {
             if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error");
             if (confirm(`¿Eliminar TODOS los datos de ${selectedUserId}?`)) {
                  try {
                      await deleteDoc(doc(db, "users", selectedUserId));
                      showNotification("Admin", "Usuario eliminado de DB", "success");
-                     await loadAllUsers(); // Recargar tabla
-                     // Limpiar vista
+                     await loadAllUsers();
                      document.getElementById('admin-actions-panel').classList.add('opacity-50', 'pointer-events-none');
                  } catch(e) { showNotification("Error", e.message, "error"); }
             }
