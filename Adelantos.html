@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adelantos Exclusivos - ComicVerse</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --orange-cr: #F47521; 
+            --dark-bg: #000000;
+        }
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: var(--orange-cr); border-radius: 4px; }
+
+        /* --- Efecto 3D y Borroso --- */
+        .preview-card-container {
+            perspective: 1000px;
+        }
+        .preview-card {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        
+        /* Estado Bloqueado */
+        .locked .preview-img {
+            filter: blur(15px) grayscale(100%);
+            transform: scale(1.1);
+            transition: 0.5s;
+        }
+        .locked .secret-text {
+            filter: blur(4px);
+            user-select: none;
+            opacity: 0.5;
+        }
+        
+        /* Icono de Candado Flotante */
+        .lock-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 20;
+            transition: 0.5s;
+            backdrop-filter: blur(2px);
+        }
+        .locked:hover .lock-overlay {
+            background: rgba(0,0,0,0.4);
+        }
+
+        /* Estado Desbloqueado */
+        .unlocked .preview-img {
+            filter: blur(0) grayscale(0%);
+            transform: scale(1);
+        }
+        .unlocked .secret-text {
+            filter: blur(0);
+            opacity: 1;
+        }
+        .unlocked .lock-overlay {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .unlocked {
+            border-color: var(--orange-cr);
+            box-shadow: 0 0 20px rgba(244, 117, 33, 0.3);
+        }
+
+        /* Animación del botón */
+        .btn-unlock {
+            position: relative; overflow: hidden;
+        }
+        .btn-unlock::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine { 100% { left: 100%; } }
+    </style>
+</head>
+<body class="relative min-h-screen pb-20">
+
+    <div class="p-4 md:p-8 max-w-7xl mx-auto">
+        
+        <!-- HEADER -->
+        <div class="flex items-center gap-3 mb-12 border-b border-gray-800 pb-6">
+            <div class="w-2 h-12 bg-gradient-to-b from-[#F47521] to-red-600 shadow-[0_0_20px_#F47521]"></div>
+            <div>
+                <h1 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white drop-shadow-xl">
+                    Adelantos <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F47521] to-yellow-400">VIP</span>
+                </h1>
+                <p class="text-gray-500 text-sm mt-1">
+                    Descubre el futuro antes que nadie. <span class="text-[#F47521]">Contenido Oculto.</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- GRID DE ADELANTOS (5 CARDS) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+
+            <!-- ADELANTO 1 -->
+            <div class="preview-card-container group">
+                <!-- Se agrega la clase 'locked' por defecto -->
+                <div id="card-1" class="preview-card locked h-[450px] flex flex-col">
+                    
+                    <!-- Imagen (Borroso al inicio) -->
+                    <div class="relative h-64 overflow-hidden bg-gray-900">
+                        <img src="Adelanto1.png" onerror="this.src='https://placehold.co/400x600/111/F47521?text=SECRET+1'" class="preview-img w-full h-full object-cover">
+                        
+                        <!-- Overlay del Candado -->
+                        <div class="lock-overlay">
+                            <i class="fa-solid fa-lock text-5xl text-white mb-2 drop-shadow-lg animate-bounce"></i>
+                            <span class="text-[#F47521] font-black uppercase tracking-widest text-xs bg-black/80 px-2 py-1 rounded">Bloqueado</span>
+                        </div>
+                    </div>
+
+                    <!-- Contenido (Texto también protegido) -->
+                    <div class="p-5 flex-1 flex flex-col justify-between relative bg-[#0a0a0a]">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2 uppercase italic">Proyecto Génesis</h3>
+                            <p class="secret-text text-sm text-gray-400 leading-relaxed">
+                                Se revela el nuevo villano del arco final. Su poder está relacionado con el control del tiempo...
+                            </p>
+                        </div>
+
+                        <!-- Botón Desbloquear -->
+                        <button onclick="unlockContent(1)" id="btn-1" class="btn-unlock w-full bg-gradient-to-r from-[#F47521] to-red-600 text-white font-black uppercase py-3 rounded-lg shadow-lg hover:scale-105 transition-transform mt-4 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-key"></i> Desbloquear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADELANTO 2 -->
+            <div class="preview-card-container group">
+                <div id="card-2" class="preview-card locked h-[450px] flex flex-col">
+                    <div class="relative h-64 overflow-hidden bg-gray-900">
+                        <img src="Adelanto2.png" onerror="this.src='https://placehold.co/400x600/111/F47521?text=SECRET+2'" class="preview-img w-full h-full object-cover">
+                        <div class="lock-overlay">
+                            <i class="fa-solid fa-lock text-5xl text-white mb-2 drop-shadow-lg"></i>
+                            <span class="text-[#F47521] font-black uppercase tracking-widest text-xs bg-black/80 px-2 py-1 rounded">Bloqueado</span>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between relative bg-[#0a0a0a]">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2 uppercase italic">Boceto Personaje</h3>
+                            <p class="secret-text text-sm text-gray-400 leading-relaxed">
+                                Diseño preliminar de la protagonista con su nueva armadura sagrada nivel 100.
+                            </p>
+                        </div>
+                        <button onclick="unlockContent(2)" id="btn-2" class="btn-unlock w-full bg-gradient-to-r from-[#F47521] to-red-600 text-white font-black uppercase py-3 rounded-lg shadow-lg hover:scale-105 transition-transform mt-4 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-key"></i> Desbloquear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADELANTO 3 -->
+            <div class="preview-card-container group">
+                <div id="card-3" class="preview-card locked h-[450px] flex flex-col">
+                    <div class="relative h-64 overflow-hidden bg-gray-900">
+                        <img src="Adelanto3.png" onerror="this.src='https://placehold.co/400x600/111/F47521?text=SECRET+3'" class="preview-img w-full h-full object-cover">
+                        <div class="lock-overlay">
+                            <i class="fa-solid fa-lock text-5xl text-white mb-2 drop-shadow-lg"></i>
+                            <span class="text-[#F47521] font-black uppercase tracking-widest text-xs bg-black/80 px-2 py-1 rounded">Bloqueado</span>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between relative bg-[#0a0a0a]">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2 uppercase italic">Nueva Portada</h3>
+                            <p class="secret-text text-sm text-gray-400 leading-relaxed">
+                                Arte final para el volumen 5. Incluye easter egg oculto en el fondo.
+                            </p>
+                        </div>
+                        <button onclick="unlockContent(3)" id="btn-3" class="btn-unlock w-full bg-gradient-to-r from-[#F47521] to-red-600 text-white font-black uppercase py-3 rounded-lg shadow-lg hover:scale-105 transition-transform mt-4 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-key"></i> Desbloquear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADELANTO 4 -->
+            <div class="preview-card-container group">
+                <div id="card-4" class="preview-card locked h-[450px] flex flex-col">
+                    <div class="relative h-64 overflow-hidden bg-gray-900">
+                        <img src="Adelanto4.png" onerror="this.src='https://placehold.co/400x600/111/F47521?text=SECRET+4'" class="preview-img w-full h-full object-cover">
+                        <div class="lock-overlay">
+                            <i class="fa-solid fa-lock text-5xl text-white mb-2 drop-shadow-lg"></i>
+                            <span class="text-[#F47521] font-black uppercase tracking-widest text-xs bg-black/80 px-2 py-1 rounded">Bloqueado</span>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between relative bg-[#0a0a0a]">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2 uppercase italic">Fecha Estreno</h3>
+                            <p class="secret-text text-sm text-gray-400 leading-relaxed">
+                                Confirmación de la fecha de salida del anime. Octubre 2025.
+                            </p>
+                        </div>
+                        <button onclick="unlockContent(4)" id="btn-4" class="btn-unlock w-full bg-gradient-to-r from-[#F47521] to-red-600 text-white font-black uppercase py-3 rounded-lg shadow-lg hover:scale-105 transition-transform mt-4 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-key"></i> Desbloquear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADELANTO 5 -->
+            <div class="preview-card-container group">
+                <div id="card-5" class="preview-card locked h-[450px] flex flex-col">
+                    <div class="relative h-64 overflow-hidden bg-gray-900">
+                        <img src="Adelanto5.png" onerror="this.src='https://placehold.co/400x600/111/F47521?text=SECRET+5'" class="preview-img w-full h-full object-cover">
+                        <div class="lock-overlay">
+                            <i class="fa-solid fa-lock text-5xl text-white mb-2 drop-shadow-lg"></i>
+                            <span class="text-[#F47521] font-black uppercase tracking-widest text-xs bg-black/80 px-2 py-1 rounded">Bloqueado</span>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between relative bg-[#0a0a0a]">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2 uppercase italic">Spoiler Mayor</h3>
+                            <p class="secret-text text-sm text-gray-400 leading-relaxed">
+                                La muerte de un personaje principal ocurrirá en el capítulo 45...
+                            </p>
+                        </div>
+                        <button onclick="unlockContent(5)" id="btn-5" class="btn-unlock w-full bg-gradient-to-r from-[#F47521] to-red-600 text-white font-black uppercase py-3 rounded-lg shadow-lg hover:scale-105 transition-transform mt-4 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-key"></i> Desbloquear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="text-center mt-12 text-gray-600 text-xs uppercase tracking-widest font-mono">
+            Recarga la página para bloquear nuevamente el contenido.
+        </div>
+    </div>
+
+    <script>
+        // URL DEL ANUNCIO
+        const adUrl = "https://www.effectivegatecpm.com/m1ys4txk?key=24956a22bda5dca3b4086262eb4b5423";
+
+        function unlockContent(id) {
+            // 1. Abrir Anuncio
+            window.open(adUrl, '_blank');
+
+            // 2. Lógica Visual de Desbloqueo
+            const card = document.getElementById(`card-${id}`);
+            const btn = document.getElementById(`btn-${id}`);
+
+            // Quitar clase 'locked' y poner 'unlocked'
+            card.classList.remove('locked');
+            card.classList.add('unlocked');
+
+            // Cambiar Botón a estado completado
+            btn.innerHTML = '<i class="fa-solid fa-unlock"></i> Disponible';
+            btn.classList.remove('from-[#F47521]', 'to-red-600');
+            btn.classList.add('from-green-600', 'to-green-400', 'cursor-default');
+            btn.disabled = true; // Desactivar botón para que no abra el anuncio de nuevo
+        }
+    </script>
+</body>
+</html>
