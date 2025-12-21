@@ -755,5 +755,12 @@
         window.confirmClearChat = async () => { const key = document.getElementById('clear-chat-key').value; if (key === "#Lau3700#") { const btn = document.querySelector('#clear-chat-modal button'); btn.innerText = "BORRANDO..."; try { const q = query(collection(db, "global_chat"), limit(500)); const snapshot = await getDocs(q); const batch = writeBatch(db); snapshot.docs.forEach((doc) => { batch.delete(doc.ref); }); await batch.commit(); alert("Chat Global eliminado."); closeClearChatModal(); } catch (e) { alert("Error: " + e.message); } finally { btn.innerText = "EJECUTAR LIMPIEZA"; } } else { alert("CLAVE INCORRECTA"); } };
 
     </script>
+
+    <script
+  type="text/javascript"
+  src="https://pl28307321.effectivegatecpm.com/da/86/f2/da86f249d98873f9fffa9b93a47f25fe.js"
+></script>
+    
 </body>
 </html>
+
