@@ -394,8 +394,38 @@
     <div id="delete-modal" class="hidden-section modal-overlay"><div class="modal-box border-red-600 shadow-red-900/50 text-center"><i class="fa-solid fa-trash-can text-5xl text-red-600 mb-4 animate-bounce"></i><h3 class="text-2xl font-black text-white uppercase mb-2">Zona de Peligro</h3><p class="text-gray-400 mb-6 text-sm">Ingresa clave admin.</p><input type="password" id="delete-key" class="input-dark text-center text-red-500 font-bold tracking-[0.5em] text-xl mb-6 border-red-900 focus:border-red-500" placeholder="CLAVE"><div class="flex gap-3"><button onclick="confirmDelete()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded uppercase">Eliminar</button><button onclick="closeDeleteModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 rounded uppercase">Cancelar</button></div></div></div>
     <!-- MODAL VACIAR CHAT -->
     <div id="clear-chat-modal" class="hidden-section modal-overlay"><div class="modal-box border-red-600 shadow-[0_0_50px_rgba(220,38,38,0.5)] text-center bg-[#110000]"><i class="fa-solid fa-biohazard text-5xl text-red-600 mb-4 animate-pulse"></i><h3 class="text-2xl font-black text-white uppercase mb-2">Limpieza Total</h3><p class="text-red-300 mb-6 text-sm font-bold">BORRARÁ TODO EL CHAT.</p><input type="password" id="clear-chat-key" class="input-dark text-center text-red-500 font-bold tracking-[0.5em] text-xl mb-6 border-red-900 focus:border-red-500 bg-black" placeholder="CLAVE MAESTRA"><div class="flex gap-3"><button onclick="confirmClearChat()" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-black py-3 rounded uppercase border border-red-500">EJECUTAR</button><button onclick="closeClearChatModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 rounded uppercase">ABORTAR</button></div></div></div>
-    <!-- MODAL VER HILO -->
-    <div id="view-thread-modal" class="hidden-section modal-overlay"><div class="bg-[#111] border border-gray-700 w-full max-w-4xl h-[90vh] rounded-xl flex flex-col relative shadow-2xl animate-[fadeIn_0.3s_ease-out]"><div class="p-6 border-b border-gray-800 bg-[#151515] rounded-t-xl flex justify-between items-start"><div><div id="view-thread-tags" class="mb-2"></div><h2 id="view-thread-title" class="text-2xl md:text-3xl font-bold text-white mb-2"></h2><div class="flex items-center gap-3 text-xs text-gray-500"><span id="view-thread-author" class="text-[#F47521] font-bold"></span><span id="view-thread-date"></span></div></div><button onclick="closeViewModal()" class="text-gray-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-2xl"></i></button></div><div class="flex-1 overflow-y-auto p-6 custom-scroll"><p id="view-thread-content" class="text-gray-300 text-lg leading-relaxed mb-8 whitespace-pre-wrap"></p><div class="border-t border-gray-800 pt-6"><h4 class="text-white font-bold uppercase mb-4 flex items-center gap-2"><i class="fa-solid fa-comments text-[#F47521]"></i> Comentarios</h4><div id="comments-list" class="space-y-4"></div></div></div><form id="comment-form" class="p-4 bg-black border-t border-gray-800 flex gap-3 rounded-b-xl"><input type="text" id="comment-input" class="input-dark flex-1" placeholder="Escribe un comentario..." required><button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 rounded-lg transition">Enviar</button></form></div></div>
+    <!-- MODAL VER HILO (MEJORADO PARA MÓVIL) -->
+    <div id="view-thread-modal" class="hidden-section modal-overlay p-0 md:p-4">
+        <div class="bg-[#111] border border-gray-700 w-full md:max-w-4xl h-[100dvh] md:h-[90vh] rounded-none md:rounded-xl flex flex-col relative shadow-2xl animate-[fadeIn_0.3s_ease-out]">
+            <!-- Header (fijo) -->
+            <div class="p-4 md:p-6 border-b border-gray-800 bg-[#151515] rounded-t-none md:rounded-t-xl flex justify-between items-start flex-shrink-0">
+                <div>
+                    <div id="view-thread-tags" class="mb-2"></div>
+                    <h2 id="view-thread-title" class="text-xl md:text-3xl font-bold text-white mb-2 leading-tight"></h2>
+                    <div class="flex items-center gap-3 text-xs text-gray-500">
+                        <span id="view-thread-author" class="text-[#F47521] font-bold"></span>
+                        <span id="view-thread-date"></span>
+                    </div>
+                </div>
+                <button onclick="closeViewModal()" class="text-gray-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            </div>
+            
+            <!-- Contenido Principal (scroll) -->
+            <div class="flex-1 overflow-y-auto p-4 md:p-6 custom-scroll relative">
+                <p id="view-thread-content" class="text-gray-300 text-base md:text-lg leading-relaxed mb-8 whitespace-pre-wrap"></p>
+                <div class="border-t border-gray-800 pt-6">
+                    <h4 class="text-white font-bold uppercase mb-4 flex items-center gap-2"><i class="fa-solid fa-comments text-[#F47521]"></i> Comentarios</h4>
+                    <div id="comments-list" class="space-y-4"></div>
+                </div>
+            </div>
+            
+            <!-- Footer (fijo) -->
+            <form id="comment-form" class="p-4 bg-black border-t border-gray-800 flex gap-3 rounded-b-none md:rounded-b-xl flex-shrink-0 pb-6 md:pb-4">
+                <input type="text" id="comment-input" class="input-dark flex-1" placeholder="Escribe un comentario..." required>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 rounded-lg transition">Enviar</button>
+            </form>
+        </div>
+    </div>
 
     <!-- LOGICA FIREBASE -->
     <script type="module">
@@ -465,9 +495,11 @@
             e.preventDefault();
             if (!currentUser) return alertRequiredLogin();
             if (chatCooldown) return;
+
             const text = chatInput.value.trim();
             if (!text) return;
 
+            // Start Cooldown
             chatCooldown = true;
             chatInputBtn.disabled = true;
             chatInputBtn.classList.add('opacity-50', 'cursor-not-allowed');
