@@ -47,12 +47,12 @@
         /* --- ESTILOS ADELANTOS (BLOQUEO) --- */
         
         /* Efecto Borroso Realista (Cinemático) */
-        .locked .preview-img {
+        .locked .preview-img, .locked .char-img {
             filter: blur(24px) grayscale(100%) contrast(120%) brightness(0.6);
             transform: scale(1.2); /* Zoom para evitar bordes blancos por el blur */
             transition: filter 0.8s, transform 0.8s;
         }
-        .locked .secret-text {
+        .locked .secret-text, .locked .char-info {
             filter: blur(5px);
             user-select: none;
             opacity: 0.4;
@@ -68,11 +68,11 @@
         }
 
         /* Estado Desbloqueado */
-        .unlocked .preview-img {
+        .unlocked .preview-img, .unlocked .char-img {
             filter: blur(0) grayscale(0%) contrast(100%) brightness(1);
             transform: scale(1);
         }
-        .unlocked .secret-text { filter: blur(0); opacity: 1; }
+        .unlocked .secret-text, .unlocked .char-info { filter: blur(0); opacity: 1; }
         .unlocked .lock-overlay { opacity: 0; pointer-events: none; }
         .unlocked { border-color: var(--orange-cr); box-shadow: 0 0 20px rgba(244, 117, 33, 0.3); }
 
@@ -91,6 +91,7 @@
             aspect-ratio: 1 / 1; /* Cuadrado perfecto 1024x1024 ratio */
             overflow: hidden;
             border-bottom: 2px solid #333;
+            position: relative;
         }
         .char-img {
             width: 100%;
@@ -248,24 +249,25 @@
         <!-- ========================================== -->
         
         <div class="flex items-center gap-3 mb-12 border-b border-gray-800 pb-6 pt-8">
-            <div class="w-2 h-12 bg-gradient-to-b from-purple-600 to-blue-600 shadow-[0_0_20px_#7c3aed]"></div>
+            <!-- Colores actualizados a Naranja/Rojo/Amarillo -->
+            <div class="w-2 h-12 bg-gradient-to-b from-[#F47521] to-red-600 shadow-[0_0_20px_#F47521]"></div>
             <div>
                 <h1 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white drop-shadow-xl">
-                    Top Secret <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-blue-500">Personajes</span>
+                    Top Secret <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F47521] to-yellow-400">Personajes</span>
                 </h1>
                 <p class="text-gray-500 text-sm mt-1">
-                    Archivos clasificados. <span class="text-purple-500">Nivel de Acceso: Máximo.</span>
+                    Archivos clasificados. <span class="text-[#F47521]">Nivel de Acceso: Máximo.</span>
                 </p>
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
-            <!-- FICHA 1 -->
+            <!-- FICHA 1 (KAEL - DESBLOQUEADA POR DEFECTO COMO MUESTRA) -->
             <div class="card-container-3d">
                 <div class="card-3d h-auto flex flex-col">
                     <div class="char-img-container bg-gray-900">
-                        <img src="FichaP1.png" onerror="this.src='https://placehold.co/1024x1024/222/purple?text=P1'" class="char-img">
+                        <img src="FichaP1.png" onerror="this.src='https://placehold.co/1024x1024/222/F47521?text=KAEL'" class="char-img">
                     </div>
                     <div class="p-6 bg-[#0a0a0a] flex-1">
                         <div class="mb-4 border-b border-white/10 pb-2">
@@ -275,7 +277,7 @@
                         
                         <div class="mb-4">
                             <span class="char-label">PODER MÁGICO</span>
-                            <div class="char-value text-purple-400">Manipulación de Sombras Ancestrales</div>
+                            <div class="char-value text-[#F47521]">Manipulación de Sombras Ancestrales</div>
                         </div>
 
                         <div class="mb-4">
@@ -293,97 +295,121 @@
                 </div>
             </div>
 
-            <!-- FICHA 2 -->
-            <div class="card-container-3d">
-                <div class="card-3d h-auto flex flex-col">
-                    <div class="char-img-container bg-gray-900">
-                        <img src="FichaP2.png" onerror="this.src='https://placehold.co/1024x1024/222/purple?text=P2'" class="char-img">
-                    </div>
-                    <div class="p-6 bg-[#0a0a0a] flex-1">
-                        <div class="mb-4 border-b border-white/10 pb-2">
-                            <span class="char-label">NOMBRE / EDAD</span>
-                            <h3 class="text-xl font-black text-white italic">LUNA / 17 AÑOS</h3>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <span class="char-label">PODER MÁGICO</span>
-                            <div class="char-value text-blue-400">Canto de Sirena & Hidroquinesis</div>
-                        </div>
-
-                        <div class="mb-4">
-                            <span class="char-label">LORE</span>
-                            <p class="text-xs text-gray-400 leading-relaxed text-justify">
-                                Princesa del reino sumergido de Atlantis. Huyó a la superficie para evitar un matrimonio arreglado. Su voz puede sanar heridas o romper cristales. Es ingenua sobre el mundo humano pero letal en combate acuático.
-                            </p>
-                        </div>
-
-                        <div class="mt-auto pt-2 border-t border-white/10 flex justify-between items-center">
-                            <span class="char-label">ESTADO</span>
-                            <span class="font-black text-sm status-alive">● VIVO</span>
+            <!-- FICHA 2 (LUNA - BLOQUEADA) -->
+            <div class="card-container-3d group">
+                <div id="card-7" class="card-3d locked h-auto flex flex-col">
+                    <div class="char-img-container bg-gray-900 relative">
+                        <img src="FichaP2.png" onerror="this.src='https://placehold.co/1024x1024/222/F47521?text=SECRET'" class="char-img">
+                        <div class="lock-overlay">
+                            <i class="fa-solid fa-lock text-5xl text-white mb-2 drop-shadow-lg"></i>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- FICHA 3 -->
-            <div class="card-container-3d">
-                <div class="card-3d h-auto flex flex-col">
-                    <div class="char-img-container bg-gray-900">
-                        <img src="FichaP3.png" onerror="this.src='https://placehold.co/1024x1024/222/purple?text=P3'" class="char-img">
-                    </div>
-                    <div class="p-6 bg-[#0a0a0a] flex-1">
-                        <div class="mb-4 border-b border-white/10 pb-2">
-                            <span class="char-label">NOMBRE / EDAD</span>
-                            <h3 class="text-xl font-black text-white italic">FENRIR / ???</h3>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <span class="char-label">PODER MÁGICO</span>
-                            <div class="char-value text-red-500">Berserker (Fuerza Física Ilimitada)</div>
-                        </div>
-
-                        <div class="mb-4">
-                            <span class="char-label">LORE</span>
-                            <p class="text-xs text-gray-400 leading-relaxed text-justify">
-                                Un mercenario que perdió su humanidad en experimentos genéticos. No recuerda su pasado, solo la ira. Su piel es tan dura como el acero. Cayó en la batalla del Puente Roto defendiendo a los civiles.
-                            </p>
+                    <div class="p-6 bg-[#0a0a0a] flex-1 relative">
+                        <!-- Contenido protegido -->
+                        <div class="char-info">
+                            <div class="mb-4 border-b border-white/10 pb-2">
+                                <span class="char-label">NOMBRE / EDAD</span>
+                                <h3 class="text-xl font-black text-white italic">LUNA / 17 AÑOS</h3>
+                            </div>
+                            <div class="mb-4">
+                                <span class="char-label">PODER MÁGICO</span>
+                                <div class="char-value text-blue-400">Canto de Sirena & Hidroquinesis</div>
+                            </div>
+                            <div class="mb-4">
+                                <span class="char-label">LORE</span>
+                                <p class="text-xs text-gray-400 leading-relaxed text-justify">
+                                    Princesa del reino sumergido de Atlantis. Huyó a la superficie para evitar un matrimonio arreglado. Su voz puede sanar heridas o romper cristales. Es ingenua sobre el mundo humano pero letal en combate acuático.
+                                </p>
+                            </div>
+                            <div class="mt-auto pt-2 border-t border-white/10 flex justify-between items-center">
+                                <span class="char-label">ESTADO</span>
+                                <span class="font-black text-sm status-alive">● VIVO</span>
+                            </div>
                         </div>
 
-                        <div class="mt-auto pt-2 border-t border-white/10 flex justify-between items-center">
-                            <span class="char-label">ESTADO</span>
-                            <span class="font-black text-sm status-dead">✝ MUERTO</span>
+                        <!-- Botón superpuesto -->
+                        <div class="absolute inset-0 flex items-center justify-center z-20">
+                             <button onclick="unlockContent(7)" id="btn-7" class="btn-unlock bg-gradient-to-r from-[#F47521] to-red-600 text-white font-black uppercase py-2 px-6 rounded shadow-lg hover:scale-105 transition-transform flex items-center justify-center gap-2 text-xs">
+                                <i class="fa-solid fa-key"></i> Desbloquear gratis
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- FICHA 4 -->
-            <div class="card-container-3d">
-                <div class="card-3d h-auto flex flex-col">
-                    <div class="char-img-container bg-gray-900">
-                        <img src="FichaP4.png" onerror="this.src='https://placehold.co/1024x1024/222/purple?text=P4'" class="char-img">
+            <!-- FICHA 3 (FENRIR - BLOQUEADA) -->
+            <div class="card-container-3d group">
+                <div id="card-8" class="card-3d locked h-auto flex flex-col">
+                    <div class="char-img-container bg-gray-900 relative">
+                        <img src="FichaP3.png" onerror="this.src='https://placehold.co/1024x1024/222/F47521?text=SECRET'" class="char-img">
+                         <div class="lock-overlay">
+                            <i class="fa-solid fa-lock text-5xl text-white mb-2 drop-shadow-lg"></i>
+                        </div>
                     </div>
-                    <div class="p-6 bg-[#0a0a0a] flex-1">
-                        <div class="mb-4 border-b border-white/10 pb-2">
-                            <span class="char-label">NOMBRE / EDAD</span>
-                            <h3 class="text-xl font-black text-white italic">DRAKO / 1000+</h3>
+                    <div class="p-6 bg-[#0a0a0a] flex-1 relative">
+                        <div class="char-info">
+                            <div class="mb-4 border-b border-white/10 pb-2">
+                                <span class="char-label">NOMBRE / EDAD</span>
+                                <h3 class="text-xl font-black text-white italic">FENRIR / ???</h3>
+                            </div>
+                            <div class="mb-4">
+                                <span class="char-label">PODER MÁGICO</span>
+                                <div class="char-value text-red-500">Berserker (Fuerza Física Ilimitada)</div>
+                            </div>
+                            <div class="mb-4">
+                                <span class="char-label">LORE</span>
+                                <p class="text-xs text-gray-400 leading-relaxed text-justify">
+                                    Un mercenario que perdió su humanidad en experimentos genéticos. No recuerda su pasado, solo la ira. Su piel es tan dura como el acero. Cayó en la batalla del Puente Roto defendiendo a los civiles.
+                                </p>
+                            </div>
+                            <div class="mt-auto pt-2 border-t border-white/10 flex justify-between items-center">
+                                <span class="char-label">ESTADO</span>
+                                <span class="font-black text-sm status-dead">✝ MUERTO</span>
+                            </div>
                         </div>
-                        
-                        <div class="mb-4">
-                            <span class="char-label">PODER MÁGICO</span>
-                            <div class="char-value text-yellow-500">Aliento de Dragón & Vuelo</div>
+                        <div class="absolute inset-0 flex items-center justify-center z-20">
+                             <button onclick="unlockContent(8)" id="btn-8" class="btn-unlock bg-gradient-to-r from-[#F47521] to-red-600 text-white font-black uppercase py-2 px-6 rounded shadow-lg hover:scale-105 transition-transform flex items-center justify-center gap-2 text-xs">
+                                <i class="fa-solid fa-key"></i> Desbloquear gratis
+                            </button>
                         </div>
+                    </div>
+                </div>
+            </div>
 
-                        <div class="mb-4">
-                            <span class="char-label">LORE</span>
-                            <p class="text-xs text-gray-400 leading-relaxed text-justify">
-                                El último de los dragones antiguos, disfrazado como un humano anciano. Mentor de Kael. Posee conocimientos perdidos de la era dorada. Su verdadera forma es colosal y puede incinerar ciudades enteras.
-                            </p>
+            <!-- FICHA 4 (DRAKO - BLOQUEADA) -->
+            <div class="card-container-3d group">
+                <div id="card-9" class="card-3d locked h-auto flex flex-col">
+                    <div class="char-img-container bg-gray-900 relative">
+                        <img src="FichaP4.png" onerror="this.src='https://placehold.co/1024x1024/222/F47521?text=SECRET'" class="char-img">
+                         <div class="lock-overlay">
+                            <i class="fa-solid fa-lock text-5xl text-white mb-2 drop-shadow-lg"></i>
                         </div>
-
-                        <div class="mt-auto pt-2 border-t border-white/10 flex justify-between items-center">
-                            <span class="char-label">ESTADO</span>
-                            <span class="font-black text-sm status-alive">● VIVO</span>
+                    </div>
+                    <div class="p-6 bg-[#0a0a0a] flex-1 relative">
+                        <div class="char-info">
+                            <div class="mb-4 border-b border-white/10 pb-2">
+                                <span class="char-label">NOMBRE / EDAD</span>
+                                <h3 class="text-xl font-black text-white italic">DRAKO / 1000+</h3>
+                            </div>
+                            <div class="mb-4">
+                                <span class="char-label">PODER MÁGICO</span>
+                                <div class="char-value text-yellow-500">Aliento de Dragón & Vuelo</div>
+                            </div>
+                            <div class="mb-4">
+                                <span class="char-label">LORE</span>
+                                <p class="text-xs text-gray-400 leading-relaxed text-justify">
+                                    El último de los dragones antiguos, disfrazado como un humano anciano. Mentor de Kael. Posee conocimientos perdidos de la era dorada. Su verdadera forma es colosal y puede incinerar ciudades enteras.
+                                </p>
+                            </div>
+                            <div class="mt-auto pt-2 border-t border-white/10 flex justify-between items-center">
+                                <span class="char-label">ESTADO</span>
+                                <span class="font-black text-sm status-alive">● VIVO</span>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center z-20">
+                             <button onclick="unlockContent(9)" id="btn-9" class="btn-unlock bg-gradient-to-r from-[#F47521] to-red-600 text-white font-black uppercase py-2 px-6 rounded shadow-lg hover:scale-105 transition-transform flex items-center justify-center gap-2 text-xs">
+                                <i class="fa-solid fa-key"></i> Desbloquear gratis
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -409,11 +435,16 @@
             card.classList.remove('locked');
             card.classList.add('unlocked');
 
-            // Cambiar Botón a estado completado
-            btn.innerHTML = '<i class="fa-solid fa-unlock"></i> Disponible';
-            btn.classList.remove('from-[#F47521]', 'to-red-600');
-            btn.classList.add('from-green-600', 'to-green-400', 'cursor-default');
-            btn.disabled = true; // Desactivar botón
+            // Si es un botón dentro de un overlay (casos 7, 8, 9), ocultar el botón completamente
+            // Si es un botón normal (casos 1-5), cambiar texto
+            if (id >= 6) {
+                btn.parentElement.style.display = 'none'; // Ocultar el div contenedor del botón
+            } else {
+                btn.innerHTML = '<i class="fa-solid fa-unlock"></i> Disponible';
+                btn.classList.remove('from-[#F47521]', 'to-red-600');
+                btn.classList.add('from-green-600', 'to-green-400', 'cursor-default');
+                btn.disabled = true; 
+            }
         }
     </script>
 </body>
