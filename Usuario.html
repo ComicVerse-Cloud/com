@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foro & Chat - ComicVerse</title>
-    
+    <title>Perfil Usuario - ComicVerse</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --orange-cr: #F47521; 
+            --orange-cr: #F47521;
             --dark-bg: #000000;
-            --chat-bg: #0a0a0a;
-            --magic-glow: 0 0 10px rgba(244, 117, 33, 0.5), 0 0 20px rgba(255, 100, 0, 0.3);
+            --neon-glow: 0 0 10px rgba(244, 117, 33, 0.5), 0 0 20px rgba(244, 117, 33, 0.3);
         }
         body {
             background-color: var(--dark-bg);
@@ -22,359 +20,402 @@
             overflow-x: hidden;
         }
 
-        /* --- Scrollbar --- */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #111; }
-        ::-webkit-scrollbar-thumb { background: var(--orange-cr); border-radius: 4px; }
+        /* --- Animaciones --- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-enter { animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes bounceIn { 0% { transform: scale(0.8); opacity: 0; } 60% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); } }
+        @keyframes holoShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* --- ESTILOS DE MARCOS --- */
-        .avatar-container { position: relative; display: inline-block; padding: 4px; border-radius: 50%; box-sizing: border-box; }
-        .frame-gold { background: linear-gradient(45deg, #FFD700, #FDB931); box-shadow: 0 0 10px #FFD700; animation: spin 4s linear infinite; }
-        .frame-neon { background: linear-gradient(90deg, #00f2ff, #001eff); box-shadow: 0 0 10px #00f2ff; animation: pulse-blue 2s infinite; }
-        .frame-fire { background: linear-gradient(0deg, #ff0000, #ffae00); box-shadow: 0 0 10px #ff4500; animation: shake 3s infinite; }
-        .frame-glitch { border: 2px solid #00ff00; box-shadow: 2px 2px #ff00de; }
-        .frame-angel-gold { border: 2px solid #FFD700; box-shadow: 0 0 10px #FFD700; }
+        /* --- MARCOS DE PERFIL (COLECCIÓN ULTIMATE & LEGENDARY PRO) --- */
+        .avatar-container { position: relative; display: inline-block; padding: 6px; border-radius: 50%; box-sizing: border-box; }
+        .profile-img { border-radius: 50%; border: 3px solid #1a1a1a; position: relative; z-index: 10; width: 6rem; height: 6rem; object-fit: cover; }
+
+        /* Legacy Keepers */
+        .frame-gold { background: linear-gradient(45deg, #FFD700, #FDB931, #FFD700); animation: spin 4s linear infinite; box-shadow: 0 0 15px #FFD700; }
+        .frame-neon { background: linear-gradient(90deg, #00f2ff, #001eff); animation: pulse-blue 2s infinite; box-shadow: 0 0 15px #00f2ff; }
+        .frame-fire { background: linear-gradient(0deg, #ff0000, #ffae00); box-shadow: 0 -5px 20px #ff4500; animation: shake 3s infinite; }
+        .frame-glitch { border: 3px solid #00ff00; box-shadow: 2px 2px #ff00de, -2px -2px #00ffff; }
+        .frame-cosmic { background: linear-gradient(135deg, #663399, #000000, #4b0082); box-shadow: 0 0 20px #9400d3; animation: spin-slow 8s linear infinite; border: 2px dashed rgba(255,255,255,0.5); }
+        .frame-plasma { background: conic-gradient(#ff00ff, #00ffff, #ff00ff); animation: spin 2s linear infinite; filter: blur(1px); }
+        .frame-matrix { background: #000; border: 2px solid #0f0; box-shadow: inset 0 0 10px #0f0, 0 0 10px #0f0; }
+        .frame-blood { background: radial-gradient(circle, #8a0303, #000); border: 2px solid #ff0000; box-shadow: 0 0 15px #ff0000; animation: pulse-red 3s infinite; }
+        .frame-holo { background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(255,255,255,0)); border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 0 20px rgba(0,255,255,0.5); backdrop-filter: hue-rotate(90deg); }
+        .frame-radioactive { background: repeating-linear-gradient(45deg, #ffeb3b, #ffeb3b 10px, #000 10px, #000 20px); border: 2px solid #ffeb3b; box-shadow: 0 0 10px #ffeb3b; }
+        .frame-spirit { background: linear-gradient(to top, #00ffff, transparent); box-shadow: 0 -10px 20px #00ffff; animation: float 3s ease-in-out infinite; }
+        .frame-steampunk { background: #cd7f32; border: 4px ridge #8b4513; box-shadow: inset 0 0 10px #000; }
+        .frame-pixel { border: 4px dashed #fff; box-shadow: 4px 4px 0 #F47521, -4px -4px 0 #00f2ff; }
+        .frame-angel { background: white; box-shadow: 0 0 25px white, 0 0 50px #fffacd; border: 2px solid #fffacd; }
+
+        /* --- LEGENDARY GOLD FRAMES (SHAPES) --- */
+        .frame-angel-gold { border: 3px solid #FFD700; box-shadow: 0 0 20px #FFD700; }
+        .frame-angel-gold::before, .frame-angel-gold::after {
+            content: ''; position: absolute; top: 10%; width: 60px; height: 100px;
+            background: linear-gradient(to bottom, #FFD700, transparent);
+            border-radius: 50% 50% 0 0; z-index: 1; opacity: 0.8;
+            filter: drop-shadow(0 0 10px #FFD700);
+        }
+        .frame-angel-gold::before { left: -40px; transform: rotate(-30deg); border-left: 4px solid #fff; }
+        .frame-angel-gold::after { right: -40px; transform: rotate(30deg); border-right: 4px solid #fff; }
+
+        .frame-demon-gold { border: 3px solid #b8860b; box-shadow: 0 0 15px #FFD700; }
+        .frame-demon-gold::before, .frame-demon-gold::after {
+            content: ''; position: absolute; top: -30px; width: 20px; height: 50px;
+            background: linear-gradient(to top, #FFD700, #b8860b);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            z-index: 1; filter: drop-shadow(0 0 5px #ff0000);
+        }
+        .frame-demon-gold::before { left: 0; transform: rotate(-25deg); }
+        .frame-demon-gold::after { right: 0; transform: rotate(25deg); }
+
+        .frame-aura-god { background: transparent; border: 2px solid #fff; box-shadow: 0 0 30px #FFD700, 0 0 60px #FFD700, inset 0 0 20px #FFD700; animation: pulse-gold 2s infinite; }
+        .frame-crown-gold { border: 4px double #FFD700; }
+        .frame-crown-gold::before { content: '👑'; position: absolute; top: -45px; left: 50%; transform: translateX(-50%); font-size: 3rem; filter: drop-shadow(0 0 10px #FFD700); z-index: 20; }
+        .frame-spike-gold { background: #FFD700; padding: 4px; clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%); animation: spin 6s linear infinite; }
+
+        /* --- NEW LEGENDARY PRO FRAMES --- */
+        /* 1. Anime Hero (Pelo + Espada) */
+        .frame-anime-hero { border: 3px solid #3b82f6; box-shadow: 0 0 20px #3b82f6; }
+        .frame-anime-hero::before { content: '⚔️'; position: absolute; bottom: -10px; right: -20px; font-size: 3rem; transform: rotate(-45deg); z-index: 20; filter: drop-shadow(0 0 5px #000); }
+        .frame-anime-hero::after { content: ''; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 80px; height: 40px; background: #facc15; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); z-index: 20; }
+
+        /* 2. Gangster (Lentes + Arma) */
+        .frame-gangster { border: 3px solid #111; box-shadow: 0 0 10px #fff; background: #333; }
+        .frame-gangster::before { content: '🕶️'; position: absolute; top: 25%; left: 50%; transform: translateX(-50%); font-size: 3rem; z-index: 20; }
+        .frame-gangster::after { content: '🔫'; position: absolute; bottom: -5px; right: -25px; font-size: 2.5rem; transform: rotate(-10deg); z-index: 20; }
+
+        /* 3. Necromancer */
+        .frame-necromancer { border: 3px solid #10b981; box-shadow: 0 0 20px #10b981, inset 0 0 10px #000; animation: pulse-green 3s infinite; }
+        .frame-necromancer::before { content: '💀'; position: absolute; bottom: -15px; left: -10px; font-size: 2rem; z-index: 20; }
+        .frame-necromancer::after { content: '💀'; position: absolute; bottom: -15px; right: -10px; font-size: 2rem; z-index: 20; transform: scaleX(-1); }
+
+        /* 4. Cyber Samurai */
+        .frame-cyber-samurai { border: 2px solid #ec4899; box-shadow: 0 0 15px #ec4899; }
+        .frame-cyber-samurai::before { content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 120%; height: 5px; background: #ec4899; box-shadow: 0 0 10px #ec4899; }
+        .frame-cyber-samurai::after { content: '👺'; position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 2rem; }
+
+        /* 5. Phoenix */
+        .frame-phoenix { border: 3px solid #f97316; box-shadow: 0 0 25px #f97316; }
+        .frame-phoenix::before { content: '🔥'; position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-size: 2.5rem; animation: float 2s infinite; }
+        .frame-phoenix::after { content: ''; position: absolute; inset: -10px; border: 2px dashed #f97316; border-radius: 50%; animation: spin-slow 10s linear infinite; }
+
+        /* 6. Void Walker */
+        .frame-void-walker { background: #000; border: 1px solid #555; box-shadow: 0 0 30px #000; }
+        .frame-void-walker::before { content: ''; position: absolute; inset: -5px; border: 1px solid #fff; border-radius: 50%; opacity: 0.3; animation: pulse 2s infinite; }
+
+        /* 7. King Slayer */
+        .frame-king-slayer { border: 3px solid #7f1d1d; box-shadow: 0 0 15px #ef4444; }
+        .frame-king-slayer::before { content: '🗡️'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(45deg); font-size: 4rem; opacity: 0.3; pointer-events: none; }
         
+        /* 8. Mecha Pilot */
+        .frame-mecha { border: 4px solid #3b82f6; clip-path: polygon(10% 0, 90% 0, 100% 25%, 100% 75%, 90% 100%, 10% 100%, 0 75%, 0 25%); background: #1e3a8a; }
+        .frame-mecha::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(transparent 50%, rgba(59, 130, 246, 0.3) 50%); background-size: 100% 4px; pointer-events: none; }
+
+        /* 9. Wizard Supreme */
+        .frame-wizard { border: 3px solid #8b5cf6; box-shadow: 0 0 15px #8b5cf6; }
+        .frame-wizard::before { content: '✨'; position: absolute; top: 0; left: -10px; font-size: 1.5rem; animation: pulse 1s infinite; }
+        .frame-wizard::after { content: '🎩'; position: absolute; top: -35px; right: 0; font-size: 2.5rem; transform: rotate(15deg); }
+
+        /* 10. Dragon Lord */
+        .frame-dragon { border: 3px solid #ef4444; }
+        .frame-dragon::before { content: '🐉'; position: absolute; bottom: -10px; left: -20px; font-size: 3rem; z-index: 20; filter: drop-shadow(2px 2px 0 #000); }
+
+
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes pulse-blue { 50% { box-shadow: 0 0 20px #00f2ff; } }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-1px); } 75% { transform: translateX(1px); } }
-        
-        /* --- Estilos Foro (PROFESIONAL V2) --- */
-        .forum-card {
-            background: rgba(20, 20, 20, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-left: 4px solid #333;
-            border-radius: 8px;
-            padding: 24px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative; overflow: hidden;
-            backdrop-filter: blur(5px);
-            animation: fadeInUp 0.5s ease-out forwards;
-            opacity: 0; transform: translateY(20px);
-        }
-        
-        /* Staggered animation delays handled in JS or simply allow fast CSS animation */
-        
-        .forum-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(244, 117, 33, 0.03), transparent);
-            transform: translateX(-100%); transition: 0.5s; pointer-events: none;
-        }
+        @keyframes spin-slow { 100% { transform: rotate(360deg); } }
+        @keyframes pulse-blue { 0% { box-shadow: 0 0 10px #00f2ff; } 50% { box-shadow: 0 0 25px #00f2ff; } 100% { box-shadow: 0 0 10px #00f2ff; } }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 5px #ff0000; } 50% { box-shadow: 0 0 25px #ff0000; } 100% { box-shadow: 0 0 5px #ff0000; } }
+        @keyframes pulse-green { 0% { box-shadow: 0 0 5px #10b981; } 50% { box-shadow: 0 0 25px #10b981; } 100% { box-shadow: 0 0 5px #10b981; } }
+        @keyframes pulse-gold { 0% { box-shadow: 0 0 20px #FFD700; } 50% { box-shadow: 0 0 50px #FFD700; } 100% { box-shadow: 0 0 20px #FFD700; } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-        .forum-card:hover {
-            transform: translateY(-5px) scale(1.01);
-            background: rgba(30, 30, 30, 0.8);
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
-            border-color: rgba(244, 117, 33, 0.3);
+        /* --- Tarjeta 3D (Flip Card) --- */
+        .card-scene { perspective: 1000px; width: 100%; height: 280px; cursor: grab; }
+        .card-obj {
+            width: 100%; height: 100%; position: relative;
+            transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+            border-radius: 16px;
         }
-        .forum-card:hover::before { transform: translateX(100%); }
-
-        /* Etiquetas Neón */
-        .tag-badge {
-            font-size: 0.65rem; font-weight: 800; text-transform: uppercase; padding: 4px 12px;
-            border-radius: 4px; background: #0a0a0a; color: #666; border: 1px solid #333; margin-right: 8px;
-            transition: 0.3s; cursor: pointer; display: inline-block; letter-spacing: 1px;
+        .card-obj.is-flipped { transform: rotateY(180deg); }
+        .card-face {
+            position: absolute; width: 100%; height: 100%;
+            -webkit-backface-visibility: hidden; backface-visibility: hidden;
+            border-radius: 16px; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5); 
         }
-        .tag-badge:hover, .tag-badge.active { 
-            background: rgba(244, 117, 33, 0.1); 
-            color: var(--orange-cr); 
-            border-color: var(--orange-cr);
-            box-shadow: 0 0 10px rgba(244, 117, 33, 0.2);
+        .card-front { 
+            background: linear-gradient(135deg, #1a1a1a, #0d0d0d); 
+            border: 1px solid rgba(255,255,255,0.1); border-bottom: 4px solid var(--orange-cr); 
         }
-
-        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
-
-        /* --- Estilos Chat Global --- */
-        .chat-container {
-            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
-            border: 1px solid #333; border-radius: 16px;
-            height: 600px; display: flex; flex-direction: column; overflow: hidden;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8); position: relative;
+        /* REVERSO MEJORADO */
+        .card-back { 
+            background: linear-gradient(135deg, #0a0a0a, #111); 
+            transform: rotateY(180deg); position: relative; overflow: hidden;
+            border: 1px solid #333;
         }
-        .chat-header-bar {
-            background: linear-gradient(90deg, #F47521, #d65a00); padding: 15px;
-            display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 10;
+        /* Holograma de fondo */
+        .card-back::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.05) 40%, transparent 50%);
+            background-size: 200% 100%; animation: holoShift 3s infinite linear; pointer-events: none;
         }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column-reverse; gap: 15px; }
+        .chip {
+            width: 40px; height: 30px; background: linear-gradient(135deg, #d4af37, #f9f295);
+            border-radius: 4px; margin-bottom: 10px; position: relative; overflow: hidden;
+        }
+        .chip::before {
+            content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: #b8860b;
+        }
         
-        .message { display: flex; gap: 12px; max-width: 85%; animation: fadeIn 0.3s; align-items: flex-end; }
-        .message.self { align-self: flex-end; flex-direction: row-reverse; }
-        .message-avatar-box { flex-shrink: 0; width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; }
-        .avatar-sm { width: 36px; height: 36px; object-fit: cover; border-radius: 50%; border: 1px solid #444; display: block; }
-        
-        .message-content {
-            background: #222; padding: 10px 15px; border-radius: 18px; border-bottom-left-radius: 2px;
-            font-size: 0.95rem; color: #ddd; word-break: break-word; border: 1px solid #333;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        .message.self .message-content {
-            background: linear-gradient(135deg, #F47521, #ff9100); color: black; font-weight: 600;
-            border-radius: 18px; border-bottom-right-radius: 2px; border: none;
-            box-shadow: 0 0 15px rgba(244, 117, 33, 0.3);
-        }
-        .message-meta { font-size: 0.7rem; color: #666; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
-        .message.self .message-meta { justify-content: flex-end; color: #888; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .status-premium { border: 2px solid #fbbf24; box-shadow: 0 0 25px rgba(251, 191, 36, 0.2); }
+        .status-basic { border: 2px solid #525252; }
 
-        /* --- Estilos Ranking Foro --- */
-        .ranking-card { background: #111; border-radius: 6px; padding: 14px; margin-bottom: 8px; border: 1px solid #222; display: flex; align-items: center; gap: 10px; transition: 0.2s; position: relative; overflow: hidden; }
-        .ranking-card:hover { border-color: var(--orange-cr); background: #161616; transform: translateX(5px); }
-        .ranking-card.gold::after { content:''; position: absolute; right: 0; top: 0; bottom: 0; width: 4px; background: #FFD700; }
-        
-        /* --- Estilos IA Chat --- */
-        .ai-message { max-width: 90%; margin-bottom: 15px; display: flex; gap: 10px; }
-        .ai-message.bot { align-items: flex-start; }
-        .ai-message.user { align-items: flex-end; flex-direction: row-reverse; align-self: flex-end; }
-        .ai-bubble { padding: 12px 16px; border-radius: 12px; font-size: 0.9rem; line-height: 1.5; }
-        .ai-bubble.bot { background: #1a1a1a; border: 1px solid #333; color: #ddd; border-top-left-radius: 2px; }
-        .ai-bubble.user { background: #F47521; color: black; font-weight: 600; border-top-right-radius: 2px; }
-        .ai-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #F47521; object-fit: cover; }
+        /* --- Badges --- */
+        .badge-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .badge {
+            font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
+            padding: 4px 10px; border-radius: 4px; border: 1px solid #333;
+            background: #0a0a0a; color: #444; transition: all 0.3s;
+            filter: grayscale(100%); opacity: 0.5;
+        }
+        .badge.owned { filter: grayscale(0%); opacity: 1; border-color: transparent; color: white; transform: scale(1.05); }
+        /* Badge Colors from previous */
+        .badge[data-title="Creador"].owned { background: linear-gradient(90deg, #F47521, #ff4500); box-shadow: 0 0 10px #ff4500; }
+        .badge[data-title="Dios"].owned { background: linear-gradient(90deg, #fff, #ffd700); color: black; box-shadow: 0 0 15px white; animation: pulseGold 2s infinite; }
+        /* ... more badges ... */
+
+        /* --- Tabla Admin --- */
+        .admin-table-container { max-height: 200px; overflow-y: auto; margin-top: 10px; border: 1px solid #333; border-radius: 4px; }
+        .admin-table { width: 100%; text-align: left; border-collapse: collapse; font-size: 0.8rem; }
+        .admin-table th { background: #222; color: #aaa; padding: 8px; position: sticky; top: 0; }
+        .admin-table td { border-bottom: 1px solid #222; padding: 8px; color: #ddd; }
+        .admin-table tr:hover { background: rgba(244, 117, 33, 0.1); cursor: pointer; }
+        .admin-table tr.selected { background: rgba(244, 117, 33, 0.3); border-left: 3px solid var(--orange-cr); }
 
         /* --- Modales --- */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 60; }
-        .hidden-section { display: none !important; }
-        .input-dark { background: #0a0a0a; border: 1px solid #333; color: white; padding: 12px; width: 100%; border-radius: 6px; outline: none; transition: 0.3s; }
-        .input-dark:focus { border-color: var(--orange-cr); box-shadow: 0 0 15px rgba(244,117,33,0.2); background: #111; }
-
-        .btn-delete { color: #ef4444; opacity: 0.5; transition: 0.2s; }
-        .btn-delete:hover { opacity: 1; transform: scale(1.2); }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 100; }
+        .modal-content { background: #111; border: 2px solid #333; padding: 2rem; border-radius: 1rem; max-width: 400px; width: 90%; text-align: center; animation: bounceIn 0.3s; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
+        .hidden-section { display: none; }
+        .input-cr { width: 100%; padding: 12px; background: #111; border: 1px solid #333; color: white; border-radius: 4px; outline: none; transition: 0.3s; }
+        .input-cr:focus { border-color: var(--orange-cr); }
     </style>
 </head>
-<body class="pb-20">
+<body class="min-h-screen flex items-center justify-center p-4">
 
-    <div class="p-4 md:p-8 max-w-7xl mx-auto">
-        
-        <!-- HEADER LOGIN STATUS -->
-        <div id="login-status-bar" class="flex justify-end mb-4">
-            <button onclick="parent.cargarPagina('Usuario.html', null)" class="text-xs text-gray-500 hover:text-[#F47521] uppercase font-bold flex items-center gap-2 group">
-                <div class="w-2 h-2 rounded-full bg-red-500 group-hover:bg-green-500 transition"></div>
-                <span id="current-username">Invitado (Iniciar Sesión)</span>
-            </button>
+    <!-- LOGIN -->
+    <div id="auth-container" class="w-full max-w-md animate-enter">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-black italic tracking-tighter mb-2">COMIC<span class="text-[#F47521]">VERSE</span></h1>
+            <p class="text-gray-400 text-sm">Identifícate para acceder al Multiverso</p>
         </div>
-
-        <!-- ======================= -->
-        <!-- SECCIÓN 1: FORO COMPLETO Y RANKING -->
-        <!-- ======================= -->
-        <div class="mb-20 grid grid-cols-1 lg:grid-cols-4 gap-8">
-            
-            <!-- COLUMNA PRINCIPAL FORO -->
-            <div class="lg:col-span-3">
-                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8 border-b border-gray-800 pb-6">
-                    <div class="flex items-center gap-4">
-                        <div class="w-2 h-12 bg-gradient-to-b from-[#F47521] to-yellow-500 shadow-[0_0_20px_#F47521]"></div>
-                        <div>
-                            <h1 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white drop-shadow-xl">
-                                Foro <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F47521] to-yellow-400">Global</span>
-                            </h1>
-                            <p class="text-gray-500 text-sm mt-1">
-                                El corazón de la comunidad. <span class="text-[#F47521] font-bold">Debate y comparte.</span>
-                            </p>
-                        </div>
-                    </div>
-                    <button onclick="openThreadModal()" class="bg-gradient-to-r from-[#F47521] to-red-600 hover:from-white hover:to-gray-200 hover:text-black text-white font-black uppercase py-3 px-8 rounded-lg text-sm transition-all shadow-[0_0_20px_rgba(244,117,33,0.4)] transform hover:scale-105 flex items-center gap-2 border border-white/10 group">
-                        <i class="fa-solid fa-pen-nib group-hover:animate-bounce"></i> Crear Discusión
-                    </button>
-                </div>
-
-                <!-- BUSQUEDA Y FILTROS -->
-                <div class="flex flex-col md:flex-row gap-4 mb-8 bg-[#0f0f0f] p-4 rounded-xl border border-white/5 shadow-lg items-center">
-                    <div class="relative flex-1 w-full">
-                        <i class="fa-solid fa-search absolute left-4 top-3.5 text-gray-500"></i>
-                        <input type="text" id="search-threads" placeholder="Buscar hilos..." class="input-dark pl-10 bg-[#050505] border-[#222] focus:bg-[#0a0a0a]" onkeyup="filtrarHilos()">
-                    </div>
-                    <div class="text-xs text-gray-500 font-mono uppercase hidden md:block">
-                        <span id="thread-count">0</span> Hilos activos
-                    </div>
-                </div>
-                
-                <!-- LISTA DE HILOS (CON ANIMACIÓN) -->
-                <div id="threads-container" class="grid grid-cols-1 gap-4 min-h-[200px]">
-                    <div class="text-center text-gray-600 py-20 flex flex-col items-center">
-                        <i class="fa-solid fa-spinner fa-spin text-4xl mb-4 text-[#F47521]"></i>
-                        <span class="uppercase tracking-widest text-xs">Cargando datos del servidor...</span>
-                    </div>
-                </div>
+        <div class="bg-[#1a1a1a] p-8 rounded-xl border border-white/10 shadow-2xl relative overflow-hidden">
+            <div class="flex mb-6 border-b border-white/10">
+                <button onclick="switchTab('login')" id="tab-login" class="flex-1 pb-2 font-bold text-[#F47521] border-b-2 border-[#F47521]">LOGIN</button>
+                <button onclick="switchTab('register')" id="tab-register" class="flex-1 pb-2 font-bold text-gray-500 hover:text-white transition">REGISTRO</button>
             </div>
-
-            <!-- SIDEBAR RANKING -->
-            <div class="lg:col-span-1 space-y-8">
-                <!-- Top Hilos -->
-                <div class="bg-[#0a0a0a] border border-gray-800 rounded-xl p-6 shadow-2xl relative overflow-hidden group">
-                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#F47521] to-transparent"></div>
-                    <h3 class="text-white font-black uppercase mb-6 flex items-center gap-2 text-sm tracking-widest">
-                        <span class="bg-[#F47521] text-black w-6 h-6 flex items-center justify-center rounded text-xs"><i class="fa-solid fa-fire"></i></span>
-                        Tendencias
-                    </h3>
-                    <div id="ranking-threads" class="space-y-3 text-sm">
-                        <p class="text-gray-600 text-xs italic">Analizando tráfico...</p>
-                    </div>
-                </div>
-
-                <!-- Top Categorías -->
-                <div class="bg-[#0a0a0a] border border-gray-800 rounded-xl p-6 shadow-2xl">
-                    <h3 class="text-white font-black uppercase mb-6 flex items-center gap-2 text-sm tracking-widest">
-                         <span class="bg-blue-600 text-white w-6 h-6 flex items-center justify-center rounded text-xs"><i class="fa-solid fa-layer-group"></i></span>
-                         Categorías
-                    </h3>
-                    <!-- Filtros Rápidos -->
-                    <div class="flex flex-wrap" id="forum-filters">
-                        <button class="tag-badge active" onclick="filtrarCategoria('Todo', this)">Todo</button>
-                        <button class="tag-badge" onclick="filtrarCategoria('Noticias', this)">Noticias</button>
-                        <button class="tag-badge" onclick="filtrarCategoria('Teoría', this)">Teoría</button>
-                        <button class="tag-badge" onclick="filtrarCategoria('Spoilers', this)">Spoilers</button>
-                        <button class="tag-badge" onclick="filtrarCategoria('FanArt', this)">FanArt</button>
-                        <button class="tag-badge" onclick="filtrarCategoria('Reseña', this)">Reseña</button>
-                        <button class="tag-badge" onclick="filtrarCategoria('Debate', this)">Debate</button>
-                        <button class="tag-badge" onclick="filtrarCategoria('Ayuda', this)">Ayuda</button>
-                        <button class="tag-badge" onclick="filtrarCategoria('Recomendación', this)">Recomendación</button>
-                        <button class="tag-badge" onclick="filtrarCategoria('Evento', this)">Evento</button>
-                        <button class="tag-badge" onclick="filtrarCategoria('Off-Topic', this)">Off-Topic</button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- ======================= -->
-        <!-- SECCIÓN 2: CHAT GLOBAL -->
-        <!-- ======================= -->
-        <div class="border-t border-gray-800 pt-16 mb-20">
-            <div class="chat-container">
-                <div class="chat-header-bar">
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-comments text-black text-2xl"></i>
-                        <h2 class="text-2xl font-black italic uppercase tracking-tighter text-black">
-                            Chat <span class="text-white drop-shadow-md">En Vivo</span>
-                        </h2>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="flex items-center gap-2 bg-black/20 px-3 py-1 rounded-full border border-black/10">
-                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                            <span class="text-xs font-bold text-black uppercase">Limpieza en 1h</span>
-                        </div>
-                        <button onclick="requestAdminAction(openClearChatModal)" class="bg-red-600 hover:bg-white hover:text-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center transition shadow-lg border-2 border-red-800" title="Limpiar todo (Admin)">
-                            <i class="fa-solid fa-broom"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div id="chat-messages" class="chat-messages custom-scroll">
-                    <div class="text-center text-gray-500 mt-10">Conectando...</div>
-                </div>
-                
-                <form id="chat-form" class="p-4 bg-black border-t border-[#F47521]/30 flex gap-3 relative z-20">
-                    <div class="relative flex-1">
-                        <input type="text" id="chat-input" class="w-full bg-[#1a1a1a] border border-[#333] text-white p-3 pl-4 rounded-full outline-none focus:border-[#F47521] focus:ring-1 focus:ring-[#F47521] transition" placeholder="Escribe algo a la comunidad..." maxlength="200" autocomplete="off">
-                    </div>
-                    <button type="submit" id="chat-btn" class="bg-[#F47521] hover:bg-white text-black font-bold p-3 w-12 h-12 rounded-full transition shadow-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
-                        <i class="fa-solid fa-paper-plane"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <!-- ======================= -->
-        <!-- SECCIÓN 3: IA COMICVERSE -->
-        <!-- ======================= -->
-        <div class="mb-20 border-t border-gray-800 pt-12">
-            <!-- Título IA Personalizado (AHORA NARANJA) -->
-            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8 border-b border-gray-800 pb-6">
-                <div class="flex items-center gap-4">
-                    <div class="w-2 h-12 bg-gradient-to-b from-[#F47521] to-yellow-500 shadow-[0_0_20px_#F47521]"></div>
-                    <div>
-                        <h1 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white drop-shadow-xl">
-                            IA <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F47521] to-yellow-400">ComicVerse</span>
-                        </h1>
-                        <p class="text-gray-500 text-sm mt-1">Asistente Otaku Inteligente.</p>
-                    </div>
-                </div>
-                <!-- Botón Configuración Protegido -->
-                <button onclick="requestAiSettings()" class="bg-gray-800 hover:bg-[#F47521] hover:text-black text-white p-3 rounded-lg transition border border-white/10 font-bold text-xs uppercase tracking-widest flex items-center gap-2 group">
-                    <i class="fa-solid fa-gear group-hover:spin"></i> Configuración
-                </button>
-            </div>
-            
-            <div class="bg-[#111] border border-[#F47521]/30 rounded-xl overflow-hidden shadow-2xl flex flex-col h-[600px] relative">
-                <!-- Header IA -->
-                <div class="bg-[#F47521]/10 p-4 border-b border-[#F47521]/20 flex items-center gap-4">
-                    <!-- Avatar Anime IA -->
-                    <img id="ai-avatar-display" src="https://image.pollinations.ai/prompt/anime%20cyborg%20girl%20face%20close%20up%20avatar%20flat%20vector?width=100&height=100&nologo=true" class="w-12 h-12 rounded-full border-2 border-[#F47521] object-cover">
-                    <div>
-                        <h3 class="font-bold text-white text-lg">ComicBot</h3>
-                        <p class="text-xs text-orange-300">Creado por ComicsCadaUnDia • Asistente Otaku</p>
-                    </div>
-                </div>
-
-                <!-- Chat Area IA -->
-                <div id="ai-chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 custom-scroll bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
-                    <!-- Mensaje Bienvenida -->
-                    <div class="ai-message bot">
-                        <img src="https://image.pollinations.ai/prompt/anime%20cyborg%20girl%20face%20close%20up%20avatar%20flat%20vector?width=100&height=100&nologo=true" class="ai-avatar bg-black">
-                        <div class="ai-bubble bot">
-                            ¡Hola! Soy ComicBot, tu asistente personal. 🤖✨<br><br>
-                            Puedo ayudarte a entender la web, recomendar cómics o simplemente hablar de anime.<br>
-                            🎨 <b>Escribe "Crea esta imagen: [descripción]"</b> para que genere arte para ti.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Input IA -->
-                <form id="ai-form" class="p-4 bg-black border-t border-[#F47521]/30 flex gap-3">
-                    <input type="text" id="ai-input" class="input-dark flex-1 !border-orange-900 focus:!border-[#F47521] focus:!shadow-orange-500/20" placeholder="Pregúntame algo o pide una imagen..." autocomplete="off">
-                    <button type="submit" class="bg-[#F47521] hover:bg-white text-black font-bold p-3 rounded-lg transition">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- --- MODALES --- -->
-
-    <!-- MODAL PERSONALIZAR IA -->
-    <div id="ai-settings-modal" class="hidden-section modal-overlay">
-        <div class="bg-[#111] border border-[#F47521] w-full max-w-md p-6 rounded-xl shadow-[0_0_50px_rgba(244,117,33,0.3)] animate-[fadeIn_0.3s_ease-out]">
-            <h3 class="text-xl font-bold text-white mb-4 uppercase"><i class="fa-solid fa-robot text-[#F47521]"></i> Personalizar IA</h3>
-            <label class="block text-xs text-gray-500 uppercase font-bold mb-1">Foto de la IA (URL)</label>
-            <input type="text" id="ai-avatar-url" placeholder="https://..." class="input-dark mb-2 text-xs">
-            <label class="block text-xs text-gray-500 uppercase font-bold mb-1">O subir imagen</label>
-            <input type="file" id="ai-file-upload" accept="image/*" class="text-xs text-gray-400 mb-4">
-            <label class="block text-xs text-gray-500 uppercase font-bold mb-1">System Prompt (Personalidad)</label>
-            <textarea id="ai-system-prompt" class="input-dark h-32 text-xs mb-4" placeholder="Instrucciones para la IA..."></textarea>
-            <div class="flex gap-2"><button onclick="saveAiSettings()" class="flex-1 bg-[#F47521] hover:bg-white hover:text-black text-black font-bold py-2 rounded">Guardar</button><button onclick="closeAiSettings()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 rounded">Cancelar</button></div>
-        </div>
-    </div>
-
-    <!-- MODAL CREAR HILO -->
-    <div id="thread-modal" class="hidden-section modal-overlay">
-        <div class="bg-[#111] border-2 border-[#F47521] w-full max-w-2xl p-8 rounded-2xl relative shadow-[0_0_60px_rgba(244,117,33,0.3)] animate-[fadeIn_0.3s_ease-out]">
-            <button onclick="closeThreadModal()" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="fa-solid fa-xmark text-2xl"></i></button>
-            <h3 class="text-3xl font-black text-white uppercase mb-6 flex items-center gap-3"><i class="fa-solid fa-pen-to-square text-[#F47521]"></i> Nuevo Hilo</h3>
-            <form id="create-thread-form" class="space-y-5">
-                <div><label class="block text-xs text-[#F47521] uppercase font-bold mb-2">Título</label><input type="text" id="thread-title" class="input-dark text-lg font-bold" required maxlength="80"></div>
-                <div><label class="block text-xs text-gray-500 uppercase font-bold mb-2">Categoría</label><select id="thread-tag" class="input-dark cursor-pointer text-gray-300">
-                    <option value="General">General</option><option value="Teoría">Teoría</option><option value="Spoilers">Spoilers</option><option value="FanArt">FanArt</option><option value="Noticias">Noticias</option><option value="Ayuda">Ayuda</option><option value="Reseña">Reseña</option><option value="Debate">Debate</option><option value="Isekai">Isekai</option><option value="Shonen">Shonen</option><option value="Seinen">Seinen</option><option value="Romance">Romance</option><option value="Terror">Terror</option><option value="Comedia">Comedia</option><option value="Yuri/Yaoi">Yuri/Yaoi</option><option value="Cosplay">Cosplay</option><option value="Tutorial">Tutorial</option><option value="Off-Topic">Off-Topic</option>
-                </select></div>
-                <div><label class="block text-xs text-gray-500 uppercase font-bold mb-2">Contenido</label><textarea id="thread-content" class="input-dark h-40 resize-none" required></textarea></div>
-                <button type="submit" class="w-full bg-gradient-to-r from-[#F47521] to-red-600 text-white font-black uppercase py-4 rounded-lg">Publicar</button>
+            <form id="login-form" class="space-y-4">
+                <input type="email" id="login-email" placeholder="Correo Electrónico" class="input-cr" required>
+                <input type="password" id="login-pass" placeholder="Contraseña" class="input-cr" required>
+                <button type="submit" class="w-full bg-[#F47521] hover:bg-orange-600 text-black font-black uppercase py-3 rounded transition hover:scale-[1.02]">Ingresar</button>
             </form>
+            <form id="register-form" class="space-y-4 hidden-section">
+                <input type="text" id="reg-username" placeholder="Nombre de Usuario (Único)" class="input-cr" required>
+                <input type="email" id="reg-email" placeholder="Correo Electrónico" class="input-cr" required>
+                <input type="password" id="reg-pass" placeholder="Contraseña (Mín 6 caracteres)" class="input-cr" required>
+                <button type="submit" class="w-full bg-white hover:bg-gray-200 text-black font-black uppercase py-3 rounded transition hover:scale-[1.02]">Crear Cuenta</button>
+            </form>
+            <div class="my-6 flex items-center justify-between text-gray-500 text-xs uppercase"><span class="w-1/3 h-px bg-white/10"></span><span>O conecta con</span><span class="w-1/3 h-px bg-white/10"></span></div>
+            <button onclick="googleLogin()" class="w-full bg-black border border-white/20 hover:border-white text-white font-bold py-3 rounded flex items-center justify-center gap-3 transition"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5"> Google</button>
         </div>
     </div>
-    <!-- MODAL BORRAR -->
-    <div id="delete-modal" class="hidden-section modal-overlay"><div class="modal-box border-red-600 shadow-red-900/50 text-center"><i class="fa-solid fa-trash-can text-5xl text-red-600 mb-4 animate-bounce"></i><h3 class="text-2xl font-black text-white uppercase mb-2">Zona de Peligro</h3><p class="text-gray-400 mb-6 text-sm">Ingresa clave admin.</p><input type="password" id="delete-key" class="input-dark text-center text-red-500 font-bold tracking-[0.5em] text-xl mb-6 border-red-900 focus:border-red-500" placeholder="CLAVE"><div class="flex gap-3"><button onclick="confirmDelete()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded uppercase">Eliminar</button><button onclick="closeDeleteModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 rounded uppercase">Cancelar</button></div></div></div>
-    <!-- MODAL VACIAR CHAT -->
-    <div id="clear-chat-modal" class="hidden-section modal-overlay"><div class="modal-box border-red-600 shadow-[0_0_50px_rgba(220,38,38,0.5)] text-center bg-[#110000]"><i class="fa-solid fa-biohazard text-5xl text-red-600 mb-4 animate-pulse"></i><h3 class="text-2xl font-black text-white uppercase mb-2">Limpieza Total</h3><p class="text-red-300 mb-6 text-sm font-bold">BORRARÁ TODO EL CHAT.</p><input type="password" id="clear-chat-key" class="input-dark text-center text-red-500 font-bold tracking-[0.5em] text-xl mb-6 border-red-900 focus:border-red-500 bg-black" placeholder="CLAVE MAESTRA"><div class="flex gap-3"><button onclick="confirmClearChat()" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-black py-3 rounded uppercase border border-red-500">EJECUTAR</button><button onclick="closeClearChatModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 rounded uppercase">ABORTAR</button></div></div></div>
-    <!-- MODAL VER HILO -->
-    <div id="view-thread-modal" class="hidden-section modal-overlay"><div class="bg-[#111] border border-gray-700 w-full max-w-4xl h-[90vh] rounded-xl flex flex-col relative shadow-2xl animate-[fadeIn_0.3s_ease-out]"><div class="p-6 border-b border-gray-800 bg-[#151515] rounded-t-xl flex justify-between items-start"><div><div id="view-thread-tags" class="mb-2"></div><h2 id="view-thread-title" class="text-2xl md:text-3xl font-bold text-white mb-2"></h2><div class="flex items-center gap-3 text-xs text-gray-500"><span id="view-thread-author" class="text-[#F47521] font-bold"></span><span id="view-thread-date"></span></div></div><button onclick="closeViewModal()" class="text-gray-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-2xl"></i></button></div><div class="flex-1 overflow-y-auto p-6 custom-scroll"><p id="view-thread-content" class="text-gray-300 text-lg leading-relaxed mb-8 whitespace-pre-wrap"></p><div class="border-t border-gray-800 pt-6"><h4 class="text-white font-bold uppercase mb-4 flex items-center gap-2"><i class="fa-solid fa-comments text-[#F47521]"></i> Comentarios</h4><div id="comments-list" class="space-y-4"></div></div></div><form id="comment-form" class="p-4 bg-black border-t border-gray-800 flex gap-3 rounded-b-xl"><input type="text" id="comment-input" class="input-dark flex-1" placeholder="Escribe un comentario..." required><button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 rounded-lg transition">Enviar</button></form></div></div>
 
-    <!-- LOGICA FIREBASE -->
+    <!-- PERFIL -->
+    <div id="profile-container" class="w-full max-w-4xl hidden-section animate-enter">
+        <div class="flex justify-between items-end mb-6">
+            <div><h2 class="text-3xl font-black italic uppercase">Mi <span class="text-[#F47521]">Perfil</span></h2><p class="text-xs text-gray-500 font-mono" id="profile-id">ID: Cargando...</p></div>
+            <button onclick="cerrarSesion()" class="text-red-500 text-xs font-bold uppercase hover:underline"><i class="fa-solid fa-power-off"></i> Cerrar Sesión</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- COLUMNA IZQUIERDA -->
+            <div class="md:col-span-1 space-y-6">
+                <!-- Tarjeta 3D -->
+                <div class="card-scene" onclick="this.querySelector('.card-obj').classList.toggle('is-flipped')">
+                    <div class="card-obj" id="membership-card">
+                        <!-- Frente -->
+                        <div class="card-face card-front">
+                            <div class="relative mb-2">
+                                <div id="avatar-frame" class="avatar-container">
+                                    <img id="display-avatar" src="https://via.placeholder.com/150" class="profile-img" onerror="this.src='https://via.placeholder.com/150'">
+                                </div>
+                                <button onclick="event.stopPropagation(); toggleEditMode()" class="absolute bottom-0 right-0 bg-[#F47521] text-black w-8 h-8 rounded-full flex items-center justify-center hover:scale-110 transition shadow-lg z-20"><i class="fa-solid fa-pen"></i></button>
+                            </div>
+                            <h3 id="display-username" class="text-xl font-bold text-white">Usuario</h3>
+                            
+                            <!-- Estado (Coloreado) -->
+                            <div id="user-status-display" class="px-3 py-1 rounded-full text-[10px] uppercase font-bold mt-1 mb-1 bg-white/10 text-white">Estado: Conectado</div>
+                            <p id="join-date" class="text-[9px] text-gray-500 font-mono">Unido: -</p>
+
+                            <div id="social-buttons" class="flex gap-2 mt-3 hidden-section justify-center relative z-20">
+                                <a id="btn-tiktok" href="#" target="_blank" class="text-white hover:text-pink-500 text-lg transition p-2 bg-black/50 rounded-full border border-white/10"><i class="fa-brands fa-tiktok"></i></a>
+                                <a id="btn-insta" href="#" target="_blank" class="text-white hover:text-purple-500 text-lg transition p-2 bg-black/50 rounded-full border border-white/10"><i class="fa-brands fa-instagram"></i></a>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-2 uppercase tracking-widest"><i class="fa-solid fa-rotate mr-1"></i> Ver Credencial</p>
+                        </div>
+                        <!-- Atrás (Mejorado) -->
+                        <div class="card-face card-back status-basic" id="card-back-style">
+                            <div class="chip"></div>
+                            <i id="badge-icon" class="fa-solid fa-user text-4xl mb-2 text-gray-500"></i>
+                            <h3 id="membership-type" class="text-2xl font-black uppercase text-gray-400">Básico</h3>
+                            <p class="text-[10px] text-gray-500 mt-2 px-4 text-center font-mono">ID: <span id="card-id-back">000000</span></p>
+                            <div class="absolute bottom-4 text-xs tracking-[0.3em] opacity-30">COMICVERSE</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bio -->
+                <div class="bg-[#111] p-4 rounded-lg border border-white/5">
+                    <h4 class="text-[#F47521] text-xs font-bold uppercase mb-2">Biografía</h4>
+                    <p id="display-bio" class="text-sm text-gray-300 italic">Sin biografía.</p>
+                    
+                    <!-- EDITOR -->
+                    <div id="editor-area" class="hidden mt-4 pt-4 border-t border-white/10">
+                        <label class="text-[10px] text-gray-500 uppercase mb-1 block">Estado Actual</label>
+                        <select id="edit-status" class="input-cr mb-2 text-xs">
+                            <option value="Leyendo un cómic">Leyendo un cómic</option>
+                            <option value="Dibujando una obra maestra">Dibujando una obra maestra</option>
+                            <option value="Buscando inspiración">Buscando inspiración</option>
+                            <option value="En una mazmorra (AFK)">En una mazmorra (AFK)</option>
+                            <option value="Debatiendo en el foro">Debatiendo en el foro</option>
+                            <option value="Esperando actualización">Esperando actualización</option>
+                            <option value="Votando en el ranking">Votando en el ranking</option>
+                            <option value="Tomando un descanso">Tomando un descanso</option>
+                            <option value="Modo Zen">Modo Zen</option>
+                            <option value="Salvando el mundo">Salvando el mundo</option>
+                        </select>
+                        <label class="text-[10px] text-gray-500 uppercase mb-1 block">Foto de Perfil</label>
+                        <input type="text" id="edit-photo" placeholder="Pegar URL..." class="input-cr mb-2 text-xs">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-[10px] text-gray-500">O subir:</span>
+                            <input type="file" id="file-upload" accept="image/*" class="text-xs text-gray-400">
+                        </div>
+                        <label class="text-[10px] text-gray-500 uppercase mb-1 block">Biografía</label>
+                        <textarea id="edit-bio" placeholder="Escribe tu bio..." class="input-cr h-20 text-xs mb-2"></textarea>
+                        
+                        <div id="creator-inputs" class="hidden-section border-t border-white/5 pt-2 mt-2">
+                            <label class="text-[10px] text-[#F47521] uppercase mb-1 block font-bold">Zona Creador</label>
+                            <input type="text" id="edit-tiktok" placeholder="URL TikTok" class="input-cr mb-2 text-xs">
+                            <input type="text" id="edit-insta" placeholder="URL Instagram" class="input-cr mb-2 text-xs">
+                        </div>
+                        <div class="flex gap-2 mt-2">
+                            <button onclick="guardarPerfil()" class="flex-1 bg-green-600 hover:bg-green-500 text-white text-xs font-bold py-2 rounded">GUARDAR</button>
+                            <button onclick="toggleEditMode()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white text-xs font-bold py-2 rounded">CANCELAR</button>
+                        </div>
+                        <button onclick="confirmarBorrar()" class="w-full mt-4 bg-red-900/30 border border-red-800 text-red-500 hover:bg-red-900 hover:text-white text-xs font-bold py-2 rounded transition">[BORRAR CUENTA]</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA -->
+            <div class="md:col-span-2 space-y-6">
+                <div class="bg-[#1a1a1a] p-6 rounded-xl border border-white/10">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2"><i class="fa-solid fa-medal text-yellow-500"></i> Títulos Obtenidos</h3>
+                        <span id="titles-count" class="text-xs bg-[#333] px-2 py-1 rounded text-white">0 / 25</span>
+                    </div>
+                    <div class="text-xs text-gray-500 mb-2 italic" id="default-title-msg"></div>
+                    <div class="badge-grid" id="titles-container"></div>
+                </div>
+
+                <!-- ADMIN ZONE -->
+                <div class="bg-black p-6 rounded-xl border border-red-900/30">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-bold text-red-500 uppercase tracking-widest"><i class="fa-solid fa-user-secret"></i> Zona Admin</h3>
+                        <input type="password" id="admin-key" placeholder="Clave" class="bg-[#111] border border-red-900/50 text-red-500 text-xs px-2 py-1 rounded w-24 text-center" onkeyup="checkAdmin()">
+                    </div>
+                    <div id="admin-controls" class="hidden-section border-t border-red-900/20 pt-4">
+                        <div class="mb-4">
+                            <input type="text" id="admin-search" placeholder="Buscar Gmail..." class="w-full bg-[#111] border border-gray-700 text-white text-xs p-2 rounded mb-2" onkeyup="filtrarUsuarios()">
+                            <div class="admin-table-container custom-scroll">
+                                <table class="admin-table"><thead><tr><th>Usuario / Email</th><th>ID</th></tr></thead><tbody id="users-table-body"><tr><td colspan="2" class="text-center py-2">Cargando...</td></tr></tbody></table>
+                            </div>
+                        </div>
+                        <div id="admin-actions-panel" class="bg-[#1a1a1a] p-4 rounded border border-gray-700 opacity-50 pointer-events-none transition-opacity">
+                            <p class="text-xs text-[#F47521] font-bold mb-2">Editando a: <span id="selected-user-email" class="text-white">Nadie</span></p>
+                            <div class="flex gap-2 mb-4">
+                                <button onclick="adminViewData()" class="flex-1 bg-blue-900/30 text-blue-400 border border-blue-500/30 text-xs font-bold py-2 rounded hover:bg-blue-600 hover:text-white"><i class="fa-solid fa-eye"></i> Ver Datos</button>
+                                <button onclick="adminDeleteUser()" class="flex-1 bg-red-900/30 text-red-500 border border-red-500/30 text-xs font-bold py-2 rounded hover:bg-red-600 hover:text-white"><i class="fa-solid fa-trash"></i> Borrar Usuario</button>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-[10px] text-gray-500 mb-1">Membresía</label>
+                                    <button onclick="adminSetPremium(true)" class="w-full bg-yellow-600/20 text-yellow-500 border border-yellow-600/50 text-xs font-bold py-1 rounded mb-2 hover:bg-yellow-600 hover:text-black">Hacer PREMIUM</button>
+                                    <button onclick="adminSetPremium(false)" class="w-full bg-gray-800 text-gray-400 border border-gray-600 text-xs font-bold py-1 rounded hover:bg-white hover:text-black">Hacer BÁSICO</button>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] text-gray-500 mb-1">Títulos</label>
+                                    <select id="admin-title-select" class="w-full bg-[#111] text-white text-xs p-1 rounded border border-gray-700 mb-2"></select>
+                                    <div class="flex gap-1">
+                                        <button onclick="adminAddTitle()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-1 rounded">Asignar</button>
+                                        <button onclick="adminRemoveTitle()" class="flex-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold py-1 rounded">Quitar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 border-t border-white/5 pt-2">
+                                <label class="block text-[10px] text-gray-500 mb-1">Marco Legendario (Frame)</label>
+                                <div class="flex gap-2">
+                                    <select id="admin-frame-select" class="flex-1 bg-[#111] text-white text-xs p-1 rounded border border-gray-700">
+                                        <option value="">Ninguno</option>
+                                        <option value="frame-anime-hero">Anime Hero</option>
+                                        <option value="frame-gangster">Gangster</option>
+                                        <option value="frame-angel-gold">Angel Gold</option>
+                                        <option value="frame-demon-gold">Demon Gold</option>
+                                        <option value="frame-crown-gold">Crown Gold</option>
+                                        <option value="frame-spike-gold">Spike Gold</option>
+                                        <option value="frame-aura-god">God Aura</option>
+                                        <option value="frame-necromancer">Necromancer</option>
+                                        <option value="frame-cyber-samurai">Cyber Samurai</option>
+                                        <option value="frame-phoenix">Phoenix</option>
+                                        <option value="frame-void-walker">Void Walker</option>
+                                        <option value="frame-king-slayer">King Slayer</option>
+                                        <option value="frame-mecha">Mecha Pilot</option>
+                                        <option value="frame-wizard">Wizard</option>
+                                        <option value="frame-dragon">Dragon Lord</option>
+                                    </select>
+                                    <button onclick="adminSetFrame()" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold py-1 px-3 rounded">Aplicar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICACIÓN -->
+    <div id="notification-modal" class="hidden-section modal-overlay">
+        <div class="modal-content border-green-500 shadow-green-500/20">
+            <i id="notif-icon" class="fa-solid fa-check-circle text-5xl text-green-500 mb-4"></i>
+            <h3 id="notif-title" class="text-2xl font-black text-white uppercase mb-2">Sistema</h3>
+            <p id="notif-msg" class="text-gray-400 mb-6">Cambios guardados.</p>
+            <button onclick="closeNotification()" class="bg-white text-black font-bold py-2 px-6 rounded uppercase hover:bg-gray-200">Aceptar</button>
+        </div>
+    </div>
+    
+    <!-- TRAMPOSILLO -->
+    <div id="cheat-modal" class="hidden-section modal-overlay">
+        <div class="modal-content border-red-600 shadow-red-600/30">
+            <i class="fa-solid fa-ban text-5xl text-red-600 mb-4 animate-pulse"></i>
+            <h3 class="text-2xl font-black text-white uppercase mb-2">¡Alto ahí!</h3>
+            <p class="text-gray-400 mb-6">¿Qué tratas de hacer, tramposillo? <br>Ese no es un enlace válido de la plataforma.</p>
+            <button onclick="closeCheatModal()" class="bg-red-600 text-white font-bold py-2 px-6 rounded uppercase hover:bg-red-500">Lo siento</button>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, addDoc, deleteDoc, collection, query, orderBy, limit, onSnapshot, serverTimestamp, updateDoc, increment, getDocs, writeBatch, setDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, deleteUser } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBf9ATqgErKQKpzKpFXsUu4BHmFcNSLzOE",
@@ -386,265 +427,192 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
         const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
 
-        let currentUser = null;
-        let userData = { username: "Invitado", avatar: "https://via.placeholder.com/150", frame: "" };
+        let currentUserUid = null;
+        let allUsersCache = [];
+        let selectedUserId = null;
 
-        // --- DEFAULTS DE LA IA ---
-        let aiSystemPrompt = "Eres ComicBot, una IA creada por ComicsCadaUnDia para el sitio ComicVerse. Eres una experta Otaku, amigable y entusiasta. Tu misión es ayudar a los usuarios a entender la web: INICIO (Novedades), ORIGINALES (Cómics del creador), FANS (Cómics de la comunidad), ADELANTOS (Spoilers), QUIZS (Juegos), FORO (Comunidad), PRÓXIMAMENTE (Futuro). También sabes mucho de anime y manga. Si te piden imágenes, diles que usen el comando 'Crea esta imagen'.";
-        let aiAvatar = "https://image.pollinations.ai/prompt/anime%20cyborg%20girl%20face%20close%20up%20avatar%20flat%20vector?width=100&height=100&nologo=true";
+        // UI
+        window.showNotification = (title, msg, type = 'success') => {
+            const modal = document.getElementById('notification-modal');
+            document.getElementById('notif-title').innerText = title;
+            document.getElementById('notif-msg').innerText = msg;
+            const content = modal.querySelector('.modal-content');
+            const icon = document.getElementById('notif-icon');
+            if(type === 'success') { content.className = "modal-content border-green-500 shadow-green-500/20"; icon.className = "fa-solid fa-check-circle text-5xl text-green-500 mb-4"; }
+            else { content.className = "modal-content border-red-500 shadow-red-500/20"; icon.className = "fa-solid fa-triangle-exclamation text-5xl text-red-500 mb-4"; }
+            modal.classList.remove('hidden-section');
+        };
+        window.closeNotification = () => document.getElementById('notification-modal').classList.add('hidden-section');
+        window.showCheatModal = () => document.getElementById('cheat-modal').classList.remove('hidden-section');
+        window.closeCheatModal = () => document.getElementById('cheat-modal').classList.add('hidden-section');
 
-        if(localStorage.getItem('ai_prompt')) aiSystemPrompt = localStorage.getItem('ai_prompt');
-        if(localStorage.getItem('ai_avatar')) {
-            aiAvatar = localStorage.getItem('ai_avatar');
-            document.querySelectorAll('#ai-avatar-display').forEach(img => img.src = aiAvatar);
-        }
+        const ALL_TITLES = [
+            { name: "Creador", type: "legendary" }, { name: "Dios", type: "legendary" }, { name: "Leyenda", type: "legendary" }, { name: "Fan #1", type: "legendary" }, { name: "Guardián", type: "legendary" },
+            { name: "Héroe", type: "epic" }, { name: "Villano", type: "epic" }, { name: "VIP", type: "epic" }, { name: "Donador", type: "epic" }, { name: "Maestro", type: "epic" }, { name: "Inmortal", type: "epic" },
+            { name: "Moderador", type: "rare" }, { name: "Artista", type: "rare" }, { name: "Editor", type: "rare" }, { name: "Guionista", type: "rare" }, { name: "Traductor", type: "rare" }, { name: "Oráculo", type: "rare" }, { name: "Vanguardia", type: "rare" },
+            { name: "Crítico", type: "common" }, { name: "Votante", type: "common" }, { name: "Beta Tester", type: "common" }, { name: "Otaku", type: "common" }, { name: "Explorador", type: "common" }, { name: "Coleccionista", type: "common" }, { name: "Arquitecto", type: "common" }
+        ];
+
+        const adminSelect = document.getElementById('admin-title-select');
+        const titlesContainer = document.getElementById('titles-container');
+        ALL_TITLES.forEach(t => {
+            const opt = document.createElement('option'); opt.value = t.name; opt.innerText = t.name; adminSelect.appendChild(opt);
+            const badge = document.createElement('span'); badge.className = `badge ${t.type}`; badge.dataset.title = t.name; badge.innerText = t.name; titlesContainer.appendChild(badge);
+        });
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                currentUser = user;
-                const docRef = doc(db, "users", user.uid);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    userData.username = data.username || user.displayName;
-                    userData.avatar = data.photoURL || user.photoURL || "https://via.placeholder.com/40";
-                    userData.frame = data.frame || ""; 
-                    document.getElementById('current-username').innerText = userData.username;
-                }
+                currentUserUid = user.uid;
+                document.getElementById('auth-container').classList.add('hidden-section');
+                document.getElementById('profile-container').classList.remove('hidden-section');
+                await cargarDatosPerfil(user);
             } else {
-                currentUser = null;
-                document.getElementById('current-username').innerText = "Invitado (Iniciar Sesión)";
+                currentUserUid = null;
+                document.getElementById('auth-container').classList.remove('hidden-section');
+                document.getElementById('profile-container').classList.add('hidden-section');
             }
         });
 
-        window.alertRequiredLogin = () => {
-            if(confirm("🔒 Debes iniciar sesión.\n\n¿Ir al Login?")) {
-                if(window.parent && window.parent.cargarPagina) window.parent.cargarPagina('Usuario.html', null);
-                else window.location.href = 'Usuario.html';
+        window.switchTab = (tab) => {
+            if (tab === 'login') {
+                document.getElementById('login-form').classList.remove('hidden-section');
+                document.getElementById('register-form').classList.add('hidden-section');
+                document.getElementById('tab-login').className = "flex-1 pb-2 font-bold text-[#F47521] border-b-2 border-[#F47521]";
+                document.getElementById('tab-register').className = "flex-1 pb-2 font-bold text-gray-500 hover:text-white transition";
+            } else {
+                document.getElementById('login-form').classList.add('hidden-section');
+                document.getElementById('register-form').classList.remove('hidden-section');
+                document.getElementById('tab-register').className = "flex-1 pb-2 font-bold text-[#F47521] border-b-2 border-[#F47521]";
+                document.getElementById('tab-login').className = "flex-1 pb-2 font-bold text-gray-500 hover:text-white transition";
             }
         };
 
-        // --- CHAT GLOBAL ---
-        const chatForm = document.getElementById('chat-form');
-        const chatInput = document.getElementById('chat-input');
-        const chatContainer = document.getElementById('chat-messages');
-        const chatInputBtn = document.getElementById('chat-btn');
-        let chatCooldown = false;
+        document.getElementById('login-form').addEventListener('submit', async (e) => { e.preventDefault(); try { await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-pass').value); } catch (e) { showNotification("Error", e.message, "error"); } });
+        document.getElementById('register-form').addEventListener('submit', async (e) => { e.preventDefault(); const userVal = document.getElementById('reg-username').value; const emailVal = document.getElementById('reg-email').value; try { const cred = await createUserWithEmailAndPassword(auth, emailVal, document.getElementById('reg-pass').value); await updateProfile(cred.user, { displayName: userVal }); await setDoc(doc(db, "users", cred.user.uid), { username: userVal, email: emailVal, photoURL: "https://via.placeholder.com/150", bio: "Nuevo en ComicVerse", titles: [], isPremium: false, joinDate: new Date().toLocaleDateString() }); } catch (e) { showNotification("Error", e.message, "error"); } });
+        window.googleLogin = async () => { try { const res = await signInWithPopup(auth, provider); const userRef = doc(db, "users", res.user.uid); const snap = await getDoc(userRef); if(!snap.exists()) { await setDoc(userRef, { username: res.user.displayName, email: res.user.email, photoURL: res.user.photoURL, bio: "Nuevo en ComicVerse", titles: [], isPremium: false, joinDate: new Date().toLocaleDateString() }); } } catch (e) { showNotification("Error", e.message, "error"); } };
+        window.cerrarSesion = () => signOut(auth);
 
-        chatForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!currentUser) return alertRequiredLogin();
-            if (chatCooldown) return;
-            const text = chatInput.value.trim();
-            if (!text) return;
+        async function cargarDatosPerfil(user) {
+            document.getElementById('profile-id').innerText = "ID: " + user.uid.substring(0, 8) + "...";
+            const snap = await getDoc(doc(db, "users", user.uid));
+            if (snap.exists()) {
+                const data = snap.data();
+                document.getElementById('display-username').innerText = data.username;
+                document.getElementById('display-bio').innerText = data.bio || "Sin bio.";
+                const photo = (data.photoURL && data.photoURL.trim() !== "") ? data.photoURL : "https://via.placeholder.com/150";
+                document.getElementById('display-avatar').src = photo;
+                if(auth.currentUser && auth.currentUser.uid === user.uid) { localStorage.setItem('userAvatar', photo); }
 
-            chatCooldown = true;
-            chatInputBtn.disabled = true;
-            chatInputBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            let timeLeft = 5;
-            chatInputBtn.innerHTML = timeLeft;
-            const timer = setInterval(() => {
-                timeLeft--; chatInputBtn.innerHTML = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(timer); chatCooldown = false; chatInputBtn.disabled = false;
-                    chatInputBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    chatInputBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
-                }
-            }, 1000);
+                document.getElementById('avatar-frame').className = `avatar-container ${data.frame || ''}`;
+                renderCardStatus(data.isPremium);
+                if(data.isPremium) document.getElementById('card-id-back').innerText = user.uid.substring(0,8).toUpperCase();
 
-            try {
-                await addDoc(collection(db, "global_chat"), {
-                    text, uid: currentUser.uid, username: userData.username, avatar: userData.avatar, frame: userData.frame, createdAt: serverTimestamp()
-                });
-                chatInput.value = "";
-            } catch (err) { console.error(err); }
-        });
+                // Status y Color
+                const statusText = data.userStatus || "Conectado";
+                const statusEl = document.getElementById('user-status-display');
+                statusEl.innerText = `Estado: ${statusText}`;
+                
+                let stColor = "bg-white/10 text-white";
+                if(statusText.includes("mazmorra")) stColor = "bg-red-900/50 text-red-200 border border-red-500/30";
+                else if(statusText.includes("Zen")) stColor = "bg-green-900/50 text-green-200 border border-green-500/30";
+                else if(statusText.includes("Leyendo")) stColor = "bg-blue-900/50 text-blue-200 border border-blue-500/30";
+                else if(statusText.includes("Salvando")) stColor = "bg-yellow-900/50 text-yellow-200 border border-yellow-500/30";
+                statusEl.className = `px-3 py-1 rounded-full text-[10px] uppercase font-bold mt-1 mb-1 ${stColor}`;
 
-        const qChat = query(collection(db, "global_chat"), orderBy("createdAt", "desc"), limit(60));
-        onSnapshot(qChat, (snapshot) => {
-            chatContainer.innerHTML = "";
-            const messages = [];
-            snapshot.forEach(doc => {
-                const msg = doc.data(); msg.id = doc.id;
-                if (msg.createdAt) { if (msg.createdAt.toDate() > new Date(Date.now() - 3600000)) messages.push(msg); } 
-                else messages.push(msg);
-            });
-            if (messages.length === 0) chatContainer.innerHTML = '<div class="text-center text-gray-600 mt-10">El chat está limpio.</div>';
-            
-            messages.forEach((msg) => {
-                const isSelf = currentUser && msg.uid === currentUser.uid;
-                const time = msg.createdAt ? new Date(msg.createdAt.toDate()).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '...';
-                const frameClass = msg.frame || '';
-                const avatarSrc = (msg.avatar && msg.avatar.length > 10) ? msg.avatar : "https://via.placeholder.com/40";
-                const deleteBtn = `<button onclick="requestDelete('${msg.id}', 'global_chat')" class="btn-delete ml-2 text-[10px]"><i class="fa-solid fa-trash"></i></button>`;
+                document.getElementById('join-date').innerText = "Unido: " + (data.joinDate || "Veterano");
 
-                const html = `<div class="message ${isSelf ? 'self' : ''}"><div class="message-avatar-box"><div class="avatar-container ${frameClass}" style="padding:2px;"><img src="${avatarSrc}" class="avatar-sm"></div></div><div class="flex flex-col ${isSelf ? 'items-end' : 'items-start'} max-w-full"><div class="message-meta"><span class="font-bold ${isSelf ? 'text-[#F47521]' : 'text-gray-400'}">${msg.username}</span><span class="opacity-50">${time}</span>${deleteBtn}</div><div class="message-content">${msg.text}</div></div></div>`;
-                chatContainer.insertAdjacentHTML('beforeend', html);
-            });
-        });
+                const userTitles = data.titles || [];
+                const badges = document.querySelectorAll('.badge');
+                let count = 0;
+                document.getElementById('default-title-msg').innerText = userTitles.length === 0 ? "Nuevo usuario (Aún no tienes títulos)" : "";
+                badges.forEach(b => { if (userTitles.includes(b.dataset.title)) { b.classList.add('owned'); count++; } else { b.classList.remove('owned'); } });
+                document.getElementById('titles-count').innerText = `${count} / ${ALL_TITLES.length}`;
 
-        // --- IA COMICVERSE ---
-        const aiForm = document.getElementById('ai-form');
-        const aiInput = document.getElementById('ai-input');
-        const aiContainer = document.getElementById('ai-chat-messages');
-
-        // SEGURIDAD: Solo Admin puede cambiar config
-        window.requestAiSettings = () => {
-            const pass = prompt("🔐 ADMIN ACCESS REQUIRED\nIngrese Clave de Creador:");
-            if (pass === "#Lau3700#") {
-                openAiSettings();
-            } else {
-                if(pass !== null) alert("Clave Incorrecta.");
-            }
-        };
-
-        window.openAiSettings = () => { document.getElementById('ai-settings-modal').classList.remove('hidden-section'); document.getElementById('ai-system-prompt').value = aiSystemPrompt; document.getElementById('ai-avatar-url').value = aiAvatar; };
-        window.closeAiSettings = () => document.getElementById('ai-settings-modal').classList.add('hidden-section');
-        window.saveAiSettings = () => { const promptVal = document.getElementById('ai-system-prompt').value; let avatarVal = document.getElementById('ai-avatar-url').value; if(promptVal) { aiSystemPrompt = promptVal; localStorage.setItem('ai_prompt', promptVal); } if(avatarVal) { aiAvatar = avatarVal; localStorage.setItem('ai_avatar', avatarVal); document.getElementById('ai-avatar-display').src = aiAvatar; } closeAiSettings(); };
-        document.getElementById('ai-file-upload').addEventListener('change', function(e) { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onloadend = function() { document.getElementById('ai-avatar-url').value = reader.result; }; reader.readAsDataURL(file); } });
-
-        aiForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const text = aiInput.value.trim();
-            if(!text) return;
-            aiContainer.insertAdjacentHTML('beforeend', `<div class="ai-message user"><div class="ai-bubble user">${text}</div></div>`);
-            aiInput.value = "";
-            aiContainer.scrollTop = aiContainer.scrollHeight;
-            const loadingId = Date.now();
-            aiContainer.insertAdjacentHTML('beforeend', `<div class="ai-message bot" id="${loadingId}"><img src="${aiAvatar}" class="ai-avatar bg-black"><div class="ai-bubble bot">Pensando... <i class="fa-solid fa-spinner fa-spin"></i></div></div>`);
-            aiContainer.scrollTop = aiContainer.scrollHeight;
-
-            try {
-                const botMsgDiv = document.getElementById(loadingId);
-                let response = "";
-                const lowerText = text.toLowerCase();
-                if (lowerText.startsWith("crea esta imagen") || lowerText.startsWith("dibuja")) {
-                    const prompt = text.replace(/crea esta imagen|dibuja/gi, "").trim();
-                    const encodedPrompt = encodeURIComponent(prompt + " anime style masterpiece");
-                    response = `¡Aquí tienes! 🎨<br><br><img src="https://image.pollinations.ai/prompt/${encodedPrompt}" style="border-radius:8px; width:100%; border:1px solid #333;">`;
+                if (userTitles.includes("Creador")) {
+                    document.getElementById('creator-inputs').classList.remove('hidden-section');
+                    document.getElementById('social-buttons').classList.remove('hidden-section');
+                    document.getElementById('edit-tiktok').value = data.tiktok || "";
+                    document.getElementById('edit-insta').value = data.insta || "";
+                    document.getElementById('btn-tiktok').href = data.tiktok || "#";
+                    document.getElementById('btn-insta').href = data.insta || "#";
+                    document.getElementById('btn-tiktok').style.display = data.tiktok ? 'inline' : 'none';
+                    document.getElementById('btn-insta').style.display = data.insta ? 'inline' : 'none';
                 } else {
-                    const instruction = `${aiSystemPrompt}\nUser: ${text}\nAI:`;
-                    const res = await fetch(`https://text.pollinations.ai/${encodeURIComponent(instruction)}`);
-                    response = res.ok ? await res.text() : "Error de conexión.";
+                    document.getElementById('creator-inputs').classList.add('hidden-section');
+                    document.getElementById('social-buttons').classList.add('hidden-section');
                 }
-                botMsgDiv.querySelector('.ai-bubble').innerHTML = response;
-                aiContainer.scrollTop = aiContainer.scrollHeight;
-            } catch (err) { console.error(err); document.getElementById(loadingId).remove(); }
-        });
-
-        // --- FORO ---
-        const threadsContainer = document.getElementById('threads-container');
-        const rankingThreadsEl = document.getElementById('ranking-threads');
-        const rankingCatsEl = document.getElementById('ranking-categories');
-        const qThreads = query(collection(db, "forum_threads"), orderBy("createdAt", "desc"), limit(50));
-        let allThreads = [];
-
-        onSnapshot(qThreads, (snapshot) => {
-            allThreads = [];
-            const catCounts = {};
-            snapshot.forEach(doc => { const d = doc.data(); d.id = doc.id; allThreads.push(d); catCounts[d.tag] = (catCounts[d.tag] || 0) + 1; });
-            renderThreads(allThreads);
-            updateRankings(allThreads, catCounts);
-        });
-
-        function updateRankings(threads, catCounts) {
-            const sortedThreads = [...threads].sort((a,b) => (b.likes || 0) - (a.likes || 0)).slice(0, 5);
-            if(rankingThreadsEl) {
-                rankingThreadsEl.innerHTML = "";
-                sortedThreads.forEach((t, index) => {
-                    let medal = index === 0 ? "🥇" : (index === 1 ? "🥈" : (index === 2 ? "🥉" : ""));
-                    let color = index === 0 ? "text-yellow-400" : (index === 1 ? "text-gray-300" : "text-gray-400");
-                    rankingThreadsEl.innerHTML += `<div class="flex items-center justify-between border-b border-white/5 pb-2 mb-2 cursor-pointer hover:bg-white/5 p-2 rounded" onclick="openViewModal('${t.id}')"><div class="truncate flex-1 pr-2 ${color} font-bold text-xs">${medal} ${index+1}. ${t.title}</div><div class="text-xs text-red-500 font-mono"><i class="fa-solid fa-heart"></i> ${t.likes || 0}</div></div>`;
-                });
-            }
-            if(rankingCatsEl) {
-                const sortedCats = Object.entries(catCounts).sort((a,b) => b[1] - a[1]).slice(0, 5);
-                rankingCatsEl.innerHTML = "";
-                sortedCats.forEach(([cat, count]) => {
-                    rankingCatsEl.innerHTML += `<div class="text-[10px] bg-[#222] border border-blue-900 text-blue-400 px-2 py-1 rounded flex items-center gap-1">${cat} <span class="bg-blue-900 text-white px-1 rounded-full">${count}</span></div>`;
-                });
+                document.getElementById('edit-bio').value = data.bio || "";
+                document.getElementById('edit-photo').value = data.photoURL || "";
+                document.getElementById('edit-status').value = data.userStatus || "Conectado";
             }
         }
 
-        window.renderThreads = (threads) => {
-            if(!threadsContainer) return;
-            threadsContainer.innerHTML = "";
-            if(threads.length === 0) { threadsContainer.innerHTML = '<div class="text-center text-gray-600">No hay discusiones.</div>'; return; }
-            threads.forEach((data, index) => {
-                const date = data.createdAt ? new Date(data.createdAt.toDate()).toLocaleDateString() : 'Reciente';
-                
-                // Color de borde dinámico según etiqueta
-                let borderColor = "border-l-gray-500";
-                if(data.tag === 'Noticias') borderColor = "border-l-yellow-500";
-                else if(data.tag === 'Teoría') borderColor = "border-l-blue-500";
-                else if(data.tag === 'Spoilers') borderColor = "border-l-red-500";
-                else if(data.tag === 'FanArt') borderColor = "border-l-pink-500";
-                else if(data.tag === 'Debate') borderColor = "border-l-green-500";
-                else if(data.tag === 'Ayuda') borderColor = "border-l-purple-500";
+        function renderCardStatus(isPremium) {
+            const cardBack = document.getElementById('card-back-style');
+            if (isPremium) { cardBack.className = "card-face card-back status-premium"; document.getElementById('membership-type').innerText = "PREMIUM"; document.getElementById('membership-type').className = "text-2xl font-black uppercase text-[#F47521] drop-shadow-md"; document.getElementById('badge-icon').className = "fa-solid fa-crown text-5xl mb-2 text-yellow-400 animate-pulse"; } 
+            else { cardBack.className = "card-face card-back status-basic"; document.getElementById('membership-type').innerText = "BÁSICO"; document.getElementById('membership-type').className = "text-2xl font-black uppercase text-gray-400"; document.getElementById('badge-icon').className = "fa-solid fa-user text-4xl mb-2 text-gray-500"; }
+        }
 
-                const frameClass = data.frame || '';
-                const avatarSrc = (data.avatar && data.avatar.length > 10) ? data.avatar : "https://via.placeholder.com/40";
-                
-                // Animación Stagger (escalonada)
-                const delay = index * 100;
+        window.toggleEditMode = () => document.getElementById('editor-area').classList.toggle('hidden');
+        document.getElementById('file-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 100000) { showNotification("Error", "Imagen muy pesada (Máx 100KB)", "error"); this.value = ""; return; }
+                const reader = new FileReader();
+                reader.onloadend = function() { document.getElementById('edit-photo').value = reader.result; }
+                reader.readAsDataURL(file);
+            }
+        });
 
-                const html = `
-                    <div class="forum-card cursor-pointer ${borderColor}" style="animation-delay: ${delay}ms;" onclick="openViewModal('${data.id}')">
-                        <div class="flex justify-between items-start mb-3 relative z-10">
-                            <div class="flex items-center gap-3">
-                                <div class="avatar-container ${frameClass}" style="padding:2px;"><img src="${avatarSrc}" class="w-10 h-10 rounded-full border border-gray-600 object-cover"></div>
-                                <div><h3 class="text-lg font-bold text-white leading-tight hover:text-[#F47521] transition">${data.title}</h3><p class="text-xs text-gray-500">por <span class="text-[#F47521]">${data.author}</span> • ${date}</p></div>
-                            </div>
-                            <button onclick="event.stopPropagation(); requestDelete('${data.id}', 'forum_threads')" class="btn-delete p-2"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                        <p class="text-gray-300 text-sm mb-4 pl-14 line-clamp-2 relative z-10">${data.content}</p>
-                        <div class="pl-14 flex items-center gap-4 relative z-10">
-                            <span class="tag-badge border border-white/10 text-white bg-[#222]">${data.tag}</span>
-                            <div class="flex items-center gap-1 text-xs text-gray-500"><i class="fa-solid fa-heart text-red-500"></i> ${data.likes || 0}</div>
-                            <div class="flex items-center gap-1 text-xs text-gray-500"><i class="fa-solid fa-comment text-blue-500"></i> ${data.commentCount || 0}</div>
-                        </div>
-                    </div>
-                `;
-                threadsContainer.insertAdjacentHTML('beforeend', html);
-            });
+        window.guardarPerfil = async () => {
+            if(!currentUserUid) return;
+            const newBio = document.getElementById('edit-bio').value;
+            let newPhoto = document.getElementById('edit-photo').value;
+            const newStatus = document.getElementById('edit-status').value;
+            const tiktokVal = document.getElementById('edit-tiktok').value;
+            const instaVal = document.getElementById('edit-insta').value;
+
+            if (tiktokVal && !tiktokVal.includes('tiktok.com')) { showCheatModal(); return; }
+            if (instaVal && !instaVal.includes('instagram.com')) { showCheatModal(); return; }
+            if(!newPhoto || newPhoto.trim() === "") newPhoto = "https://via.placeholder.com/150";
+
+            const updates = { bio: newBio, photoURL: newPhoto, userStatus: newStatus };
+            if(!document.getElementById('creator-inputs').classList.contains('hidden-section')){ updates.tiktok = tiktokVal; updates.insta = instaVal; }
+
+            try { await updateDoc(doc(db, "users", currentUserUid), updates); await cargarDatosPerfil(auth.currentUser); window.toggleEditMode(); showNotification("Sistema", "Perfil actualizado correctamente.", "success"); } catch(e) { showNotification("Error", e.message, "error"); }
         };
-        
-        window.filtrarCategoria = (cat, btn) => { document.querySelectorAll('#forum-filters .tag-badge').forEach(b => b.classList.remove('active', 'bg-[#F47521]', 'text-black')); if(btn) btn.classList.add('active', 'bg-[#F47521]', 'text-black'); if (cat === 'Todo') renderThreads(allThreads); else renderThreads(allThreads.filter(t => t.tag === cat)); };
-        window.filtrarHilos = () => { const term = document.getElementById('search-threads').value.toLowerCase(); renderThreads(allThreads.filter(t => t.title.toLowerCase().includes(term) || t.content.toLowerCase().includes(term))); };
 
-        // MODALS & ACTIONS
-        const threadModal = document.getElementById('thread-modal');
-        const threadForm = document.getElementById('create-thread-form');
-        window.openThreadModal = () => { if(!currentUser) return alertRequiredLogin(); threadModal.classList.remove('hidden-section'); };
-        window.closeThreadModal = () => threadModal.classList.add('hidden-section');
-        threadForm.addEventListener('submit', async (e) => { e.preventDefault(); const title = document.getElementById('thread-title').value; const content = document.getElementById('thread-content').value; const tag = document.getElementById('thread-tag').value; try { await addDoc(collection(db, "forum_threads"), { title, content, tag, uid: currentUser.uid, author: userData.username, avatar: userData.avatar, frame: userData.frame, likes: 0, commentCount: 0, createdAt: serverTimestamp() }); closeThreadModal(); threadForm.reset(); } catch (err) { console.error(err); } });
-
-        let currentThreadId = null;
-        window.openViewModal = async (id) => { currentThreadId = id; const thread = allThreads.find(t => t.id === id); if (!thread) return; document.getElementById('view-thread-title').innerText = thread.title; document.getElementById('view-thread-content').innerText = thread.content; document.getElementById('view-thread-author').innerText = thread.author; document.getElementById('view-thread-date').innerText = new Date(thread.createdAt.toDate()).toLocaleString(); const hasLiked = localStorage.getItem(`like_${id}`); const likeColor = hasLiked ? 'text-red-500' : 'text-gray-500 hover:text-red-500'; document.getElementById('view-thread-tags').innerHTML = `<span class="tag-badge bg-[#222] border-white/20">${thread.tag}</span><button onclick="likeThread('${id}')" class="ml-4 ${likeColor} transition font-bold"><i class="fa-solid fa-heart"></i> <span id="modal-likes">${thread.likes || 0}</span></button>`; const commentsRef = collection(db, "forum_threads", id, "comments"); const qComm = query(commentsRef, orderBy("createdAt", "asc")); onSnapshot(qComm, (snap) => { const list = document.getElementById('comments-list'); list.innerHTML = ""; if(snap.empty) list.innerHTML = '<div class="text-gray-600 text-sm">Sé el primero en responder.</div>'; snap.forEach(doc => { const c = doc.data(); const cFrame = c.frame || ''; const cAvatar = (c.avatar && c.avatar.length > 10) ? c.avatar : "https://via.placeholder.com/40"; const html = `<div class="flex gap-3 animate-[fadeIn_0.2s]"><div class="avatar-container ${cFrame} flex-shrink-0" style="padding:2px; width:fit-content; height:fit-content;"><img src="${cAvatar}" class="w-8 h-8 rounded-full border border-gray-600"></div><div class="flex-1"><div class="flex justify-between items-baseline"><span class="text-sm font-bold text-[#F47521]">${c.username}</span><button onclick="requestDeleteComment('${id}', '${doc.id}')" class="btn-delete text-xs"><i class="fa-solid fa-trash"></i></button></div><p class="text-gray-400 text-sm mt-1 bg-[#1a1a1a] p-2 rounded-lg border border-white/5">${c.text}</p></div></div>`; list.insertAdjacentHTML('beforeend', html); }); }); document.getElementById('view-thread-modal').classList.remove('hidden-section'); };
-        window.closeViewModal = () => document.getElementById('view-thread-modal').classList.add('hidden-section');
-        document.getElementById('comment-form').addEventListener('submit', async (e) => { e.preventDefault(); if(!currentUser) return alertRequiredLogin(); const text = document.getElementById('comment-input').value; try { await addDoc(collection(db, "forum_threads", currentThreadId, "comments"), { text, uid: currentUser.uid, username: userData.username, avatar: userData.avatar, frame: userData.frame, createdAt: serverTimestamp() }); await updateDoc(doc(db, "forum_threads", currentThreadId), { commentCount: increment(1) }); document.getElementById('comment-input').value = ""; } catch(err) { console.error(err); } });
-        window.likeThread = async (id) => { if(!currentUser) return alertRequiredLogin(); if(localStorage.getItem(`like_${id}`)) { alert("Ya diste like."); return; } const ref = doc(db, "forum_threads", id); await updateDoc(ref, { likes: increment(1) }); localStorage.setItem(`like_${id}`, 'true'); const count = document.getElementById('modal-likes'); if(count) count.innerText = parseInt(count.innerText) + 1; };
-
-        // ADMIN DELETE
-        let deleteTargetId = null; let deleteCollection = null; let deleteSubId = null;
-        window.requestDelete = (id, collection) => { deleteTargetId = id; deleteCollection = collection; deleteSubId = null; openDeleteModal(); };
-        window.requestDeleteComment = (threadId, commentId) => { deleteTargetId = threadId; deleteCollection = "forum_threads"; deleteSubId = commentId; openDeleteModal(); };
-        function openDeleteModal() { document.getElementById('delete-modal').classList.remove('hidden-section'); document.getElementById('delete-key').value = ""; }
-        window.closeDeleteModal = () => document.getElementById('delete-modal').classList.add('hidden-section');
-        window.confirmDelete = async () => { const key = document.getElementById('delete-key').value; if (key === "#Lau3700#") { try { if (deleteSubId) { await deleteDoc(doc(db, "forum_threads", deleteTargetId, "comments", deleteSubId)); await updateDoc(doc(db, "forum_threads", deleteTargetId), { commentCount: increment(-1) }); } else { await deleteDoc(doc(db, deleteCollection, deleteTargetId)); } closeDeleteModal(); } catch (e) { alert("Error: " + e.message); } } else { alert("CLAVE INCORRECTA"); } };
-        window.openClearChatModal = () => { document.getElementById('clear-chat-modal').classList.remove('hidden-section'); document.getElementById('clear-chat-key').value = ""; };
-        window.closeClearChatModal = () => document.getElementById('clear-chat-modal').classList.add('hidden-section');
-        window.confirmClearChat = async () => { const key = document.getElementById('clear-chat-key').value; if (key === "#Lau3700#") { const btn = document.querySelector('#clear-chat-modal button'); btn.innerText = "BORRANDO..."; try { const q = query(collection(db, "global_chat"), limit(500)); const snapshot = await getDocs(q); const batch = writeBatch(db); snapshot.docs.forEach((doc) => { batch.delete(doc.ref); }); await batch.commit(); alert("Chat Global eliminado."); closeClearChatModal(); } catch (e) { alert("Error: " + e.message); } finally { btn.innerText = "EJECUTAR LIMPIEZA"; } } else { alert("CLAVE INCORRECTA"); } };
-        
-        // ADMIN HELPER PARA IA SETTINGS
-        window.requestAdminAction = (action) => {
-            const pass = prompt("🔐 ADMIN ACCESS REQUIRED\nIngrese Clave de Creador:");
-            if(pass === "#Lau3700#") action();
-            else if(pass !== null) alert("Clave Incorrecta.");
+        window.confirmarBorrar = async () => {
+            if(confirm("¿ESTÁS SEGURO? Esta acción es irreversible.")) {
+                if(confirm("Última advertencia.")) {
+                    try { const user = auth.currentUser; await deleteDoc(doc(db, "users", user.uid)); await deleteUser(user); showNotification("Sistema", "Cuenta eliminada. Adiós.", "success"); setTimeout(() => window.location.reload(), 2000); } catch(e) { showNotification("Error", "Requiere login reciente. Cierra y vuelve a entrar.", "error"); }
+                }
+            }
         };
+
+        window.checkAdmin = async () => { const key = document.getElementById('admin-key').value; if (key === "#Lau3700#") { document.getElementById('admin-controls').classList.remove('hidden-section'); await loadAllUsers(); } else { document.getElementById('admin-controls').classList.add('hidden-section'); } };
+        async function loadAllUsers() {
+            const tbody = document.getElementById('users-table-body'); tbody.innerHTML = '<tr><td colspan="2" class="text-center">Cargando...</td></tr>';
+            try { const querySnapshot = await getDocs(collection(db, "users")); allUsersCache = []; querySnapshot.forEach((doc) => { allUsersCache.push({ id: doc.id, ...doc.data() }); }); renderUserTable(allUsersCache); } catch (e) { tbody.innerHTML = '<tr><td colspan="2" class="text-red-500">Error</td></tr>'; }
+        }
+        window.filtrarUsuarios = () => { const term = document.getElementById('admin-search').value.toLowerCase(); const filtered = allUsersCache.filter(u => (u.email && u.email.toLowerCase().includes(term)) || (u.username && u.username.toLowerCase().includes(term))); renderUserTable(filtered); };
+        function renderUserTable(users) {
+            const tbody = document.getElementById('users-table-body'); tbody.innerHTML = '';
+            if (users.length === 0) { tbody.innerHTML = '<tr><td colspan="2" class="text-center text-gray-500">Sin resultados</td></tr>'; return; }
+            users.forEach(u => { const tr = document.createElement('tr'); tr.innerHTML = `<td><div class="font-bold text-white">${u.username || 'Sin nombre'}</div><div class="text-gray-500 text-[10px]">${u.email || 'No Email'}</div></td><td class="font-mono text-xs text-gray-600">${u.id.substring(0,6)}...</td>`; tr.onclick = () => selectUserForAdmin(u.id, u.email); tbody.appendChild(tr); });
+        }
+        function selectUserForAdmin(uid, email) { selectedUserId = uid; const rows = document.querySelectorAll('.admin-table tr'); rows.forEach(r => r.classList.remove('selected')); const panel = document.getElementById('admin-actions-panel'); panel.classList.remove('opacity-50', 'pointer-events-none'); document.getElementById('selected-user-email').innerText = email || uid; }
+
+        window.adminSetPremium = async (status) => { if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error"); try { await updateDoc(doc(db, "users", selectedUserId), { isPremium: status }); showNotification("Admin", "Estado actualizado", "success"); if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser); } catch(e) { showNotification("Error", e.message, "error"); } };
+        window.adminAddTitle = async () => { if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error"); try { await updateDoc(doc(db, "users", selectedUserId), { titles: arrayUnion(document.getElementById('admin-title-select').value) }); showNotification("Admin", "Título asignado", "success"); if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser); } catch(e) { showNotification("Error", e.message, "error"); } };
+        window.adminRemoveTitle = async () => { if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error"); try { await updateDoc(doc(db, "users", selectedUserId), { titles: arrayRemove(document.getElementById('admin-title-select').value) }); showNotification("Admin", "Título removido", "success"); if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser); } catch(e) { showNotification("Error", e.message, "error"); } };
+        window.adminSetFrame = async () => { if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error"); try { await updateDoc(doc(db, "users", selectedUserId), { frame: document.getElementById('admin-frame-select').value }); showNotification("Admin", "Marco aplicado", "success"); if (selectedUserId === currentUserUid) cargarDatosPerfil(auth.currentUser); } catch(e) { showNotification("Error", e.message, "error"); } };
+        window.adminViewData = async () => { if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error"); await cargarDatosPerfil({ uid: selectedUserId }); showNotification("Admin", "Datos cargados en vista previa.", "success"); };
+        window.adminDeleteUser = async () => { if (!selectedUserId) return showNotification("Admin", "Selecciona usuario", "error"); if (confirm(`¿Eliminar TODOS los datos de ${selectedUserId}?`)) { try { await deleteDoc(doc(db, "users", selectedUserId)); showNotification("Admin", "Usuario eliminado de DB", "success"); await loadAllUsers(); document.getElementById('admin-actions-panel').classList.add('opacity-50', 'pointer-events-none'); } catch(e) { showNotification("Error", e.message, "error"); } } };
 
     </script>
 </body>
