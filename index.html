@@ -27,29 +27,6 @@
             overflow: hidden; 
         }
 
-        /* --- PRELOADER (FIX DEFINITIVO DE CARGA) --- */
-        #preloader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #000; z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease;
-            pointer-events: all; /* Bloquea clicks mientras carga */
-        }
-        .loader-bar-box {
-            width: 200px; height: 4px; background: #222; border-radius: 2px;
-            overflow: hidden; position: relative; box-shadow: 0 0 10px rgba(244, 117, 33, 0.4);
-        }
-        .loader-bar {
-            width: 50%; height: 100%; background: #F47521; position: absolute; left: -50%;
-            animation: load 1.5s infinite ease-in-out;
-            box-shadow: 0 0 15px #F47521;
-        }
-        @keyframes load { 0% { left: -50%; } 100% { left: 100%; } }
-        .loader-text {
-            color: #F47521; margin-top: 15px; font-family: monospace; font-size: 12px;
-            letter-spacing: 3px; animation: pulse 1s infinite; text-transform: uppercase;
-        }
-
         /* --- Scrollbar --- */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #050505; }
@@ -234,40 +211,6 @@
 </head>
 <body class="flex flex-col md:flex-row h-screen overflow-hidden relative">
 
-    <!-- PRELOADER (FIX: SE QUITA A LOS 3s MÁXIMO) -->
-    <div id="preloader">
-        <div class="loader-bar-box">
-            <div class="loader-bar"></div>
-        </div>
-        <div class="loader-text">CARGANDO...</div>
-    </div>
-    
-    <!-- SCRIPT DE CARGA FORZADA -->
-    <script>
-        // Función única para ocultar preloader
-        function removePreloader() {
-            const preloader = document.getElementById('preloader');
-            if (preloader && preloader.style.display !== 'none') {
-                preloader.style.opacity = '0';
-                // Esperar a que termine la transición CSS de opacidad
-                setTimeout(() => {
-                    preloader.style.display = 'none';
-                }, 500);
-            }
-        }
-
-        // 1. Intentar quitar cuando todo cargue (Normal)
-        window.addEventListener('load', removePreloader);
-
-        // 2. Intentar quitar cuando el HTML esté listo (Rápido)
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(removePreloader, 1000); // 1s de cortesía
-        });
-
-        // 3. FUERZA BRUTA: Quitar sí o sí a los 3.5 segundos si algo falló
-        setTimeout(removePreloader, 3500);
-    </script>
-
     <!-- BOTÓN PERFIL USUARIO (TEXTO PARA EVITAR ERRORES DE FOTO) -->
     <!-- Se conecta a Usuario.html -->
     <div class="user-top-btn hidden md:flex items-center gap-3 px-6 py-3 rounded-md cursor-pointer group" onclick="cargarPagina('Usuario.html', null)">
@@ -360,8 +303,7 @@
         </div>
 
         <!-- IFRAME VISOR (Aquí cargan las páginas externas) -->
-        <!-- Usamos src="about:blank" para evitar estados de carga colgados -->
-        <iframe id="visor-contenido" src="about:blank" title="Contenido"></iframe>
+        <iframe id="visor-contenido" src="" title="Contenido"></iframe>
 
         <!-- PÁGINA DE INICIO (HOME) -->
         <div id="inicio-container" class="p-4 md:p-8 max-w-[1600px] mx-auto animate-[fadeIn_0.5s_ease-out]">
@@ -579,7 +521,7 @@
                 </div>
             </div>
 
-            <!-- --- NUEVO FOOTER 3D (AL FINAL DE LA PÁGINA) --- -->
+            <!-- --- FOOTER 3D PULIDO --- -->
             <footer class="footer-3d-container rounded-t-3xl mt-12 pb-8">
                 <div class="footer-grid-bg"></div>
                 <div class="relative z-10 max-w-6xl mx-auto px-6 pt-16">
@@ -598,14 +540,14 @@
                             </div>
                         </div>
 
-                        <!-- Columna Legal (Internal Links) -->
+                        <!-- Columna Legal (Conexiones) -->
                         <div class="flex flex-col items-center space-y-4">
                             <h3 class="text-white font-bold uppercase tracking-widest border-b-2 border-[#F47521] pb-2 mb-2">Legal & Ayuda</h3>
                             <button onclick="cargarPagina('Soporte.html', null)" class="text-gray-300 hover:text-white hover:underline decoration-[#F47521] underline-offset-4 transition">Centro de Soporte</button>
                             <button onclick="cargarPagina('Términos.html', null)" class="text-gray-300 hover:text-white hover:underline decoration-[#F47521] underline-offset-4 transition">Términos y Condiciones</button>
                         </div>
 
-                        <!-- Columna Redes (External Links) -->
+                        <!-- Columna Redes (Redirige a prueba.com) -->
                         <div class="flex flex-col items-center space-y-6">
                             <h3 class="text-white font-bold uppercase tracking-widest border-b-2 border-[#F47521] pb-2 mb-2">Síguenos</h3>
                             <div class="flex gap-6">
@@ -648,7 +590,7 @@
         // LOGICA TARJETA
         function toggleCard(card) { card.classList.toggle('flipped'); }
 
-        // LOGICA NAVEGACIÓN
+        // LOGICA NAVEGACIÓN (Controla el Iframe)
         function cargarPagina(url, elemento) {
             if (elemento) {
                 const navItems = document.querySelectorAll('.nav-item');
@@ -670,5 +612,7 @@
             document.getElementById('visor-contenido').src = "";
         }
     </script>
+    
 </body>
+
 </html>
