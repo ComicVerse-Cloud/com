@@ -127,13 +127,87 @@
         .odds-row:hover { background: rgba(255,255,255,0.05); }
         .glow-text { text-shadow: 0 0 5px currentColor; }
 
+        /* --- MODAL ADBLOCK --- */
+        #adblock-modal {
+            position: fixed; inset: 0; z-index: 9999; background: black;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 20px;
+        }
+        #adblock-modal.active { display: flex; }
+        .adblock-box {
+            background: #111; border: 2px solid #F47521; border-radius: 16px; padding: 30px;
+            max-width: 500px; box-shadow: 0 0 100px rgba(244,117,33,0.3); animation: shake 0.5s;
+        }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
     </style>
 </head>
 <body class="relative min-h-screen pb-20">
 
+    <!-- DETECTOR DE ADBLOCK REAL (CORREGIDO) -->
+    <div id="adblock-modal">
+        <div class="adblock-box">
+            <i class="fa-solid fa-hand-paper text-6xl text-[#F47521] mb-6"></i>
+            <h2 class="text-3xl font-black text-white uppercase mb-4">¡ALTO AHÍ PEQUEÑO!</h2>
+            <p class="text-gray-300 text-lg mb-6 leading-relaxed">
+                La página da contenido gratis, los anuncios son mi monetización por mi arduo trabajo. <br>
+                <span class="font-bold text-[#F47521]">Respeta la comunidad.</span>
+            </p>
+            <div class="bg-black/50 p-4 rounded border border-red-900 mb-6">
+                <p class="text-red-500 font-bold text-sm uppercase tracking-widest mb-2">Cómo desactivarlo:</p>
+                <ul class="text-red-400 text-xs text-left list-disc pl-5 space-y-1">
+                    <li>Haz clic en el icono de tu bloqueador (Extensiones).</li>
+                    <li>Selecciona "Pausar en este sitio" o "No actuar en esta página".</li>
+                    <li>Recarga la página (F5).</li>
+                </ul>
+            </div>
+            <button onclick="location.reload()" class="bg-[#F47521] hover:bg-white hover:text-black text-black font-black uppercase py-3 px-8 rounded shadow-lg transition transform hover:scale-105">
+                YA LO DESACTIVÉ (RECARGAR)
+            </button>
+        </div>
+    </div>
+
+    <!-- SCRIPT DE DETECCIÓN INTELIGENTE -->
+    <script>
+        window.addEventListener('load', function() {
+            // Esperar 2 segundos para asegurar que la página cargó y los anuncios intentaron mostrarse
+            setTimeout(function() {
+                var adBait = document.createElement("div");
+                // Clases comunes que los AdBlockers buscan y bloquean
+                adBait.setAttribute("class", "pub_300x250 text-ad textAd adsbox banner_ads");
+                // Estilo para que no moleste visualmente pero sea detectable si se colapsa
+                adBait.setAttribute("style", "width: 10px !important; height: 10px !important; position: absolute !important; left: -10000px !important; top: -1000px !important; background: #fff;");
+                adBait.innerHTML = "&nbsp;";
+                document.body.appendChild(adBait);
+                
+                // Pequeño delay adicional para dar tiempo al bloqueador de actuar sobre el nuevo elemento
+                setTimeout(function() {
+                    var isBlocked = false;
+                    
+                    // Si el bloqueador colapsó el elemento o lo ocultó
+                    if (adBait.offsetHeight === 0 || adBait.offsetWidth === 0 || adBait.clientHeight === 0) {
+                        isBlocked = true;
+                    }
+                    
+                    var styles = window.getComputedStyle(adBait);
+                    if (styles && (styles.display === 'none' || styles.visibility === 'hidden')) {
+                        isBlocked = true;
+                    }
+
+                    if (isBlocked) {
+                        document.getElementById('adblock-modal').classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
+                    
+                    adBait.remove(); // Limpiar el cebo
+                }, 150); 
+            }, 2000); 
+        });
+    </script>
+
     <div class="p-4 md:p-8 max-w-7xl mx-auto">
         
-        <!-- HEADER -->
+        <!-- HEADER (Personalización Naranja/Amarillo) -->
         <div class="flex items-center gap-3 mb-6 border-b border-gray-800 pb-6">
             <div class="w-2 h-12 bg-gradient-to-b from-[#F47521] to-yellow-500 shadow-[0_0_20px_#F47521]"></div>
             <div>
@@ -187,7 +261,7 @@
             <div class="flex items-center justify-center gap-3 mb-8">
                 <div class="w-2 h-10 bg-[#F47521] shadow-[0_0_15px_#F47521]"></div>
                 <h2 class="text-3xl font-black italic uppercase tracking-tighter text-white">
-                    Ruleta <span class="text-[#F47521]">Daily</span>
+                    Ruleta <span class="text-[#F47521]">Diaria</span>
                 </h2>
             </div>
 
@@ -209,6 +283,7 @@
                     <button id="btn-power-up" onclick="powerUpWheel()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:scale-105 transition transform text-white font-black py-3 rounded uppercase tracking-widest shadow-lg mb-2">
                         <i class="fa-solid fa-bolt text-yellow-300"></i> Potenciar Ruleta
                     </button>
+                    <p class="text-[10px] text-gray-500 mb-2">Mira un anuncio y vuelve a la página para potenciar la ruleta y ganar</p>
                     
                     <button id="btn-spin" onclick="spinWheel()" class="hidden w-full bg-gradient-to-r from-[#F47521] to-red-600 hover:scale-105 transition transform text-white font-black py-3 rounded uppercase tracking-widest shadow-lg shadow-orange-500/20">
                         Girar Ahora
@@ -227,47 +302,33 @@
                     </div>
                     <table class="w-full text-xs text-left">
                         <tbody class="text-gray-300">
-                            <!-- PREMIO 1: DINERO 5 USD -->
-                            <tr class="odds-row border-b border-[#222]">
-                                <td class="py-3 px-4 flex items-center gap-2 text-green-500 font-bold">
-                                    <i class="fa-solid fa-money-bill-wave"></i> 5.00 USD
-                                </td>
+                             <tr class="odds-row border-b border-[#222]">
+                                <td class="py-3 px-4 flex items-center gap-2 text-green-500 font-bold"><i class="fa-solid fa-money-bill-wave"></i> 5.00 USD</td>
                                 <td class="py-3 px-4 text-right font-mono text-green-500">5.0%</td>
                             </tr>
-                            <!-- PREMIO 2: DINERO 1 USD -->
                             <tr class="odds-row border-b border-[#222]">
-                                <td class="py-3 px-4 flex items-center gap-2 text-green-400">
-                                    <i class="fa-solid fa-coins"></i> 1.00 USD
-                                </td>
+                                <td class="py-3 px-4 flex items-center gap-2 text-green-400"><i class="fa-solid fa-coins"></i> 1.00 USD</td>
                                 <td class="py-3 px-4 text-right font-mono text-green-400">15.0%</td>
                             </tr>
-                            <!-- PREMIO 3: PREMIUM PERMANENTE -->
                             <tr class="odds-row border-b border-[#222]">
-                                <td class="py-3 px-4 flex items-center gap-2 text-[#FFD700] font-bold glow-text">
-                                    <i class="fa-solid fa-crown"></i> Premium Permanente
-                                </td>
+                                <td class="py-3 px-4 flex items-center gap-2 text-[#FFD700] font-bold glow-text"><i class="fa-solid fa-crown"></i> Premium Permanente</td>
                                 <td class="py-3 px-4 text-right font-mono text-[#FFD700]">0.5%</td>
                             </tr>
-                            <!-- PREMIO 4: PREMIUM TEMPORAL -->
                             <tr class="odds-row border-b border-[#222]">
-                                <td class="py-3 px-4 flex items-center gap-2 text-purple-400">
-                                    <i class="fa-solid fa-hourglass-half"></i> Premium 10h / 1h
-                                </td>
+                                <td class="py-3 px-4 flex items-center gap-2 text-purple-400"><i class="fa-solid fa-hourglass-half"></i> Premium 10h / 1h</td>
                                 <td class="py-3 px-4 text-right font-mono">10.0%</td>
                             </tr>
-                             <!-- PREMIO 5: ITEMS RAROS -->
                              <tr class="odds-row border-b border-[#222]">
-                                <td class="py-3 px-4 flex items-center gap-2 text-blue-400">
-                                    <i class="fa-solid fa-shirt"></i> Skins / Títulos
-                                </td>
+                                <td class="py-3 px-4 flex items-center gap-2 text-blue-400"><i class="fa-solid fa-shirt"></i> Skins / Títulos / Caps</td>
                                 <td class="py-3 px-4 text-right font-mono">20.0%</td>
                             </tr>
-                             <!-- PREMIO 6: NADA -->
+                             <tr class="odds-row border-b border-[#222]">
+                                <td class="py-3 px-4 flex items-center gap-2 text-pink-400"><i class="fa-solid fa-lock-open"></i> Pack 5 Caps</td>
+                                <td class="py-3 px-4 text-right font-mono">15.0%</td>
+                            </tr>
                              <tr class="odds-row">
-                                <td class="py-3 px-4 flex items-center gap-2 text-red-500 font-bold">
-                                    <i class="fa-solid fa-face-frown"></i> Suerte para la próxima
-                                </td>
-                                <td class="py-3 px-4 text-right font-mono">49.5%</td>
+                                <td class="py-3 px-4 flex items-center gap-2 text-red-500 font-bold"><i class="fa-solid fa-face-frown"></i> Suerte para la próxima</td>
+                                <td class="py-3 px-4 text-right font-mono">85.0%</td>
                             </tr>
                         </tbody>
                     </table>
@@ -332,7 +393,8 @@
             <div id="prize-icon" class="text-6xl mb-4 animate-bounce">🎁</div>
             <h3 class="text-2xl font-black text-white uppercase mb-2">Resultado</h3>
             <p id="prize-text" class="text-xl text-[#F47521] font-bold mb-6">...</p>
-            <button onclick="closePrizeModal()" class="w-full bg-gray-800 hover:bg-white hover:text-black text-white font-bold py-3 rounded uppercase">Aceptar</button>
+            <a id="claim-btn" href="#" class="w-full bg-gradient-to-r from-green-600 to-green-500 hover:scale-105 transition transform text-white font-black py-3 rounded uppercase block shadow-lg">RECLAMAR PREMIO</a>
+            <button id="close-prize-btn" onclick="closePrizeModal()" class="w-full bg-gray-800 hover:bg-white hover:text-black text-white font-bold py-3 rounded uppercase hidden mt-2">Aceptar</button>
         </div>
     </div>
 
@@ -367,7 +429,6 @@
         };
 
         window.spinWheel = async function() {
-            // Check Firebase first (Double check)
             const docRef = doc(db, "roulette_spins", deviceId);
             try {
                 const docSnap = await getDoc(docRef);
@@ -385,19 +446,17 @@
             document.getElementById('btn-spin').classList.add('opacity-50');
 
             // --- LÓGICA RIGGED (REAL) ---
-            // 90% Suerte, 9.9% Basura, 0.1% Premium, 0% Dinero
             const failIndices = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18];
             const premiumIndices = [1, 5, 11]; 
-            const othersIndices = [7, 13, 15, 17, 19]; // Removed money indices (3, 9)
+            const othersIndices = [7, 13, 15, 17, 19];
 
             const rand = Math.random() * 100;
             let resultIndex;
 
-            if (rand < 90) { resultIndex = failIndices[Math.floor(Math.random() * failIndices.length)]; } 
+            if (rand < 85) { resultIndex = failIndices[Math.floor(Math.random() * failIndices.length)]; } 
             else if (rand < 99.9) { resultIndex = othersIndices[Math.floor(Math.random() * othersIndices.length)]; } 
             else { if (Math.random() < 0.1) resultIndex = 1; else resultIndex = premiumIndices[Math.floor(Math.random() * premiumIndices.length)]; }
 
-            // Animación
             const segmentAngleDeg = 360 / 20;
             const extraSpins = 360 * 8;
             const baseOffset = -90 - (segmentAngleDeg / 2); 
@@ -408,20 +467,31 @@
             wheelEl.style.transform = `rotate(${targetRotation}deg)`;
 
             setTimeout(async () => {
-                // Save to Firebase immediately
-                try {
-                    await setDoc(docRef, { lastSpin: Date.now() });
-                } catch(e) { console.error("Firebase save error", e); }
+                try { await setDoc(docRef, { lastSpin: Date.now() }); } catch(e) { console.error(e); }
 
                 const segments = [
-                    "Suerte", "Prem Perm", "Suerte", "5 USD", "Suerte", "Prem 10h", "Suerte", "Admin Key", "Suerte", "1 USD",
+                    "Suerte", "Prem Perm", "Suerte", "5 USD", "Suerte", "Prem 10h", "Suerte", "Pack 5 Caps", "Suerte", "1 USD",
                     "Suerte", "Prem 1h", "Suerte", "Skins", "Suerte", "Top Secret", "Suerte", "Caps", "Suerte", "Titulos"
                 ];
                 const prize = segments[resultIndex];
                 
                 let icon = "😢"; let msg = "Suerte para la próxima."; let color = "text-gray-400";
-                if (prize.includes("Suerte")) { icon = "💩"; msg = "¡Caja vacía! Suerte para la próxima."; } 
-                else { icon = "🎉"; msg = `¡FELICIDADES! Ganaste: ${prize} (Toma Captura)`; color = "text-[#F47521]"; }
+                const claimBtn = document.getElementById('claim-btn');
+                const closeBtn = document.getElementById('close-prize-btn');
+
+                if (prize.includes("Suerte")) { 
+                    icon = "💩"; msg = "¡Caja vacía! Suerte para la próxima."; 
+                    claimBtn.classList.add('hidden'); 
+                    closeBtn.classList.remove('hidden');
+                } else { 
+                    icon = "🎉"; msg = `¡FELICIDADES! Ganaste: ${prize}`; color = "text-[#F47521]"; 
+                    claimBtn.classList.remove('hidden'); 
+                    closeBtn.classList.add('hidden');
+                    
+                    const subject = encodeURIComponent(`RECLAMO PREMIO: ${prize}`);
+                    const body = encodeURIComponent(`Hola soporte,\n\nHe ganado el premio "${prize}" en la Ruleta Diaria.\n\nID Dispositivo: ${deviceId}\nFecha: ${new Date().toLocaleString()}\n\nEspero mi recompensa.`);
+                    claimBtn.href = `mailto:ComicVerseSupport@gmail.com?subject=${subject}&body=${body}`;
+                }
 
                 document.getElementById('prize-icon').innerText = icon;
                 document.getElementById('prize-text').innerText = msg;
@@ -438,8 +508,7 @@
             }, 5000);
         };
 
-        // --- RESTO DEL CÓDIGO (JUEGOS, COOLDOWN, ETC) ---
-        // (Se mantiene igual, solo integrado en el módulo)
+        // --- RESTO DE FUNCIONES ---
         
         window.startCooldown = function(duration) {
             const msg = document.getElementById('cooldown-msg');
@@ -464,7 +533,6 @@
             }, 1000);
         };
 
-        // Check Cooldown on Load (Firebase)
         (async () => {
             const docRef = doc(db, "roulette_spins", deviceId);
             const docSnap = await getDoc(docRef);
