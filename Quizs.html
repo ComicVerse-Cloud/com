@@ -53,27 +53,29 @@
         /* --- Game Viewer (Iframe Optimizad) --- */
         .game-viewer-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 100;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start; /* Alineado arriba para dejar espacio abajo */
             opacity: 0; pointer-events: none; transition: 0.3s;
-            padding: 5px;
+            padding-top: 10px; /* Espacio superior mínimo */
         }
         .game-viewer-overlay.active { opacity: 1; pointer-events: auto; }
         
-        /* --- CONFIGURACIÓN DE TAMAÑO DEL JUEGO (AQUÍ ESTÁ EL TAMAÑO) --- */
+        /* --- CONFIGURACIÓN DE TAMAÑO DEL JUEGO (ADAPTABLE A ADS) --- */
         .game-frame-container {
-            /* Ancho del panel */
-            width: 95vw; 
-            max-width: 1216px; /* Límite para PC */
+            /* 1. Anchura: Casi todo el ancho disponible */
+            width: 98vw;
+            max-width: 1216px; 
             
-            /* Alto del panel (Aumentado para llenar más pantalla en móvil) */
-            max-height: 96vh; 
+            /* 2. Altura: Calculada dinámicamente para dejar espacio a los anuncios abajo (aprox 180px) */
+            height: calc(100dvh - 200px); 
             
-            /* Intenta mantener cuadrado, pero se estira si falta espacio vertical */
-            aspect-ratio: 1 / 1; 
+            /* 3. Mantener aspecto cuadrado lo más posible, pero permitir estirarse si es necesario o encogerse */
+            /* aspect-ratio: 1 / 1;  <-- Desactivado para forzar altura máxima disponible */
             
             background: #000; border: 2px solid var(--orange-cr);
             border-radius: 12px; position: relative; overflow: hidden;
             box-shadow: 0 0 60px rgba(244,117,33,0.3);
+            margin-bottom: 10px; /* Separación con los anuncios */
+            flex-shrink: 1; /* Permite encogerse si falta espacio */
         }
         
         .game-iframe { width: 100%; height: 100%; border: none; }
@@ -107,13 +109,24 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
         }
         
-        /* --- ESPACIO PUBLICIDAD (AQUÍ CONFIGURAS EL ANUNCIO) --- */
-        .game-ad-space {
-            width: 100%; max-width: 320px; height: 50px;
-            background: #111; border: 1px dashed #333;
-            margin-top: 12px; display: flex; align-items: center; justify-content: center;
-            color: #444; font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
-            border-radius: 8px;
+        /* --- CONTENEDOR DE ANUNCIOS (BOTTOM) --- */
+        .ads-container-bottom {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding-bottom: 5px;
+            flex-shrink: 0; /* Evita que los anuncios se aplasten */
+            background: rgba(0,0,0,0.8); /* Fondo ligero para legibilidad */
+        }
+
+        .banner-normal-placeholder {
+            width: 320px; height: 50px; /* Tamaño móvil estándar */
+            background: #222; border: 1px dashed #555;
+            display: flex; align-items: center; justify-content: center;
+            color: #666; font-size: 10px;
         }
 
         /* --- Slider Horizontal --- */
@@ -245,14 +258,14 @@
     <!-- VISOR DE JUEGO (PANTALLA COMPLETA - AJUSTABLE) -->
     <div id="game-viewer" class="game-viewer-overlay">
         
-        <!-- Contenedor del Juego -->
+        <!-- Contenedor del Juego (Se estira para llenar espacio sobrante) -->
         <div class="game-frame-container">
-            <!-- Botón Cerrar Mejorado y Personalizado -->
+            <!-- Botón Cerrar Mejorado -->
             <button onclick="closeGame()" class="close-game-btn">
                 SALIR <i class="fa-solid fa-right-from-bracket"></i>
             </button>
             
-            <!-- Logo Superpuesto (Opcional) -->
+            <!-- Logo Superpuesto -->
             <div class="logo-overlay">
                 <img src="https://via.placeholder.com/80x40/transparent/F47521?text=COMICVERSE" alt="Logo">
             </div>
@@ -260,14 +273,22 @@
             <iframe id="game-iframe" src="" class="game-iframe" allow="fullscreen"></iframe>
         </div>
 
-        <!-- Espacio para Anuncios (Debajo del juego) -->
-        <div class="game-ad-space">
-            ESPACIO PUBLICITARIO (BANNER)
+        <!-- CONTENEDOR DE ANUNCIOS (STACKED BOTTOM) -->
+        <div class="ads-container-bottom">
+            <!-- 1. BANNER NORMAL (Script Falso / Placeholder) -->
+            <div class="banner-normal-placeholder">
+                <!-- AQUÍ PEGAS TU SCRIPT DE BANNER NORMAL 320x50 -->
+                <span>BANNER 320x50</span>
+            </div>
+
+            <!-- 2. BANNER NATIVO (Script Proporcionado) -->
+            <script async="async" data-cfasync="false" src="https://pl28307525.effectivegatecpm.com/ec1123a13f7bf7f7810ca9fcdef627bc/invoke.js"></script>
+            <div id="container-ec1123a13f7bf7f7810ca9fcdef627bc"></div>
         </div>
     </div>
 
     <script>
-        // URL DEL ANUNCIO
+        // URL DEL ANUNCIO (Interstitial)
         const adUrl = "https://www.effectivegatecpm.com/m1ys4txk?key=24956a22bda5dca3b4086262eb4b5423";
 
         // DATOS DE LOS JUEGOS
@@ -327,7 +348,7 @@
         function unlockAndPlay() {
             if(!currentGameId) return;
 
-            // 1. Abrir Anuncio
+            // 1. Abrir Anuncio Interstitial
             window.open(adUrl, '_blank');
 
             // 2. Cerrar modal detalle y Abrir juego inmediatamente
