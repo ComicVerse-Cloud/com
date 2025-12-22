@@ -12,8 +12,8 @@
     <style>
         /* --- Configuración Global --- */
         :root {
-            --orange-cr: #F47521; /* Naranja Crunchyroll */
-            --dark-bg: #000000;   /* Fondo Negro */
+            --orange-cr: #F47521;
+            --dark-bg: #000000;
             --dark-card: #23252B;
             --text-gray: #A0A0A0;
             --neon-blue: #00f3ff;
@@ -25,29 +25,6 @@
             color: white;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             overflow: hidden; 
-        }
-
-        /* --- PRELOADER (FIX DEFINITIVO DE CARGA) --- */
-        #preloader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #000; z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease;
-            pointer-events: all; /* Bloquea clicks mientras carga */
-        }
-        .loader-bar-box {
-            width: 200px; height: 4px; background: #222; border-radius: 2px;
-            overflow: hidden; position: relative; box-shadow: 0 0 10px rgba(244, 117, 33, 0.4);
-        }
-        .loader-bar {
-            width: 50%; height: 100%; background: #F47521; position: absolute; left: -50%;
-            animation: load 1.5s infinite ease-in-out;
-            box-shadow: 0 0 15px #F47521;
-        }
-        @keyframes load { 0% { left: -50%; } 100% { left: 100%; } }
-        .loader-text {
-            color: #F47521; margin-top: 15px; font-family: monospace; font-size: 12px;
-            letter-spacing: 3px; animation: pulse 1s infinite; text-transform: uppercase;
         }
 
         /* --- Scrollbar --- */
@@ -234,40 +211,6 @@
 </head>
 <body class="flex flex-col md:flex-row h-screen overflow-hidden relative">
 
-    <!-- PRELOADER (FIX: SE QUITA A LOS 3s MÁXIMO) -->
-    <div id="preloader">
-        <div class="loader-bar-box">
-            <div class="loader-bar"></div>
-        </div>
-        <div class="loader-text">CARGANDO...</div>
-    </div>
-    
-    <!-- SCRIPT DE CARGA FORZADA -->
-    <script>
-        // Función única para ocultar preloader
-        function removePreloader() {
-            const preloader = document.getElementById('preloader');
-            if (preloader && preloader.style.display !== 'none') {
-                preloader.style.opacity = '0';
-                // Esperar a que termine la transición CSS de opacidad
-                setTimeout(() => {
-                    preloader.style.display = 'none';
-                }, 500);
-            }
-        }
-
-        // 1. Intentar quitar cuando todo cargue (Normal)
-        window.addEventListener('load', removePreloader);
-
-        // 2. Intentar quitar cuando el HTML esté listo (Rápido)
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(removePreloader, 1000); // 1s de cortesía
-        });
-
-        // 3. FUERZA BRUTA: Quitar sí o sí a los 3.5 segundos si algo falló
-        setTimeout(removePreloader, 3500);
-    </script>
-
     <!-- BOTÓN PERFIL USUARIO (TEXTO PARA EVITAR ERRORES DE FOTO) -->
     <!-- Se conecta a Usuario.html -->
     <div class="user-top-btn hidden md:flex items-center gap-3 px-6 py-3 rounded-md cursor-pointer group" onclick="cargarPagina('Usuario.html', null)">
@@ -360,7 +303,7 @@
         </div>
 
         <!-- IFRAME VISOR (Aquí cargan las páginas externas) -->
-        <iframe id="visor-contenido" src="about:blank" title="Contenido"></iframe>
+        <iframe id="visor-contenido" src="" title="Contenido"></iframe>
 
         <!-- PÁGINA DE INICIO (HOME) -->
         <div id="inicio-container" class="p-4 md:p-8 max-w-[1600px] mx-auto animate-[fadeIn_0.5s_ease-out]">
@@ -578,7 +521,7 @@
                 </div>
             </div>
 
-            <!-- --- NUEVO FOOTER 3D (AL FINAL DE LA PÁGINA) --- -->
+            <!-- --- FOOTER 3D PULIDO --- -->
             <footer class="footer-3d-container rounded-t-3xl mt-12 pb-8">
                 <div class="footer-grid-bg"></div>
                 <div class="relative z-10 max-w-6xl mx-auto px-6 pt-16">
@@ -666,8 +609,10 @@
             const navItems = document.querySelectorAll('.nav-item');
             navItems.forEach(item => item.classList.remove('active'));
             document.querySelector('.nav-item:first-child').classList.add('active');
-            document.getElementById('visor-contenido').src = "about:blank";
+            document.getElementById('visor-contenido').src = "";
         }
     </script>
+    
 </body>
+
 </html>
