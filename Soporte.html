@@ -33,17 +33,25 @@
         }
         .input-dark:focus { border-color: var(--orange-cr); box-shadow: 0 0 15px rgba(244,117,33,0.2); }
 
-        /* --- Tarjetas FAQ --- */
+        /* --- Tarjetas FAQ 3D HD --- */
         .faq-card {
-            background: #111; border: 1px solid #222; border-left: 4px solid #333;
-            padding: 20px; border-radius: 8px; transition: 0.3s; cursor: pointer;
-            height: 100%;
+            background: linear-gradient(145deg, #151515, #0a0a0a);
+            border: 1px solid #222; border-left: 4px solid #444;
+            padding: 24px; border-radius: 12px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: default; position: relative; overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .faq-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.03), transparent);
+            transform: translateX(-100%); transition: 0.5s; pointer-events: none;
         }
         .faq-card:hover { 
             border-color: var(--orange-cr); border-left-color: var(--orange-cr);
-            background: #161616; transform: translateY(-3px); 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transform: translateY(-5px) scale(1.02); 
+            box-shadow: 0 20px 40px -10px rgba(244, 117, 33, 0.15);
         }
+        .faq-card:hover::before { transform: translateX(100%); }
 
         /* --- Panel Admin Tickets (Vista Previa) --- */
         .ticket-card {
@@ -55,6 +63,7 @@
         .ticket-card:hover { 
             border-color: var(--orange-cr); 
             box-shadow: 0 0 15px rgba(244,117,33,0.1); 
+            background: #220a0a;
         }
         .ticket-tag {
             font-size: 0.6rem; font-weight: 900; text-transform: uppercase;
@@ -119,6 +128,14 @@
                         </select>
                     </div>
                     
+                    <!-- NUEVO CAMPO: FORMA DE CONTACTO -->
+                    <div>
+                        <label class="block text-xs text-[#F47521] uppercase font-bold mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-address-card"></i> Forma de Contacto
+                        </label>
+                        <input type="text" id="ticket-contact" class="input-dark" placeholder="Ej: Tu Email, Discord o Telegram (Para responderte)" required>
+                    </div>
+
                     <div>
                         <label class="block text-xs text-gray-500 uppercase font-bold mb-2">Descripción (Máx 500 car.)</label>
                         <textarea id="ticket-msg" class="input-dark h-40 resize-none" placeholder="Describe tu problema con detalle..." maxlength="500" required></textarea>
@@ -165,13 +182,18 @@
             </div>
         </div>
 
-        <!-- SECCIÓN 3: FAQ (EXPANDIDO) -->
+        <!-- SECCIÓN 3: FAQ (3D HD) -->
         <div class="mb-16">
             <h2 class="text-2xl font-black text-white uppercase mb-8 flex items-center gap-2 border-l-4 border-[#F47521] pl-4">
                 F.A.Q. <span class="text-gray-600 text-lg font-normal lowercase ml-2">// preguntas frecuentes</span>
             </h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- PREGUNTA NUEVA + ANTERIORES -->
+                <div class="faq-card">
+                    <h4 class="text-[#F47521] font-bold mb-1 flex items-center gap-2"><i class="fa-solid fa-money-bill-1-wave"></i> ¿Cómo pagan las recompensas?</h4>
+                    <p class="text-gray-400 text-xs">Los pagos (si aplicas a ganancias) se realizan vía PayPal o saldo en cuenta. Debes tener verificado el perfil.</p>
+                </div>
                 <div class="faq-card">
                     <h4 class="text-[#F47521] font-bold mb-1 flex items-center gap-2"><i class="fa-solid fa-upload"></i> ¿Cómo subo mi cómic?</h4>
                     <p class="text-gray-400 text-xs">Ve a la sección "Cómics Fans" y usa el botón "Postular Idea". Si tu idea recibe suficientes votos en el ranking, serás contactado.</p>
@@ -229,14 +251,15 @@
             </a>
         </div>
 
-        <!-- SECCIÓN 6: DMCA -->
+        <!-- SECCIÓN 6: DMCA MEJORADO -->
         <div class="border-t border-gray-800 pt-8 text-center md:text-left">
-            <h2 class="text-xl font-black text-gray-300 uppercase mb-4">DMCA & Copyright</h2>
-            <div class="text-xs text-gray-500 space-y-2 leading-relaxed font-mono bg-[#050505] p-6 rounded border border-gray-800">
-                <p>ComicVerse respeta la propiedad intelectual de terceros. Esta plataforma opera como un medio de indexación y compartición de contenido generado por usuarios y enlaces de terceros.</p>
-                <p>Si usted es el propietario de los derechos de autor de algún contenido que aparece en nuestro sitio web y no desea que esté disponible, por favor notifíquenos a través del formulario de soporte seleccionando la categoría "Contenido" o enviando un correo a <strong>dmca@comicverse.com</strong>.</p>
-                <p>Todas las imágenes y marcas registradas mostradas son propiedad de sus respectivos dueños. ComicVerse no reclama propiedad sobre el contenido de terceros indexado.</p>
-                <p class="mt-4 pt-4 border-t border-gray-800 text-[#F47521]">© 2026 ComicVerse Project. Todos los derechos reservados.</p>
+            <h2 class="text-xl font-black text-gray-300 uppercase mb-4">DMCA & Términos Legales</h2>
+            <div class="text-xs text-gray-500 space-y-3 leading-relaxed font-mono bg-[#050505] p-6 rounded border border-gray-800 text-justify">
+                <p><strong>Aviso de Copyright:</strong> ComicVerse respeta los derechos de propiedad intelectual de terceros y cumple con las disposiciones de la Digital Millennium Copyright Act (DMCA). Esta plataforma opera como un índice de contenido y comunidad.</p>
+                <p><strong>Responsabilidad:</strong> ComicVerse no aloja archivos ilegales en sus servidores propios. Todo el contenido es proporcionado por usuarios de la comunidad o enlaces a servidores de terceros ajenos a nuestra administración. No nos hacemos responsables del uso indebido del material aquí expuesto.</p>
+                <p><strong>Notificación de Infracción:</strong> Si usted es el propietario de los derechos de autor de algún material que aparece en este sitio y cree que su uso constituye una infracción, por favor notifíquenos inmediatamente. Puede hacerlo a través de nuestro sistema de tickets (Categoría: Contenido) o enviando una reclamación formal a <strong>dmca@comicverse.com</strong> incluyendo prueba de propiedad. El contenido será revisado y eliminado en un plazo máximo de 48 horas hábiles si procede.</p>
+                <p><strong>Política de Uso:</strong> Al usar este sitio, usted acepta que el material descargado es para uso personal y de prueba. ComicVerse recomienda apoyar a los autores comprando el material original.</p>
+                <p class="mt-4 pt-4 border-t border-gray-800 text-[#F47521] text-center">© 2026 ComicVerse Project. Todos los derechos reservados.</p>
             </div>
         </div>
 
@@ -271,9 +294,9 @@
         </div>
     </div>
 
-    <!-- MODAL LECTURA DE TICKET (ADMIN) -->
+    <!-- MODAL LECTURA DE TICKET (ADMIN FIXED) -->
     <div id="ticket-detail-modal" class="hidden-section modal-overlay">
-        <div class="bg-[#111] border border-gray-700 w-full max-w-2xl h-auto max-h-[90vh] rounded-xl flex flex-col relative shadow-2xl animate-enter">
+        <div class="bg-[#111] border border-gray-700 w-full max-w-3xl h-auto max-h-[90vh] rounded-xl flex flex-col relative shadow-2xl animate-enter">
             <div class="p-6 border-b border-gray-800 bg-[#151515] rounded-t-xl flex justify-between items-center">
                 <div class="flex items-center gap-3">
                     <span id="detail-category" class="bg-[#F47521] text-black text-xs font-bold px-2 py-1 rounded uppercase">ERROR</span>
@@ -283,16 +306,20 @@
             </div>
             
             <div class="p-6 overflow-y-auto custom-scroll">
-                <div class="mb-4 flex items-center gap-3 text-sm text-gray-400 border-b border-white/5 pb-4">
-                    <i class="fa-solid fa-user"></i> <span id="detail-user" class="text-white">Usuario</span>
-                    <span class="text-gray-600">|</span>
-                    <i class="fa-solid fa-envelope"></i> <span id="detail-email">email@test.com</span>
-                    <span class="text-gray-600">|</span>
-                    <i class="fa-solid fa-calendar"></i> <span id="detail-date">Fecha</span>
+                <div class="mb-4 bg-black/30 p-4 rounded border border-white/5">
+                    <h4 class="text-[#F47521] text-xs uppercase font-bold mb-2">Datos del Usuario</h4>
+                    <div class="grid grid-cols-2 gap-4 text-sm text-gray-400">
+                        <div><i class="fa-solid fa-user mr-2"></i> <span id="detail-user" class="text-white">Usuario</span></div>
+                        <div><i class="fa-solid fa-envelope mr-2"></i> <span id="detail-email">email</span></div>
+                        <div><i class="fa-solid fa-calendar mr-2"></i> <span id="detail-date">Fecha</span></div>
+                        <div class="col-span-2 text-[#F47521] border-t border-white/5 pt-2 mt-2">
+                            <i class="fa-solid fa-address-card mr-2"></i> Contacto: <span id="detail-contact" class="text-white font-mono select-all"></span>
+                        </div>
+                    </div>
                 </div>
                 
                 <label class="block text-xs text-[#F47521] uppercase font-bold mb-2">Mensaje del Usuario:</label>
-                <div class="bg-black/50 p-4 rounded-lg border border-white/10 text-gray-300 whitespace-pre-wrap break-words leading-relaxed" id="detail-message">
+                <div class="bg-black/50 p-4 rounded-lg border border-white/10 text-gray-300 whitespace-pre-wrap break-words leading-relaxed font-mono text-sm" id="detail-message">
                     <!-- Mensaje completo aquí -->
                 </div>
             </div>
@@ -338,7 +365,9 @@
 
         let currentUser = null;
 
-        onAuthStateChanged(auth, (user) => { currentUser = user; });
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+        });
 
         // --- UI HELPERS ---
         const charCount = document.getElementById('char-count');
@@ -353,14 +382,20 @@
         // --- CREAR TICKET ---
         document.getElementById('ticket-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!currentUser) { document.getElementById('auth-req-modal').classList.remove('hidden-section'); return; }
+            
+            if (!currentUser) {
+                document.getElementById('auth-req-modal').classList.remove('hidden-section');
+                return;
+            }
 
             const category = document.getElementById('ticket-category').value;
             const message = document.getElementById('ticket-msg').value;
+            const contact = document.getElementById('ticket-contact').value; // Nuevo campo
             const btn = e.target.querySelector('button');
             const originalText = btn.innerText;
 
-            btn.disabled = true; btn.innerText = "Enviando...";
+            btn.disabled = true;
+            btn.innerText = "Enviando...";
 
             try {
                 let username = "Usuario";
@@ -373,10 +408,10 @@
                     email: currentUser.email,
                     category: category,
                     message: message,
+                    contact: contact, // Guardamos contacto
                     createdAt: serverTimestamp()
                 });
 
-                // MOSTRAR MODAL DE ÉXITO PERSONALIZADO
                 document.getElementById('success-modal').classList.remove('hidden-section');
                 
                 e.target.reset();
@@ -385,13 +420,14 @@
                 console.error("Error:", error);
                 alert("Hubo un error al enviar el ticket.");
             } finally {
-                btn.disabled = false; btn.innerText = originalText;
+                btn.disabled = false;
+                btn.innerText = originalText;
             }
         });
 
         // --- ADMIN PANEL ---
-        window.openAdminModal = () => { document.getElementById('admin-modal').classList.remove('hidden-section'); document.getElementById('admin-key-input').value = ""; };
-        window.closeAdminModal = () => document.getElementById('admin-modal').classList.add('hidden-section');
+        window.openAdminModal = () => { document.getElementById('admin-auth-modal').classList.remove('hidden-section'); document.getElementById('admin-key-input').value = ""; };
+        window.closeAdminModal = () => document.getElementById('admin-auth-modal').classList.add('hidden-section');
         window.closeAdminPanel = () => document.getElementById('admin-panel-container').classList.add('hidden-section');
 
         window.verifyAdmin = () => {
@@ -403,7 +439,9 @@
             } else { alert("Clave incorrecta"); }
         };
 
-        let currentTicketId = null; // Para borrar desde el modal
+        let currentTicketId = null;
+        // Cache para guardar los datos completos de los tickets y no pasarlos por HTML
+        let ticketsCache = {}; 
 
         function loadTickets() {
             const container = document.getElementById('tickets-list');
@@ -411,16 +449,20 @@
             
             onSnapshot(q, (snapshot) => {
                 container.innerHTML = "";
-                if(snapshot.empty) { container.innerHTML = '<div class="text-gray-500 w-full col-span-2 text-center py-4">No hay tickets pendientes.</div>'; return; }
+                ticketsCache = {}; // Reset cache
+
+                if(snapshot.empty) { container.innerHTML = '<div class="text-gray-500 w-full col-span-3 text-center py-10">No hay tickets pendientes.</div>'; return; }
 
                 snapshot.forEach(docSnap => {
                     const data = docSnap.data();
-                    const date = data.createdAt ? new Date(data.createdAt.toDate()).toLocaleDateString() : 'Reciente';
-                    const msgPreview = data.message.length > 50 ? data.message.substring(0, 50) + "..." : data.message;
+                    ticketsCache[docSnap.id] = data; // Guardar en memoria
                     
-                    // Tarjeta de Vista Previa
+                    const date = data.createdAt ? new Date(data.createdAt.toDate()).toLocaleDateString() : 'Reciente';
+                    const msgPreview = data.message.length > 60 ? data.message.substring(0, 60) + "..." : data.message;
+                    
+                    // Solo pasamos el ID en el onclick
                     const html = `
-                        <div class="ticket-card group" onclick="openTicketDetail('${docSnap.id}', '${data.category}', '${data.username}', '${data.email}', '${date}', \`${data.message.replace(/`/g, "\\`")}\`)">
+                        <div class="ticket-card group" onclick="openTicketDetail('${docSnap.id}')">
                             <div class="flex justify-between items-start mb-2">
                                 <div>
                                     <span class="ticket-tag text-[#F47521]">${data.category}</span>
@@ -437,15 +479,21 @@
             });
         }
 
-        // Abrir Modal con Detalles Completos
-        window.openTicketDetail = (id, cat, user, email, date, msg) => {
+        // Abrir Modal usando Cache (FIX SEGURO)
+        window.openTicketDetail = (id) => {
+            const data = ticketsCache[id];
+            if (!data) return;
+
             currentTicketId = id;
+            const date = data.createdAt ? new Date(data.createdAt.toDate()).toLocaleString() : 'Reciente';
+
             document.getElementById('detail-id').innerText = id.substring(0,6);
-            document.getElementById('detail-category').innerText = cat;
-            document.getElementById('detail-user').innerText = user;
-            document.getElementById('detail-email').innerText = email;
+            document.getElementById('detail-category').innerText = data.category;
+            document.getElementById('detail-user').innerText = data.username;
+            document.getElementById('detail-email').innerText = data.email;
             document.getElementById('detail-date').innerText = date;
-            document.getElementById('detail-message').innerText = msg; // Muestra texto completo
+            document.getElementById('detail-contact').innerText = data.contact || "No especificado";
+            document.getElementById('detail-message').innerText = data.message;
 
             document.getElementById('ticket-detail-modal').classList.remove('hidden-section');
         };
@@ -461,7 +509,6 @@
                 try {
                     await deleteDoc(doc(db, "support_tickets", currentTicketId));
                     closeTicketDetail();
-                    // La lista se actualiza sola por onSnapshot
                 } catch(e) { console.error(e); alert("Error al borrar"); }
             }
         };
