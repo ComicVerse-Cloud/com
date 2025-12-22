@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ComicVerse - Tu Portal Manga</title>
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS (Estilos Modernos) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Iconos (FontAwesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -12,607 +12,383 @@
     <style>
         /* --- Configuración Global --- */
         :root {
-            --orange-cr: #F47521;
-            --dark-bg: #000000;
-            --dark-card: #23252B;
-            --text-gray: #A0A0A0;
-            --neon-blue: #00f3ff;
-            --neon-pink: #bc13fe;
+            --orange-cr: #F47521; /* Naranja Crunchyroll */
+            --dark-bg: #000000;   /* Fondo Negro */
+            --card-bg: #1a1a1a;   /* Fondo Tarjetas */
         }
 
         body {
             background-color: var(--dark-bg);
             color: white;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow: hidden; 
+            overflow: hidden; /* Evita doble scroll */
         }
 
-        /* --- Scrollbar --- */
-        ::-webkit-scrollbar { width: 6px; }
+        /* --- Preloader (Pantalla de Carga) --- */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #000; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .loader-bar-box {
+            width: 200px; height: 4px; background: #222; border-radius: 2px;
+            overflow: hidden; position: relative; box-shadow: 0 0 10px rgba(244, 117, 33, 0.4);
+        }
+        .loader-bar {
+            width: 50%; height: 100%; background: var(--orange-cr); position: absolute; left: -50%;
+            animation: load 1.5s infinite ease-in-out;
+            box-shadow: 0 0 15px var(--orange-cr);
+        }
+        @keyframes load { 0% { left: -50%; } 100% { left: 100%; } }
+
+        /* --- Scrollbar Personalizado --- */
+        ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #050505; }
         ::-webkit-scrollbar-thumb { background: var(--orange-cr); border-radius: 10px; }
 
-        /* --- Efecto Glitch para Logo --- */
-        .glitch-text {
-            position: relative;
-            animation: glitch-skew 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite both;
-        }
-        .glitch-text::before, .glitch-text::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-        }
-        .glitch-text::before {
-            left: 2px; text-shadow: -1px 0 #ff00c1; clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
-        }
-        .glitch-text::after {
-            left: -2px; text-shadow: -1px 0 #00fff9; clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim2 5s infinite linear alternate-reverse;
-        }
-        @keyframes glitch-anim {
-            0% { clip: rect(14px, 9999px, 122px, 0); }
-            5% { clip: rect(78px, 9999px, 98px, 0); }
-            100% { clip: rect(11px, 9999px, 77px, 0); }
-        }
-        @keyframes glitch-anim2 {
-            0% { clip: rect(65px, 9999px, 109px, 0); }
-            100% { clip: rect(2px, 9999px, 62px, 0); }
-        }
-
-        /* --- Tarjeta Premium 360° (FLIP CARD TÁCTIL) --- */
-        .flip-card {
-            perspective: 1000px;
-            width: 100%;
-            height: 100%;
-            min-height: 550px;
-            cursor: pointer;
-        }
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+        /* --- Efecto 3D en Portadas --- */
+        .card-container { perspective: 1000px; }
+        .card-3d {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
             transform-style: preserve-3d;
         }
-        .flip-card.flipped .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: 1.5rem;
-            overflow: hidden;
-            box-shadow: 0 0 30px rgba(244, 117, 33, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .flip-card-front {
-            background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
-            z-index: 2;
-        }
-        .flip-card-back {
-            background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
-            color: white;
-            transform: rotateY(180deg);
-            border: 2px solid #F47521;
-        }
-        .flip-card-back::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: radial-gradient(circle at 2px 2px, rgba(244, 117, 33, 0.1) 1px, transparent 0);
-            background-size: 30px 30px;
-            pointer-events: none;
-        }
-
-        /* --- Efecto 3D Noticias --- */
-        .card-container { perspective: 1000px; }
-        .card-3d { transition: transform 0.4s ease, box-shadow 0.4s ease; transform-style: preserve-3d; }
         .card-container:hover .card-3d {
-            transform: rotateY(10deg) rotateX(5deg) scale(1.02);
-            box-shadow: -10px 10px 20px rgba(244, 117, 33, 0.2);
+            transform: rotateY(10deg) rotateX(5deg) scale(1.05);
+            box-shadow: -5px 5px 20px rgba(244, 117, 33, 0.3);
             z-index: 10;
             border: 1px solid var(--orange-cr);
         }
 
-        /* --- SLIDER 3D TENDENCIAS --- */
-        .slider-container {
-            position: relative;
-            overflow: hidden;
-            border-radius: 1rem;
-            perspective: 1000px;
-        }
-        .slider-wrapper {
-            display: flex;
-            transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
-            height: 100%;
-        }
-        .slide {
-            min-width: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-        }
-        .slide-content {
-            transform: translateZ(50px);
-            text-shadow: 0 4px 8px rgba(0,0,0,0.8);
-        }
-
-        /* --- Menú Items --- */
+        /* --- Menú Activo --- */
         .nav-item.active {
             background: linear-gradient(90deg, rgba(244, 117, 33, 0.15) 0%, transparent 100%);
             border-right: 4px solid var(--orange-cr);
+            color: white;
         }
+        .nav-item.active i { color: var(--orange-cr); }
+        
         @media (max-width: 768px) {
-            .nav-item.active { border-right: none; border-top: 3px solid var(--orange-cr); background: transparent;}
+            .nav-item.active { 
+                border-right: none; 
+                border-top: 3px solid var(--orange-cr); 
+                background: transparent;
+            }
         }
 
-        /* --- Iframe --- */
+        /* --- Iframe (Visor de otras páginas) --- */
         #visor-contenido { width: 100%; height: 100vh; border: none; display: none; }
+        
+        /* Clases para alternar vistas */
         .show-iframe #inicio-container { display: none; }
         .show-iframe #visor-contenido { display: block; }
-        
-        /* --- Botón Usuario Top Right (TEXTO PLANO) --- */
-        .user-top-btn {
-            position: absolute;
-            top: 1.5rem;
-            right: 2rem;
-            z-index: 60;
-            transition: all 0.3s ease;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-        }
-        .user-top-btn:hover {
-            transform: translateY(-2px);
-            border-color: var(--orange-cr);
-            box-shadow: 0 0 25px rgba(244, 117, 33, 0.4);
-            cursor: pointer;
-            background: rgba(244, 117, 33, 0.1);
-        }
+        .show-iframe #hero-section { display: none; }
 
-        /* --- FOOTER 3D PERSONALIZADO --- */
-        .footer-3d-container {
-            perspective: 1000px;
-            background: linear-gradient(to top, #000 20%, #080808 100%);
-            border-top: 2px solid #F47521;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 -20px 50px rgba(0,0,0,0.8);
+        /* --- Botón Usuario Flotante (Desktop) --- */
+        .user-btn-desktop {
+            position: absolute; top: 20px; right: 20px; z-index: 50;
+            background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(5px);
+            border: 1px solid #333; transition: all 0.3s;
         }
-        .footer-grid-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(244, 117, 33, 0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(244, 117, 33, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
-            transform: perspective(600px) rotateX(45deg) scale(1.5);
-            transform-origin: top center;
-            opacity: 0.3;
-            pointer-events: none;
-        }
-        .social-btn {
-            transform-style: preserve-3d;
-            transition: all 0.3s ease;
-        }
-        .social-btn:hover {
-            transform: translateZ(20px) scale(1.15);
-            text-shadow: 0 0 20px currentColor;
+        .user-btn-desktop:hover {
+            border-color: var(--orange-cr); box-shadow: 0 0 15px rgba(244, 117, 33, 0.4);
         }
     </style>
 </head>
-<body class="flex flex-col md:flex-row h-screen overflow-hidden relative">
+<body class="flex flex-col md:flex-row h-screen relative">
 
-    <!-- BOTÓN PERFIL USUARIO (TEXTO PARA EVITAR ERRORES DE FOTO) -->
-    <!-- Se conecta a Usuario.html -->
-    <div class="user-top-btn hidden md:flex items-center gap-3 px-6 py-3 rounded-md cursor-pointer group" onclick="cargarPagina('Usuario.html', null)">
-        <div class="flex flex-col text-right">
-            <span class="text-[9px] text-gray-400 uppercase font-black tracking-[0.2em] group-hover:text-[#F47521] transition">Conectado</span>
-            <span class="text-sm font-black text-white uppercase tracking-widest group-hover:text-white transition flex items-center gap-2">
-                USUARIO <i class="fa-solid fa-circle-user text-[#F47521]"></i>
-            </span>
-        </div>
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="loader-bar-box"><div class="loader-bar"></div></div>
+        <div class="mt-4 text-[#F47521] font-mono text-xs tracking-[0.3em] animate-pulse">CARGANDO...</div>
     </div>
 
-    <!-- MENÚ LATERAL -->
+    <!-- BOTÓN USUARIO (PC) -->
+    <button onclick="cargarPagina('Usuario.html', null)" class="user-btn-desktop hidden md:flex items-center gap-3 px-4 py-2 rounded-full cursor-pointer group">
+        <div class="text-right">
+            <span class="block text-[10px] text-gray-400 uppercase font-bold tracking-wider group-hover:text-[#F47521]">Mi Cuenta</span>
+            <span class="block text-sm font-black text-white">USUARIO</span>
+        </div>
+        <div class="w-10 h-10 rounded-full border-2 border-[#F47521] overflow-hidden bg-black">
+            <!-- FOTO USUARIO (usuario.png o fallback) -->
+            <img src="usuario.png" onerror="this.src='https://via.placeholder.com/150/000000/FFFFFF/?text=U'" class="w-full h-full object-cover">
+        </div>
+    </button>
+
+    <!-- MENÚ DE NAVEGACIÓN -->
     <nav class="bg-[#080808] w-full md:w-64 h-16 md:h-screen fixed md:relative bottom-0 z-50 flex md:flex-col justify-between shadow-[0_0_40px_rgba(0,0,0,0.8)] border-t md:border-t-0 md:border-r border-white/5">
         
-        <!-- Logo -->
+        <!-- Logo (Visible en PC) -->
         <div class="hidden md:flex flex-col items-center pt-8 pb-4 cursor-pointer group" onclick="irAInicio()">
-            <div class="relative mb-2">
-                <div class="absolute inset-0 bg-orange-500 blur-xl opacity-20 group-hover:opacity-40 transition duration-500"></div>
-                <i class="fa-solid fa-bolt text-5xl text-[#F47521] relative z-10 animate-pulse"></i>
-            </div>
-            <h1 class="font-black text-3xl tracking-tighter italic text-white glitch-text" data-text="COMICVERSE">
+            <i class="fa-solid fa-bolt text-5xl text-[#F47521] mb-2 animate-pulse"></i>
+            <h1 class="font-black text-2xl italic tracking-tighter text-white">
                 COMIC<span class="text-[#F47521]">VERSE</span>
             </h1>
         </div>
 
-        <!-- Links Navegación -->
-        <ul class="flex md:flex-col justify-around md:justify-start w-full md:px-3 md:gap-2">
-            <!-- 1. Inicio -->
-            <li class="nav-item active cursor-pointer flex flex-col md:flex-row items-center md:px-5 py-3 rounded-lg group transition-all" onclick="irAInicio()">
-                <i class="fa-solid fa-house-chimney text-lg mb-1 md:mb-0 md:mr-4 text-gray-500 group-hover:text-[#F47521] transition"></i>
-                <span class="text-[10px] md:text-sm font-bold uppercase tracking-wider text-gray-400 group-hover:text-white">Inicio</span>
-            </li>
-            
-            <!-- 2. Originales -->
+        <!-- Links del Menú -->
+        <ul class="flex md:flex-col justify-around md:justify-start w-full md:px-2 md:gap-1">
+            <!-- 1. Cómics Propios -->
             <li class="nav-item cursor-pointer flex flex-col md:flex-row items-center md:px-5 py-3 rounded-lg group transition-all" onclick="cargarPagina('ComicsPropios.html', this)">
-                <i class="fa-solid fa-feather-pointed text-lg mb-1 md:mb-0 md:mr-4 text-gray-500 group-hover:text-[#F47521] transition"></i>
+                <i class="fa-solid fa-pen-nib text-lg mb-1 md:mb-0 md:mr-4 text-gray-500 group-hover:text-[#F47521] transition"></i>
                 <span class="text-[10px] md:text-sm font-bold uppercase tracking-wider text-gray-400 group-hover:text-white">Originales</span>
             </li>
 
-            <!-- 3. Fans -->
+            <!-- 2. Cómics Fans -->
             <li class="nav-item cursor-pointer flex flex-col md:flex-row items-center md:px-5 py-3 rounded-lg group transition-all" onclick="cargarPagina('ComicsFans.html', this)">
                 <i class="fa-solid fa-users-viewfinder text-lg mb-1 md:mb-0 md:mr-4 text-gray-500 group-hover:text-[#F47521] transition"></i>
                 <span class="text-[10px] md:text-sm font-bold uppercase tracking-wider text-gray-400 group-hover:text-white">Fans</span>
             </li>
 
-            <!-- 4. Adelantos -->
+            <!-- 3. Adelantos -->
             <li class="nav-item cursor-pointer flex flex-col md:flex-row items-center md:px-5 py-3 rounded-lg group transition-all" onclick="cargarPagina('Adelantos.html', this)">
                 <i class="fa-solid fa-eye text-lg mb-1 md:mb-0 md:mr-4 text-gray-500 group-hover:text-[#F47521] transition"></i>
                 <span class="text-[10px] md:text-sm font-bold uppercase tracking-wider text-gray-400 group-hover:text-white">Adelantos</span>
             </li>
 
-            <!-- 5. Quizs -->
+            <!-- 4. Quizs -->
             <li class="nav-item cursor-pointer flex flex-col md:flex-row items-center md:px-5 py-3 rounded-lg group transition-all" onclick="cargarPagina('Quizs.html', this)">
                 <i class="fa-solid fa-gamepad text-lg mb-1 md:mb-0 md:mr-4 text-gray-500 group-hover:text-[#F47521] transition"></i>
                 <span class="text-[10px] md:text-sm font-bold uppercase tracking-wider text-gray-400 group-hover:text-white">Quizs</span>
             </li>
 
-            <!-- 6. Foro -->
+            <!-- 5. Foro -->
             <li class="nav-item cursor-pointer flex flex-col md:flex-row items-center md:px-5 py-3 rounded-lg group transition-all" onclick="cargarPagina('Foro.html', this)">
                 <i class="fa-solid fa-comments text-lg mb-1 md:mb-0 md:mr-4 text-gray-500 group-hover:text-[#F47521] transition"></i>
                 <span class="text-[10px] md:text-sm font-bold uppercase tracking-wider text-gray-400 group-hover:text-white">Foro</span>
             </li>
 
-            <!-- 7. Pronto -->
+            <!-- 6. Próximamente -->
             <li class="nav-item cursor-pointer flex flex-col md:flex-row items-center md:px-5 py-3 rounded-lg group transition-all" onclick="cargarPagina('Proximamente.html', this)">
                 <i class="fa-solid fa-hourglass-half text-lg mb-1 md:mb-0 md:mr-4 text-gray-500 group-hover:text-[#F47521] transition"></i>
                 <span class="text-[10px] md:text-sm font-bold uppercase tracking-wider text-gray-400 group-hover:text-white">Pronto</span>
             </li>
         </ul>
 
-        <!-- Footer Menu -->
-        <div class="hidden md:flex p-4 border-t border-white/5 justify-center">
-             <p class="text-[10px] text-gray-600 font-mono">v.Gold.5.0</p>
+        <!-- Botón Usuario (Móvil - dentro del nav) -->
+        <div class="md:hidden absolute top-[-50px] right-4" onclick="cargarPagina('Usuario.html', null)">
+             <div class="w-10 h-10 rounded-full border-2 border-[#F47521] overflow-hidden bg-black shadow-lg">
+                <img src="usuario.png" onerror="this.src='https://via.placeholder.com/150/000000/FFFFFF/?text=U'" class="w-full h-full object-cover">
+            </div>
+        </div>
+
+        <div class="hidden md:flex p-4 justify-center">
+            <span class="text-[10px] text-gray-600">v1.0.0</span>
         </div>
     </nav>
 
-    <!-- CONTENIDO PRINCIPAL -->
+    <!-- ÁREA PRINCIPAL -->
     <main id="main-container" class="flex-1 relative bg-[#050505] overflow-y-auto h-[calc(100vh-64px)] md:h-screen pb-20 md:pb-0 scroll-smooth">
         
-        <!-- Header Móvil (Con botón de usuario simplificado) -->
-        <div class="md:hidden flex items-center justify-between p-4 bg-black/90 backdrop-blur sticky top-0 z-40 border-b border-white/10">
-            <div class="flex items-center gap-2">
-                <i class="fa-solid fa-bolt text-[#F47521]"></i>
-                <h1 class="font-black italic text-lg tracking-tighter text-white">COMIC<span class="text-[#F47521]">VERSE</span></h1>
-            </div>
-            <!-- Botón usuario móvil (TEXTO) -->
-            <button onclick="cargarPagina('Usuario.html', null)" class="bg-[#111] border border-[#F47521] text-white px-3 py-1 rounded text-xs font-bold uppercase tracking-wider hover:bg-[#F47521] hover:text-black transition">
-                Usuario
-            </button>
+        <!-- Header Móvil -->
+        <div class="md:hidden flex items-center p-4 bg-black/90 backdrop-blur sticky top-0 z-40 border-b border-white/10">
+            <i class="fa-solid fa-bolt text-[#F47521] mr-2"></i>
+            <h1 class="font-black italic text-lg tracking-tighter text-white">COMIC<span class="text-[#F47521]">VERSE</span></h1>
         </div>
 
-        <!-- IFRAME VISOR (Aquí cargan las páginas externas) -->
-        <iframe id="visor-contenido" src="" title="Contenido"></iframe>
+        <!-- VISOR IFRAME (Aquí cargan las secciones) -->
+        <iframe id="visor-contenido" src="about:blank" title="Contenido"></iframe>
 
-        <!-- PÁGINA DE INICIO (HOME) -->
+        <!-- CONTENIDO DE INICIO (Visible por defecto) -->
         <div id="inicio-container" class="p-4 md:p-8 max-w-[1600px] mx-auto animate-[fadeIn_0.5s_ease-out]">
             
-            <!-- --- SLIDER 3D TENDENCIAS (Nombres de archivo fáciles) --- -->
-            <div class="relative group mb-12">
-                <div class="slider-container w-full h-64 md:h-[500px] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.7)]">
-                    <div class="slider-wrapper" id="hero-slider">
-                        
-                        <!-- Slide 1: Ecos del Vacío (tendencia1.png) -->
-                        <div class="slide bg-black relative overflow-hidden">
-                            <img src="tendencia1.png" onerror="this.src='https://images.unsplash.com/photo-1620641788421-7f1c33b7436e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'" class="absolute inset-0 w-full h-full object-cover opacity-60">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-                            <div class="absolute bottom-0 left-0 p-8 md:p-16 slide-content">
-                                <span class="bg-[#F47521] text-black font-black px-4 py-1 uppercase tracking-widest text-xs mb-4 inline-block">Top #1 Global</span>
-                                <h2 class="text-4xl md:text-7xl font-black italic uppercase text-white mb-2">Ecos del Vacío</h2>
-                                <p class="text-gray-300 max-w-xl text-lg hidden md:block">El universo colapsa y solo un guerrero puede sostener la realidad.</p>
-                                <!-- BOTÓN A LEERCAPITULO.HTML -->
-                                <button onclick="cargarPagina('LeerCapitulo.html', null)" class="mt-4 bg-[#F47521] hover:bg-white hover:text-black text-black font-bold py-2 px-6 rounded uppercase tracking-widest transition-all">Leer Capítulo 1</button>
-                            </div>
-                        </div>
-
-                        <!-- Slide 2: Neon Samurai (tendencia2.png) -->
-                        <div class="slide bg-black relative overflow-hidden">
-                            <img src="tendencia2.png" onerror="this.src='https://images.unsplash.com/photo-1578632767115-351597cf2477?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'" class="absolute inset-0 w-full h-full object-cover opacity-60">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-                            <div class="absolute bottom-0 left-0 p-8 md:p-16 slide-content">
-                                <span class="bg-blue-500 text-black font-black px-4 py-1 uppercase tracking-widest text-xs mb-4 inline-block">Exclusivo</span>
-                                <h2 class="text-4xl md:text-7xl font-black italic uppercase text-white mb-2">Neon Samurai</h2>
-                                <p class="text-gray-300 max-w-xl text-lg hidden md:block">Honor y tecnología chocan en la nueva era.</p>
-                            </div>
-                        </div>
-
-                         <!-- Slide 3: Magic Academy (tendencia3.png) -->
-                         <div class="slide bg-black relative overflow-hidden">
-                            <img src="tendencia3.png" onerror="this.src='https://images.unsplash.com/photo-1519074069444-1ba4fff66d16?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'" class="absolute inset-0 w-full h-full object-cover opacity-60">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-                            <div class="absolute bottom-0 left-0 p-8 md:p-16 slide-content">
-                                <span class="bg-purple-500 text-white font-black px-4 py-1 uppercase tracking-widest text-xs mb-4 inline-block">Fantasía</span>
-                                <h2 class="text-4xl md:text-7xl font-black italic uppercase text-white mb-2">Magic Academy</h2>
-                            </div>
-                        </div>
-
-                        <!-- Slide 4: La Grieta (tendencia4.png) -->
-                        <div class="slide bg-black relative overflow-hidden">
-                            <img src="tendencia4.png" onerror="this.src='https://images.unsplash.com/photo-1626544827763-d516dce335ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'" class="absolute inset-0 w-full h-full object-cover opacity-60">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-                            <div class="absolute bottom-0 left-0 p-8 md:p-16 slide-content">
-                                <span class="bg-red-500 text-white font-black px-4 py-1 uppercase tracking-widest text-xs mb-4 inline-block">Terror</span>
-                                <h2 class="text-4xl md:text-7xl font-black italic uppercase text-white mb-2">La Grieta</h2>
-                            </div>
-                        </div>
-
-                        <!-- Slide 5: Lost World (tendencia5.png) -->
-                        <div class="slide bg-black relative overflow-hidden">
-                            <img src="tendencia5.png" onerror="this.src='https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'" class="absolute inset-0 w-full h-full object-cover opacity-60">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-                            <div class="absolute bottom-0 left-0 p-8 md:p-16 slide-content">
-                                <span class="bg-green-500 text-black font-black px-4 py-1 uppercase tracking-widest text-xs mb-4 inline-block">Aventura</span>
-                                <h2 class="text-4xl md:text-7xl font-black italic uppercase text-white mb-2">Lost World</h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button onclick="prevSlide()" class="absolute top-1/2 left-4 -translate-y-1/2 bg-black/50 hover:bg-[#F47521] text-white p-3 rounded-full transition backdrop-blur-md border border-white/20"><i class="fa-solid fa-chevron-left"></i></button>
-                <button onclick="nextSlide()" class="absolute top-1/2 right-4 -translate-y-1/2 bg-black/50 hover:bg-[#F47521] text-white p-3 rounded-full transition backdrop-blur-md border border-white/20"><i class="fa-solid fa-chevron-right"></i></button>
-            </div>
-
-            <!-- Sección Estrenos (Nombres de archivo fáciles) -->
-            <div class="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-2 h-8 bg-[#F47521]"></div>
-                    <h3 class="text-3xl font-black uppercase italic tracking-wide text-white">Nuevos Lanzamientos</h3>
+            <!-- Banner Principal (Hero) -->
+            <!-- IMAGEN: tendencia1.png -->
+            <div id="hero-section" class="w-full h-64 md:h-[450px] rounded-xl bg-[#111] mb-12 relative overflow-hidden border border-white/10 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.7)] group">
+                <img src="tendencia1.png" onerror="this.src='https://via.placeholder.com/1600x900/111/F47521?text=TENDENCIA+1'" class="absolute inset-0 w-full h-full object-cover opacity-60 transition duration-700 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-8 md:p-12">
+                    <span class="bg-[#F47521] text-black font-black px-3 py-1 uppercase tracking-widest text-xs mb-2 inline-block rounded-sm">Estreno #1</span>
+                    <h2 class="text-3xl md:text-6xl font-black italic uppercase text-white mb-2">Título Principal</h2>
+                    <p class="text-gray-300 max-w-lg text-sm md:text-base mb-4">
+                        Una breve descripción impactante sobre el cómic o noticia más importante del momento.
+                    </p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-20">
-                <!-- Card 1: lanzamiento1.png -->
+            <!-- SECCIÓN 1: ESTRENOS (5 NOTICIAS 3D) -->
+            <div class="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
+                <div class="w-2 h-8 bg-[#F47521]"></div>
+                <h3 class="text-2xl md:text-3xl font-black uppercase italic tracking-wide text-white">Estrenos</h3>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-16">
+                
+                <!-- Noticia 1 -->
                 <div class="card-container cursor-pointer group">
                     <div class="card-3d bg-[#151515] rounded-xl overflow-hidden h-full relative border border-white/5">
-                        <div class="h-64 overflow-hidden relative">
-                            <img src="lanzamiento1.png" onerror="this.src='https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?auto=format&fit=crop&w=400&q=80'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                            <div class="absolute top-3 left-3 bg-[#F47521] text-black text-xs font-black uppercase px-3 py-1 skew-x-[-10deg] shadow-lg"><span class="skew-x-[10deg] inline-block">EP 12</span></div>
+                        <div class="h-48 overflow-hidden relative">
+                            <!-- IMAGEN: lanzamiento1.png -->
+                            <img src="lanzamiento1.png" onerror="this.src='https://via.placeholder.com/400x300/222/F47521?text=LANZAMIENTO+1'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                            <div class="absolute top-2 right-2 bg-black/80 text-[#F47521] text-xs font-bold px-2 py-1 rounded border border-[#F47521]">NUEVO</div>
                         </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-white text-lg leading-tight mb-2 group-hover:text-[#F47521] transition">Cyber Hunter</h4>
-                            <p class="text-gray-500 text-xs uppercase tracking-wider font-bold">Acción • Sci-Fi</p>
+                        <div class="p-4">
+                            <h4 class="font-bold text-white text-lg leading-tight mb-1 group-hover:text-[#F47521] transition">Título Estreno 1</h4>
+                            <p class="text-gray-500 text-xs uppercase font-bold">Capítulo 12</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 2: lanzamiento2.png -->
+                <!-- Noticia 2 -->
                 <div class="card-container cursor-pointer group">
                     <div class="card-3d bg-[#151515] rounded-xl overflow-hidden h-full relative border border-white/5">
-                        <div class="h-64 overflow-hidden relative">
-                            <img src="lanzamiento2.png" onerror="this.src='https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=400&q=80'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                            <div class="absolute top-3 left-3 bg-red-600 text-white text-xs font-black uppercase px-3 py-1 skew-x-[-10deg] shadow-lg border border-red-500"><span class="skew-x-[10deg] inline-block"><i class="fa-solid fa-fire"></i> HOT</span></div>
+                        <div class="h-48 overflow-hidden relative">
+                            <!-- IMAGEN: lanzamiento2.png -->
+                            <img src="lanzamiento2.png" onerror="this.src='https://via.placeholder.com/400x300/222/F47521?text=LANZAMIENTO+2'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                         </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-white text-lg leading-tight mb-2 group-hover:text-[#F47521] transition">Neon Genesis</h4>
-                            <p class="text-gray-500 text-xs uppercase tracking-wider font-bold">Mecha • Drama</p>
+                        <div class="p-4">
+                            <h4 class="font-bold text-white text-lg leading-tight mb-1 group-hover:text-[#F47521] transition">Título Estreno 2</h4>
+                            <p class="text-gray-500 text-xs uppercase font-bold">Temporada Final</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 3: lanzamiento3.png -->
+                <!-- Noticia 3 -->
                 <div class="card-container cursor-pointer group">
                     <div class="card-3d bg-[#151515] rounded-xl overflow-hidden h-full relative border border-white/5">
-                        <div class="h-64 overflow-hidden relative">
-                            <img src="lanzamiento3.png" onerror="this.src='https://images.unsplash.com/photo-1608889175123-8ee362201f81?auto=format&fit=crop&w=400&q=80'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                             <div class="absolute top-3 left-3 bg-blue-600 text-white text-xs font-black uppercase px-3 py-1 skew-x-[-10deg] shadow-lg"><span class="skew-x-[10deg] inline-block">NUEVO</span></div>
+                        <div class="h-48 overflow-hidden relative">
+                            <!-- IMAGEN: lanzamiento3.png -->
+                            <img src="lanzamiento3.png" onerror="this.src='https://via.placeholder.com/400x300/222/F47521?text=LANZAMIENTO+3'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                         </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-white text-lg leading-tight mb-2 group-hover:text-[#F47521] transition">Spirit Walker</h4>
-                            <p class="text-gray-500 text-xs uppercase tracking-wider font-bold">Fantasía</p>
-                        </div>
-                    </div>
-                </div>
-
-                 <!-- Card 4: lanzamiento4.png -->
-                 <div class="card-container cursor-pointer group">
-                    <div class="card-3d bg-[#151515] rounded-xl overflow-hidden h-full relative border border-white/5">
-                        <div class="h-64 overflow-hidden relative">
-                            <img src="lanzamiento4.png" onerror="this.src='https://images.unsplash.com/photo-1621416894569-0f39ed31d247?auto=format&fit=crop&w=400&q=80'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                        </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-white text-lg leading-tight mb-2 group-hover:text-[#F47521] transition">Love & Pixels</h4>
-                            <p class="text-gray-500 text-xs uppercase tracking-wider font-bold">Romance</p>
+                        <div class="p-4">
+                            <h4 class="font-bold text-white text-lg leading-tight mb-1 group-hover:text-[#F47521] transition">Título Estreno 3</h4>
+                            <p class="text-gray-500 text-xs uppercase font-bold">Especial</p>
                         </div>
                     </div>
                 </div>
 
-                 <!-- Card 5: lanzamiento5.png -->
-                 <div class="card-container cursor-pointer group">
+                <!-- Noticia 4 -->
+                <div class="card-container cursor-pointer group">
                     <div class="card-3d bg-[#151515] rounded-xl overflow-hidden h-full relative border border-white/5">
-                        <div class="h-64 overflow-hidden relative">
-                            <img src="lanzamiento5.png" onerror="this.src='https://images.unsplash.com/photo-1560972550-aba3456b5564?auto=format&fit=crop&w=400&q=80'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-                            <div class="absolute top-3 left-3 bg-purple-600 text-white text-xs font-black uppercase px-3 py-1 skew-x-[-10deg] shadow-lg"><span class="skew-x-[10deg] inline-block">FINAL</span></div>
+                        <div class="h-48 overflow-hidden relative">
+                            <!-- IMAGEN: lanzamiento4.png -->
+                            <img src="lanzamiento4.png" onerror="this.src='https://via.placeholder.com/400x300/222/F47521?text=LANZAMIENTO+4'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                         </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-white text-lg leading-tight mb-2 group-hover:text-[#F47521] transition">Dark Knight</h4>
-                            <p class="text-gray-500 text-xs uppercase tracking-wider font-bold">Seinen</p>
+                        <div class="p-4">
+                            <h4 class="font-bold text-white text-lg leading-tight mb-1 group-hover:text-[#F47521] transition">Título Estreno 4</h4>
+                            <p class="text-gray-500 text-xs uppercase font-bold">Acción</p>
                         </div>
                     </div>
                 </div>
+
+                <!-- Noticia 5 -->
+                <div class="card-container cursor-pointer group">
+                    <div class="card-3d bg-[#151515] rounded-xl overflow-hidden h-full relative border border-white/5">
+                        <div class="h-48 overflow-hidden relative">
+                            <!-- IMAGEN: lanzamiento5.png -->
+                            <img src="lanzamiento5.png" onerror="this.src='https://via.placeholder.com/400x300/222/F47521?text=LANZAMIENTO+5'" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-bold text-white text-lg leading-tight mb-1 group-hover:text-[#F47521] transition">Título Estreno 5</h4>
+                            <p class="text-gray-500 text-xs uppercase font-bold">Romance</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
-            <!-- SECCIÓN COMUNIDAD Y PREMIUM (Nombres de archivo fáciles) -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 pb-20">
-                <div class="lg:col-span-2">
-                    <div class="flex items-center gap-3 mb-8">
-                        <i class="fa-solid fa-users-line text-2xl text-[#F47521]"></i>
-                        <h3 class="text-2xl font-black uppercase tracking-wide italic text-white">Hub de la Comunidad</h3>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Noticia 1: noticias1.png -->
-                        <div class="bg-[#111] border border-white/5 p-4 rounded-xl flex items-center gap-4 hover:border-[#F47521] transition cursor-pointer group">
-                            <div class="w-16 h-16 bg-gray-800 rounded-lg shrink-0 overflow-hidden"><img src="noticias1.png" onerror="this.src='https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=150&q=80'" class="w-full h-full object-cover"></div>
-                            <div><span class="text-[#F47521] text-[10px] font-bold uppercase tracking-widest block mb-1">Torneo</span><h4 class="font-bold text-white leading-tight group-hover:text-[#F47521] transition">Batalla de Ilustradores</h4></div>
-                        </div>
-                        <!-- Noticia 2: Sistema (sin foto externa, usa icono) -->
-                        <div class="bg-[#111] border border-white/5 p-4 rounded-xl flex items-center gap-4 hover:border-[#F47521] transition cursor-pointer group">
-                             <div class="w-16 h-16 bg-gray-800 rounded-lg shrink-0 overflow-hidden flex items-center justify-center"><i class="fa-solid fa-server text-2xl text-blue-500"></i></div>
-                            <div><span class="text-blue-500 text-[10px] font-bold uppercase tracking-widest block mb-1">Sistema</span><h4 class="font-bold text-white leading-tight group-hover:text-blue-400 transition">Mantenimiento Web</h4></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PREMIUM CARD -->
-                <div class="lg:col-span-1 h-full min-h-[450px]">
-                    <div class="flip-card" onclick="toggleCard(this)">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
-                                <div class="absolute top-4 right-4 bg-red-600 text-white text-xs font-black px-2 py-1 rounded shadow-lg animate-pulse">-50% OFF</div>
-                                <div class="relative z-10 p-6 w-full text-center">
-                                    <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-yellow-300 via-orange-500 to-[#F47521] rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(244,117,33,0.6)] border-4 border-black"><i class="fa-solid fa-crown text-5xl text-black"></i></div>
-                                    <h3 class="text-4xl font-black italic uppercase mb-1 text-white drop-shadow-md">Premium Plus</h3>
-                                    <p class="text-gray-400 text-sm mb-4 line-through decoration-red-500 decoration-2">$9.99/mes</p>
-                                    <p class="text-3xl font-black text-[#F47521] mb-6">$4.99<span class="text-sm text-white">/mes</span></p>
-                                    <ul class="text-left w-full space-y-2 mb-6 px-4">
-                                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-[#F47521]"></i><span class="font-bold text-sm">Sin Publicidad</span></li>
-                                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-[#F47521]"></i><span class="font-bold text-sm">Lectura Ilimitada</span></li>
-                                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-[#F47521]"></i><span class="font-bold text-sm">Estrenos Anticipados</span></li>
-                                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-[#F47521]"></i><span class="font-bold text-sm">Soporte a Autores</span></li>
-                                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-[#F47521]"></i><span class="font-bold text-sm">Insignia Exclusiva</span></li>
-                                    </ul>
-                                    <div class="text-gray-400 text-xs font-bold uppercase tracking-widest animate-pulse flex items-center justify-center gap-2 border border-white/20 py-2 rounded-full"><i class="fa-solid fa-rotate"></i> Toca para Comprar</div>
-                                </div>
-                            </div>
-                            <div class="flip-card-back">
-                                <h3 class="text-2xl font-black uppercase italic mb-6 text-[#F47521]">Ventajas de Nivel</h3>
-                                <div class="w-full px-6 space-y-6">
-                                    <div class="grid grid-cols-3 gap-2 text-center">
-                                        <div class="bg-white/5 p-2 rounded border border-white/10"><i class="fa-solid fa-video text-blue-400 mb-1"></i><div class="text-[9px] font-bold">4K ULTRA</div></div>
-                                        <div class="bg-white/5 p-2 rounded border border-white/10"><i class="fa-solid fa-download text-green-400 mb-1"></i><div class="text-[9px] font-bold">DESCARGAS</div></div>
-                                        <div class="bg-white/5 p-2 rounded border border-white/10"><i class="fa-solid fa-headset text-purple-400 mb-1"></i><div class="text-[9px] font-bold">SOPORTE</div></div>
-                                    </div>
-                                    <div class="text-center">
-                                        <div class="text-[10px] font-black uppercase text-gray-400 mb-2 tracking-widest">Tu Rango Inicial</div>
-                                        <div class="flex justify-center gap-4">
-                                            <div class="w-10 h-10 rounded-full bg-gray-400 border border-white opacity-50 flex items-center justify-center"><i class="fa-solid fa-shield text-black"></i></div>
-                                            <div class="w-12 h-12 rounded-full bg-[#F47521] border-2 border-white shadow-[0_0_15px_rgba(244,117,33,0.8)] flex items-center justify-center scale-110 relative z-10"><i class="fa-solid fa-crown text-black text-xl"></i></div>
-                                            <div class="w-10 h-10 rounded-full bg-yellow-400 border border-white opacity-50 flex items-center justify-center"><i class="fa-solid fa-star text-black"></i></div>
-                                        </div>
-                                        <p class="text-xs text-[#F47521] mt-2 font-bold">Nivel ORO Garantizado</p>
-                                    </div>
-                                    <a href="mailto:ComicVerseSupport@gmail.com?subject=Solicitud%20Premium%20Plus&body=Hola,%20Quiero%20activar%20mi%20membresia%20PREMIUM%20PLUS." onclick="event.stopPropagation();" class="block w-full bg-gradient-to-r from-[#F47521] to-red-600 text-white font-black uppercase tracking-widest py-3 rounded-lg shadow-xl transform transition active:scale-95 mt-2 hover:shadow-[0_0_20px_rgba(244,117,33,0.6)]"><i class="fa-regular fa-paper-plane mr-2"></i> Activar Ahora</a>
-                                    <button onclick="event.stopPropagation(); cargarPagina('Premium.html', null)" class="block w-full bg-white/10 hover:bg-white/20 text-white font-bold uppercase tracking-widest py-2 rounded-lg transition border border-white/20 text-xs">Ver Más Beneficios</button>
-                                </div>
-                                <div class="mt-4 text-gray-500 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer hover:text-white transition"><i class="fa-solid fa-rotate-left"></i> Volver</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- --- FOOTER 3D PULIDO --- -->
-            <footer class="footer-3d-container rounded-t-3xl mt-12 pb-8">
-                <div class="footer-grid-bg"></div>
-                <div class="relative z-10 max-w-6xl mx-auto px-6 pt-16">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
-                        
-                        <!-- Columna Marca -->
-                        <div class="flex flex-col items-center md:items-start space-y-4">
-                            <h2 class="text-4xl font-black italic tracking-tighter text-white glitch-text" data-text="COMICVERSE">
-                                COMIC<span class="text-[#F47521]">VERSE</span>
-                            </h2>
-                            <p class="text-gray-400 text-sm max-w-xs">
-                                El portal definitivo para lectores de manga y cómics. Únete a la revolución digital.
-                            </p>
-                            <div class="text-[#F47521] font-black text-2xl mt-4 drop-shadow-[0_0_10px_rgba(244,117,33,0.8)]">
-                                2026 ©
-                            </div>
-                        </div>
-
-                        <!-- Columna Legal (Conexiones) -->
-                        <div class="flex flex-col items-center space-y-4">
-                            <h3 class="text-white font-bold uppercase tracking-widest border-b-2 border-[#F47521] pb-2 mb-2">Legal & Ayuda</h3>
-                            <button onclick="cargarPagina('Soporte.html', null)" class="text-gray-300 hover:text-white hover:underline decoration-[#F47521] underline-offset-4 transition">Centro de Soporte</button>
-                            <button onclick="cargarPagina('Términos.html', null)" class="text-gray-300 hover:text-white hover:underline decoration-[#F47521] underline-offset-4 transition">Términos y Condiciones</button>
-                        </div>
-
-                        <!-- Columna Redes (Redirige a prueba.com) -->
-                        <div class="flex flex-col items-center space-y-6">
-                            <h3 class="text-white font-bold uppercase tracking-widest border-b-2 border-[#F47521] pb-2 mb-2">Síguenos</h3>
-                            <div class="flex gap-6">
-                                <a href="https://prueba.com" target="_self" class="social-btn w-12 h-12 bg-gradient-to-tr from-purple-600 to-pink-600 rounded-xl flex items-center justify-center text-white text-2xl shadow-lg">
-                                    <i class="fa-brands fa-instagram"></i>
-                                </a>
-                                <a href="https://prueba.com" target="_self" class="social-btn w-12 h-12 bg-black border border-white/20 rounded-xl flex items-center justify-center text-white text-2xl shadow-lg hover:shadow-[0_0_15px_rgba(0,255,255,0.5)]">
-                                    <i class="fa-brands fa-tiktok"></i>
-                                </a>
-                                <a href="https://prueba.com" target="_self" class="social-btn w-12 h-12 bg-gradient-to-tr from-red-500 to-orange-500 rounded-xl flex items-center justify-center text-white text-2xl shadow-lg">
-                                    <i class="fa-solid fa-envelope"></i>
-                                </a>
-                            </div>
-                            <p class="text-[10px] text-gray-500 font-mono">conectado@comicverse.com</p>
-                        </div>
-
+            <!-- SECCIÓN 2: NOTICIAS COMUNIDAD -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
+                <div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fa-solid fa-bullhorn text-2xl text-[#F47521]"></i>
+                        <h3 class="text-2xl font-black uppercase tracking-wide italic text-white">Comunidad</h3>
                     </div>
                     
-                    <div class="text-center mt-12 pt-8 border-t border-white/5 text-[10px] text-gray-600 uppercase tracking-widest">
-                        Designed with Power • Buenos Aires Server
+                    <!-- Noticia Comunidad 1 -->
+                    <div class="bg-[#111] border border-white/5 p-4 rounded-xl flex items-center gap-4 hover:border-[#F47521] transition cursor-pointer mb-4 group">
+                        <div class="w-20 h-20 bg-gray-800 rounded-lg shrink-0 overflow-hidden">
+                            <!-- IMAGEN: noticias1.png -->
+                            <img src="noticias1.png" onerror="this.src='https://via.placeholder.com/150/222/FFF?text=NEWS'" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <span class="text-[#F47521] text-[10px] font-bold uppercase tracking-widest block mb-1">Evento</span>
+                            <h4 class="font-bold text-white leading-tight group-hover:text-[#F47521] transition">Concurso de FanArts 2026</h4>
+                            <p class="text-gray-500 text-xs mt-1">¡Participa y gana premios exclusivos!</p>
+                        </div>
+                    </div>
+
+                    <!-- Noticia Comunidad 2 -->
+                    <div class="bg-[#111] border border-white/5 p-4 rounded-xl flex items-center gap-4 hover:border-[#F47521] transition cursor-pointer group">
+                        <div class="w-20 h-20 bg-gray-800 rounded-lg shrink-0 overflow-hidden flex items-center justify-center">
+                            <i class="fa-solid fa-server text-3xl text-blue-500"></i>
+                        </div>
+                        <div>
+                            <span class="text-blue-500 text-[10px] font-bold uppercase tracking-widest block mb-1">Sistema</span>
+                            <h4 class="font-bold text-white leading-tight group-hover:text-blue-400 transition">Mantenimiento Programado</h4>
+                            <p class="text-gray-500 text-xs mt-1">Mejoras en el servidor este fin de semana.</p>
+                        </div>
                     </div>
                 </div>
-            </footer>
+
+                <!-- Banner Lateral -->
+                <div class="bg-gradient-to-br from-[#F47521] to-red-700 rounded-xl p-8 flex flex-col justify-center items-center text-center shadow-lg relative overflow-hidden">
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+                    <i class="fa-solid fa-crown text-6xl text-white mb-4 drop-shadow-md z-10"></i>
+                    <h3 class="text-3xl font-black italic text-white uppercase z-10">Hazte Premium</h3>
+                    <p class="text-white/80 text-sm mb-6 z-10">Accede a contenido exclusivo y apoya a los creadores.</p>
+                    <button class="bg-black hover:bg-white hover:text-black text-white font-bold py-3 px-8 rounded uppercase tracking-widest transition z-10">
+                        Saber Más
+                    </button>
+                </div>
+            </div>
+
         </div>
+
     </main>
 
-    <!-- Scripts -->
+    <!-- SCRIPTS -->
     <script>
-        // LOGICA SLIDER 
-        let currentSlide = 0;
-        const totalSlides = 5;
-        function updateSlider() {
-            const wrapper = document.getElementById('hero-slider');
-            if(wrapper) wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
-        }
-        function nextSlide() { currentSlide = (currentSlide + 1) % totalSlides; updateSlider(); }
-        function prevSlide() { currentSlide = (currentSlide - 1 + totalSlides) % totalSlides; updateSlider(); }
-        setInterval(nextSlide, 5000);
+        // --- 1. Preloader Inteligente ---
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            preloader.style.opacity = '0';
+            setTimeout(() => preloader.style.display = 'none', 500);
+        });
 
-        // LOGICA TARJETA
-        function toggleCard(card) { card.classList.toggle('flipped'); }
+        // Seguro Anti-Carga Infinita (3 segundos)
+        setTimeout(() => {
+            const preloader = document.getElementById('preloader');
+            if(preloader && preloader.style.display !== 'none') {
+                preloader.style.opacity = '0';
+                setTimeout(() => preloader.style.display = 'none', 500);
+            }
+        }, 3000);
 
-        // LOGICA NAVEGACIÓN (Controla el Iframe)
+        // --- 2. Lógica de Navegación (SPA) ---
         function cargarPagina(url, elemento) {
+            // Actualizar clase 'active' en el menú
             if (elemento) {
                 const navItems = document.querySelectorAll('.nav-item');
                 navItems.forEach(item => item.classList.remove('active'));
+                
+                // Buscar el icono dentro del elemento para cambiar color (opcional si usas CSS)
+                const icons = document.querySelectorAll('.nav-item i');
+                // Reset colors handled by CSS class
+                
                 elemento.classList.add('active');
             }
-            const mainContainer = document.querySelector('body');
+
+            // Cambiar vista
+            const body = document.querySelector('body');
             const iframe = document.getElementById('visor-contenido');
-            mainContainer.classList.add('show-iframe');
+
+            body.classList.add('show-iframe');
             iframe.src = url;
         }
 
         function irAInicio() {
-            const mainContainer = document.querySelector('body');
-            mainContainer.classList.remove('show-iframe');
+            const body = document.querySelector('body');
+            body.classList.remove('show-iframe');
+            
+            // Reset menú al primero
             const navItems = document.querySelectorAll('.nav-item');
             navItems.forEach(item => item.classList.remove('active'));
             document.querySelector('.nav-item:first-child').classList.add('active');
-            document.getElementById('visor-contenido').src = "";
+            
+            // Limpiar iframe para ahorrar memoria
+            document.getElementById('visor-contenido').src = "about:blank";
         }
     </script>
-    
 </body>
-
 </html>
