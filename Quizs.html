@@ -55,53 +55,65 @@
             position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 100;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             opacity: 0; pointer-events: none; transition: 0.3s;
-            padding: 10px; /* Pequeño padding para no pegar a los bordes */
+            padding: 5px;
         }
         .game-viewer-overlay.active { opacity: 1; pointer-events: auto; }
         
+        /* --- CONFIGURACIÓN DE TAMAÑO DEL JUEGO (AQUÍ ESTÁ EL TAMAÑO) --- */
         .game-frame-container {
-            /* OPTIMIZACIÓN MÓVIL: Usar casi toda la pantalla disponible */
-            width: 98vw; 
-            max-width: 1216px; /* Límite real del mapa */
+            /* Ancho del panel */
+            width: 95vw; 
+            max-width: 1216px; /* Límite para PC */
             
-            /* Altura máxima para evitar scroll en móviles pequeños */
-            max-height: 85vh; 
+            /* Alto del panel (Aumentado para llenar más pantalla en móvil) */
+            max-height: 96vh; 
             
-            /* Mantener cuadrado si es posible, pero permitir flexibilidad */
+            /* Intenta mantener cuadrado, pero se estira si falta espacio vertical */
             aspect-ratio: 1 / 1; 
             
-            background: #000; border: 1px solid var(--orange-cr);
-            border-radius: 8px; position: relative; overflow: hidden;
-            box-shadow: 0 0 30px rgba(244,117,33,0.2);
+            background: #000; border: 2px solid var(--orange-cr);
+            border-radius: 12px; position: relative; overflow: hidden;
+            box-shadow: 0 0 60px rgba(244,117,33,0.3);
         }
         
         .game-iframe { width: 100%; height: 100%; border: none; }
         
+        /* --- BOTÓN SALIR PERSONALIZADO --- */
         .close-game-btn {
-            position: absolute; top: -15px; right: -15px; width: 45px; height: 45px;
-            background: #ef4444; color: white; border-radius: 50%; border: 3px solid #000;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: bold; cursor: pointer; z-index: 50; box-shadow: 0 0 10px #ef4444;
-            font-size: 1.2rem; transition: transform 0.2s;
+            position: absolute; top: 15px; right: 15px;
+            background: #F47521; color: black;
+            padding: 8px 24px; border-radius: 50px;
+            font-weight: 900; font-size: 0.85rem;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            border: 2px solid white;
+            box-shadow: 0 0 20px rgba(244, 117, 33, 0.6);
+            display: flex; align-items: center; gap: 8px;
+            z-index: 50; cursor: pointer; transition: all 0.3s ease;
         }
-        .close-game-btn:active { transform: scale(0.9); }
+        .close-game-btn:hover {
+            transform: scale(1.05); background: white; color: #F47521; border-color: #F47521;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+        }
+        .close-game-btn i { font-size: 1.1rem; }
 
-        /* --- LOGO SOBREPUESTO (Overlay Logo) --- */
+        /* --- LOGO SOBREPUESTO --- */
         .logo-overlay {
             position: absolute;
-            top: 10px; left: 10px; /* Cambia a bottom/right si prefieres */
-            width: 80px; height: auto;
+            top: 15px; left: 15px;
+            width: 100px; height: auto;
             z-index: 40;
-            pointer-events: none; /* Permite hacer clic a través del logo */
-            opacity: 0.8;
+            pointer-events: none;
+            opacity: 0.9;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
         }
         
-        /* --- Espacios Publicitarios --- */
+        /* --- ESPACIO PUBLICIDAD (AQUÍ CONFIGURAS EL ANUNCIO) --- */
         .game-ad-space {
             width: 100%; max-width: 320px; height: 50px;
             background: #111; border: 1px dashed #333;
-            margin-top: 10px; display: flex; align-items: center; justify-content: center;
-            color: #444; font-size: 10px; text-transform: uppercase;
+            margin-top: 12px; display: flex; align-items: center; justify-content: center;
+            color: #444; font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+            border-radius: 8px;
         }
 
         /* --- Slider Horizontal --- */
@@ -230,16 +242,17 @@
         </div>
     </div>
 
-    <!-- VISOR DE JUEGO (MEJORADO PARA MÓVIL) -->
+    <!-- VISOR DE JUEGO (PANTALLA COMPLETA - AJUSTABLE) -->
     <div id="game-viewer" class="game-viewer-overlay">
         
         <!-- Contenedor del Juego -->
         <div class="game-frame-container">
-            <!-- Botón Cerrar (Sobresale un poco para fácil click) -->
-            <button onclick="closeGame()" class="close-game-btn"><i class="fa-solid fa-xmark"></i></button>
+            <!-- Botón Cerrar Mejorado y Personalizado -->
+            <button onclick="closeGame()" class="close-game-btn">
+                SALIR <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
             
-            <!-- Logo Superpuesto (Opcional: puedes poner tu marca aquí para tapar la original) -->
-            <!-- Cambia 'src' por tu logo.png -->
+            <!-- Logo Superpuesto (Opcional) -->
             <div class="logo-overlay">
                 <img src="https://via.placeholder.com/80x40/transparent/F47521?text=COMICVERSE" alt="Logo">
             </div>
