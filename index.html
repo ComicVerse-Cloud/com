@@ -27,12 +27,13 @@
             overflow: hidden; 
         }
 
-        /* --- PRELOADER (FIX DE CARGA INFINITA) --- */
+        /* --- PRELOADER (FIX DEFINITIVO DE CARGA) --- */
         #preloader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: #000; z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: opacity 0.5s ease;
+            pointer-events: all; /* Bloquea clicks mientras carga */
         }
         .loader-bar-box {
             width: 200px; height: 4px; background: #222; border-radius: 2px;
@@ -233,15 +234,42 @@
 </head>
 <body class="flex flex-col md:flex-row h-screen overflow-hidden relative">
 
-    <!-- PRELOADER -->
+    <!-- PRELOADER (FIX: SE QUITA A LOS 3s MÁXIMO) -->
     <div id="preloader">
         <div class="loader-bar-box">
             <div class="loader-bar"></div>
         </div>
         <div class="loader-text">CARGANDO...</div>
     </div>
+    
+    <!-- SCRIPT DE CARGA FORZADA -->
+    <script>
+        // Función única para ocultar preloader
+        function removePreloader() {
+            const preloader = document.getElementById('preloader');
+            if (preloader && preloader.style.display !== 'none') {
+                preloader.style.opacity = '0';
+                // Esperar a que termine la transición CSS de opacidad
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 500);
+            }
+        }
 
-    <!-- BOTÓN PERFIL USUARIO -->
+        // 1. Intentar quitar cuando todo cargue (Normal)
+        window.addEventListener('load', removePreloader);
+
+        // 2. Intentar quitar cuando el HTML esté listo (Rápido)
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(removePreloader, 1000); // 1s de cortesía
+        });
+
+        // 3. FUERZA BRUTA: Quitar sí o sí a los 3.5 segundos si algo falló
+        setTimeout(removePreloader, 3500);
+    </script>
+
+    <!-- BOTÓN PERFIL USUARIO (TEXTO PARA EVITAR ERRORES DE FOTO) -->
+    <!-- Se conecta a Usuario.html -->
     <div class="user-top-btn hidden md:flex items-center gap-3 px-6 py-3 rounded-md cursor-pointer group" onclick="cargarPagina('Usuario.html', null)">
         <div class="flex flex-col text-right">
             <span class="text-[9px] text-gray-400 uppercase font-black tracking-[0.2em] group-hover:text-[#F47521] transition">Conectado</span>
@@ -319,30 +347,31 @@
     <!-- CONTENIDO PRINCIPAL -->
     <main id="main-container" class="flex-1 relative bg-[#050505] overflow-y-auto h-[calc(100vh-64px)] md:h-screen pb-20 md:pb-0 scroll-smooth">
         
-        <!-- Header Móvil -->
+        <!-- Header Móvil (Con botón de usuario simplificado) -->
         <div class="md:hidden flex items-center justify-between p-4 bg-black/90 backdrop-blur sticky top-0 z-40 border-b border-white/10">
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-bolt text-[#F47521]"></i>
                 <h1 class="font-black italic text-lg tracking-tighter text-white">COMIC<span class="text-[#F47521]">VERSE</span></h1>
             </div>
-            <!-- Botón usuario móvil -->
+            <!-- Botón usuario móvil (TEXTO) -->
             <button onclick="cargarPagina('Usuario.html', null)" class="bg-[#111] border border-[#F47521] text-white px-3 py-1 rounded text-xs font-bold uppercase tracking-wider hover:bg-[#F47521] hover:text-black transition">
                 Usuario
             </button>
         </div>
 
         <!-- IFRAME VISOR (Aquí cargan las páginas externas) -->
+        <!-- Usamos src="about:blank" para evitar estados de carga colgados -->
         <iframe id="visor-contenido" src="about:blank" title="Contenido"></iframe>
 
         <!-- PÁGINA DE INICIO (HOME) -->
         <div id="inicio-container" class="p-4 md:p-8 max-w-[1600px] mx-auto animate-[fadeIn_0.5s_ease-out]">
             
-            <!-- --- SLIDER 3D TENDENCIAS --- -->
+            <!-- --- SLIDER 3D TENDENCIAS (Nombres de archivo fáciles) --- -->
             <div class="relative group mb-12">
                 <div class="slider-container w-full h-64 md:h-[500px] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.7)]">
                     <div class="slider-wrapper" id="hero-slider">
                         
-                        <!-- Slide 1 -->
+                        <!-- Slide 1: Ecos del Vacío (tendencia1.png) -->
                         <div class="slide bg-black relative overflow-hidden">
                             <img src="tendencia1.png" onerror="this.src='https://images.unsplash.com/photo-1620641788421-7f1c33b7436e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'" class="absolute inset-0 w-full h-full object-cover opacity-60">
                             <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
@@ -350,11 +379,12 @@
                                 <span class="bg-[#F47521] text-black font-black px-4 py-1 uppercase tracking-widest text-xs mb-4 inline-block">Top #1 Global</span>
                                 <h2 class="text-4xl md:text-7xl font-black italic uppercase text-white mb-2">Ecos del Vacío</h2>
                                 <p class="text-gray-300 max-w-xl text-lg hidden md:block">El universo colapsa y solo un guerrero puede sostener la realidad.</p>
+                                <!-- BOTÓN A LEERCAPITULO.HTML -->
                                 <button onclick="cargarPagina('LeerCapitulo.html', null)" class="mt-4 bg-[#F47521] hover:bg-white hover:text-black text-black font-bold py-2 px-6 rounded uppercase tracking-widest transition-all">Leer Capítulo 1</button>
                             </div>
                         </div>
 
-                        <!-- Slide 2 -->
+                        <!-- Slide 2: Neon Samurai (tendencia2.png) -->
                         <div class="slide bg-black relative overflow-hidden">
                             <img src="tendencia2.png" onerror="this.src='https://images.unsplash.com/photo-1578632767115-351597cf2477?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'" class="absolute inset-0 w-full h-full object-cover opacity-60">
                             <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
@@ -365,8 +395,8 @@
                             </div>
                         </div>
 
-                        <!-- Slide 3 -->
-                        <div class="slide bg-black relative overflow-hidden">
+                         <!-- Slide 3: Magic Academy (tendencia3.png) -->
+                         <div class="slide bg-black relative overflow-hidden">
                             <img src="tendencia3.png" onerror="this.src='https://images.unsplash.com/photo-1519074069444-1ba4fff66d16?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'" class="absolute inset-0 w-full h-full object-cover opacity-60">
                             <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
                             <div class="absolute bottom-0 left-0 p-8 md:p-16 slide-content">
@@ -375,7 +405,7 @@
                             </div>
                         </div>
 
-                        <!-- Slide 4 -->
+                        <!-- Slide 4: La Grieta (tendencia4.png) -->
                         <div class="slide bg-black relative overflow-hidden">
                             <img src="tendencia4.png" onerror="this.src='https://images.unsplash.com/photo-1626544827763-d516dce335ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'" class="absolute inset-0 w-full h-full object-cover opacity-60">
                             <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
@@ -385,8 +415,8 @@
                             </div>
                         </div>
 
-                         <!-- Slide 5 -->
-                         <div class="slide bg-black relative overflow-hidden">
+                        <!-- Slide 5: Lost World (tendencia5.png) -->
+                        <div class="slide bg-black relative overflow-hidden">
                             <img src="tendencia5.png" onerror="this.src='https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'" class="absolute inset-0 w-full h-full object-cover opacity-60">
                             <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
                             <div class="absolute bottom-0 left-0 p-8 md:p-16 slide-content">
@@ -400,7 +430,7 @@
                 <button onclick="nextSlide()" class="absolute top-1/2 right-4 -translate-y-1/2 bg-black/50 hover:bg-[#F47521] text-white p-3 rounded-full transition backdrop-blur-md border border-white/20"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
 
-            <!-- Sección Estrenos -->
+            <!-- Sección Estrenos (Nombres de archivo fáciles) -->
             <div class="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
                 <div class="flex items-center gap-3">
                     <div class="w-2 h-8 bg-[#F47521]"></div>
@@ -409,7 +439,7 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-20">
-                <!-- Card 1 -->
+                <!-- Card 1: lanzamiento1.png -->
                 <div class="card-container cursor-pointer group">
                     <div class="card-3d bg-[#151515] rounded-xl overflow-hidden h-full relative border border-white/5">
                         <div class="h-64 overflow-hidden relative">
@@ -423,7 +453,7 @@
                     </div>
                 </div>
 
-                <!-- Card 2 -->
+                <!-- Card 2: lanzamiento2.png -->
                 <div class="card-container cursor-pointer group">
                     <div class="card-3d bg-[#151515] rounded-xl overflow-hidden h-full relative border border-white/5">
                         <div class="h-64 overflow-hidden relative">
@@ -437,7 +467,7 @@
                     </div>
                 </div>
 
-                <!-- Card 3 -->
+                <!-- Card 3: lanzamiento3.png -->
                 <div class="card-container cursor-pointer group">
                     <div class="card-3d bg-[#151515] rounded-xl overflow-hidden h-full relative border border-white/5">
                         <div class="h-64 overflow-hidden relative">
@@ -451,7 +481,7 @@
                     </div>
                 </div>
 
-                 <!-- Card 4 -->
+                 <!-- Card 4: lanzamiento4.png -->
                  <div class="card-container cursor-pointer group">
                     <div class="card-3d bg-[#151515] rounded-xl overflow-hidden h-full relative border border-white/5">
                         <div class="h-64 overflow-hidden relative">
@@ -464,7 +494,7 @@
                     </div>
                 </div>
 
-                 <!-- Card 5 -->
+                 <!-- Card 5: lanzamiento5.png -->
                  <div class="card-container cursor-pointer group">
                     <div class="card-3d bg-[#151515] rounded-xl overflow-hidden h-full relative border border-white/5">
                         <div class="h-64 overflow-hidden relative">
@@ -479,7 +509,7 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN COMUNIDAD Y PREMIUM -->
+            <!-- SECCIÓN COMUNIDAD Y PREMIUM (Nombres de archivo fáciles) -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 pb-20">
                 <div class="lg:col-span-2">
                     <div class="flex items-center gap-3 mb-8">
@@ -487,10 +517,12 @@
                         <h3 class="text-2xl font-black uppercase tracking-wide italic text-white">Hub de la Comunidad</h3>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Noticia 1: noticias1.png -->
                         <div class="bg-[#111] border border-white/5 p-4 rounded-xl flex items-center gap-4 hover:border-[#F47521] transition cursor-pointer group">
                             <div class="w-16 h-16 bg-gray-800 rounded-lg shrink-0 overflow-hidden"><img src="noticias1.png" onerror="this.src='https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=150&q=80'" class="w-full h-full object-cover"></div>
                             <div><span class="text-[#F47521] text-[10px] font-bold uppercase tracking-widest block mb-1">Torneo</span><h4 class="font-bold text-white leading-tight group-hover:text-[#F47521] transition">Batalla de Ilustradores</h4></div>
                         </div>
+                        <!-- Noticia 2: Sistema (sin foto externa, usa icono) -->
                         <div class="bg-[#111] border border-white/5 p-4 rounded-xl flex items-center gap-4 hover:border-[#F47521] transition cursor-pointer group">
                              <div class="w-16 h-16 bg-gray-800 rounded-lg shrink-0 overflow-hidden flex items-center justify-center"><i class="fa-solid fa-server text-2xl text-blue-500"></i></div>
                             <div><span class="text-blue-500 text-[10px] font-bold uppercase tracking-widest block mb-1">Sistema</span><h4 class="font-bold text-white leading-tight group-hover:text-blue-400 transition">Mantenimiento Web</h4></div>
@@ -602,23 +634,6 @@
 
     <!-- Scripts -->
     <script>
-        // --- MANEJO DEL PRELOADER ---
-        window.addEventListener('load', () => {
-            const preloader = document.getElementById('preloader');
-            if(preloader) {
-                preloader.style.opacity = '0';
-                setTimeout(() => preloader.style.display = 'none', 500);
-            }
-        });
-        // Fallback de seguridad (3 segundos)
-        setTimeout(() => {
-            const preloader = document.getElementById('preloader');
-            if(preloader && preloader.style.display !== 'none') {
-                preloader.style.opacity = '0';
-                setTimeout(() => preloader.style.display = 'none', 500);
-            }
-        }, 3000);
-
         // LOGICA SLIDER 
         let currentSlide = 0;
         const totalSlides = 5;
