@@ -44,90 +44,89 @@
         .game-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
         .game-card:hover .game-img { transform: scale(1.1); }
 
-        /* --- Modal Detalles (Previo al juego) --- */
-        .modal-overlay { 
-            position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); 
-            display: flex; align-items: center; justify-content: center; z-index: 60; 
-            opacity: 0; pointer-events: none; transition: 0.3s; 
-        }
+        /* --- Modal Detalles --- */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 60; opacity: 0; pointer-events: none; transition: 0.3s; }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-        .modal-box { 
-            background: #151515; border: 1px solid #333; border-radius: 12px; padding: 2rem; 
-            width: 90%; max-width: 500px; position: relative; transform: scale(0.9); 
-            transition: 0.3s; box-shadow: 0 0 50px rgba(244,117,33,0.1); 
-        }
+        .modal-box { background: #151515; border: 1px solid #333; border-radius: 12px; padding: 2rem; width: 90%; max-width: 500px; position: relative; transform: scale(0.9); transition: 0.3s; box-shadow: 0 0 50px rgba(244,117,33,0.1); }
         .modal-overlay.active .modal-box { transform: scale(1); }
 
-        /* --- GAME VIEWER (VISOR DE JUEGO) --- */
+        /* --- Game Viewer (Iframe Optimizad) --- */
         .game-viewer-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; /* Fondo negro sólido para inmersión */
-            z-index: 100;
-            display: none; /* Oculto por defecto, JS lo cambia a flex */
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            overflow-y: auto; /* Permite scroll si los anuncios son muy altos */
+            position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            opacity: 0; pointer-events: none; transition: 0.3s; padding-top: 10px;
         }
-        .game-viewer-overlay.active { display: flex; }
+        .game-viewer-overlay.active { opacity: 1; pointer-events: auto; }
         
-        /* 1. ANUNCIO ARRIBA */
-        .ad-top-container {
-            width: 100%; display: flex; justify-content: center; background: #111; padding: 10px 0;
-            border-bottom: 1px solid #333; flex-shrink: 0;
-        }
-
-        /* 2. JUEGO (CENTRO) */
-        .game-frame-wrapper {
-            flex-grow: 1; /* Ocupa todo el espacio disponible */
-            width: 100%;
-            max-width: 1216px; /* Límite de ancho para PC */
-            display: flex; flex-direction: column;
-            position: relative;
-            padding: 10px;
-        }
         .game-frame-container {
-            width: 100%; height: 100%;
+            width: 98vw; max-width: 1216px; height: calc(100dvh - 200px); 
             background: #000; border: 2px solid var(--orange-cr);
-            border-radius: 8px; position: relative; overflow: hidden;
-            box-shadow: 0 0 30px rgba(244,117,33,0.2);
-            min-height: 400px; /* Altura mínima garantizada */
+            border-radius: 12px; position: relative; overflow: hidden;
+            box-shadow: 0 0 60px rgba(244,117,33,0.3); margin-bottom: 10px; flex-shrink: 1;
         }
         .game-iframe { width: 100%; height: 100%; border: none; }
         
-        /* Botón Salir */
         .close-game-btn {
-            position: absolute; top: 20px; right: 20px;
-            background: #F47521; color: black;
-            padding: 8px 20px; border-radius: 30px;
-            font-weight: 900; font-size: 0.8rem;
-            text-transform: uppercase; letter-spacing: 1px;
-            border: 2px solid white;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
-            display: flex; align-items: center; gap: 5px;
-            z-index: 50; cursor: pointer; transition: all 0.2s;
+            position: absolute; top: 15px; right: 15px;
+            background: #F47521; color: black; padding: 8px 24px; border-radius: 50px;
+            font-weight: 900; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px;
+            border: 2px solid white; box-shadow: 0 0 20px rgba(244, 117, 33, 0.6);
+            display: flex; align-items: center; gap: 8px; z-index: 50; cursor: pointer; transition: all 0.3s ease;
         }
-        .close-game-btn:hover { transform: scale(1.05); background: white; color: #F47521; }
-
-        /* 3. ANUNCIO ABAJO (NATIVO) */
-        .ad-bottom-container {
-            width: 100%;
-            padding: 20px 0;
-            background: #080808;
-            border-top: 1px solid #333;
-            display: flex; justify-content: center;
-            flex-shrink: 0;
-            min-height: 200px; /* Espacio para que el nativo respire */
-        }
+        .close-game-btn:hover { transform: scale(1.05); background: white; color: #F47521; border-color: #F47521; }
+        .logo-overlay { position: absolute; top: 15px; left: 15px; width: 100px; height: auto; z-index: 40; pointer-events: none; opacity: 0.9; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); }
+        
+        /* --- Anuncios --- */
+        .ad-slot { background-color: #050505; display: block; width: 100%; overflow: hidden; margin: 20px 0; min-height: 100px; border: 1px solid #222; text-align: center; }
 
         /* --- Slider Horizontal --- */
-        .games-slider {
-            display: flex; gap: 24px; overflow-x: auto; padding: 20px 0;
-            scroll-snap-type: x mandatory;
+        .games-slider { display: flex; gap: 24px; overflow-x: auto; padding: 20px 0; scroll-snap-type: x mandatory; }
+        .slider-item { min-width: 280px; max-width: 320px; flex-shrink: 0; scroll-snap-align: center; }
+
+        /* --- CANVAS RULETA --- */
+        #wheel-wrapper {
+            position: relative;
+            width: 320px; height: 320px;
+            margin: 0 auto;
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(244, 117, 33, 0.2), inset 0 0 50px rgba(0,0,0,0.8);
+            background: #111;
+            border: 4px solid #333;
         }
-        .slider-item {
-            min-width: 280px; max-width: 320px; flex-shrink: 0; scroll-snap-align: center;
+        #wheel-canvas {
+            width: 100%; height: 100%;
+            transition: transform 5s cubic-bezier(0.1, 0.8, 0.1, 1);
         }
+        .wheel-pointer {
+            position: absolute;
+            top: -10px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #fff;
+            z-index: 20; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.8));
+        }
+        .wheel-center-knob {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 60px; height: 60px; background: radial-gradient(circle, #F47521, #d65a00);
+            border: 4px solid #fff; border-radius: 50%;
+            z-index: 15; box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .wheel-center-knob i { color: white; font-size: 1.5rem; }
+
+        /* --- TABLA PROBABILIDADES --- */
+        .odds-table-container {
+            background: #0f0f0f; border: 1px solid #333; border-radius: 12px;
+            overflow: hidden; margin-top: 2rem; position: relative;
+        }
+        .odds-table-container::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--orange-cr); box-shadow: 2px 0 10px var(--orange-cr);
+        }
+        .odds-row:hover { background: rgba(255,255,255,0.05); }
+        .glow-text { text-shadow: 0 0 5px currentColor; }
+
     </style>
 </head>
 <body class="relative min-h-screen pb-20">
@@ -136,10 +135,10 @@
         
         <!-- HEADER -->
         <div class="flex items-center gap-3 mb-6 border-b border-gray-800 pb-6">
-            <div class="w-2 h-12 bg-gradient-to-b from-[#F47521] to-purple-600 shadow-[0_0_20px_#F47521]"></div>
+            <div class="w-2 h-12 bg-gradient-to-b from-[#F47521] to-yellow-500 shadow-[0_0_20px_#F47521]"></div>
             <div>
                 <h1 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white drop-shadow-xl">
-                    Quizs & <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F47521] to-purple-500">Juegos</span>
+                    Quizs & <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F47521] to-yellow-500">Juegos</span>
                 </h1>
                 <p class="text-gray-500 text-sm mt-1">
                     Diversión arcade y retos de conocimiento.
@@ -148,223 +147,373 @@
         </div>
 
         <!-- SLIDER HORIZONTAL DE JUEGOS -->
-        <div class="games-slider hide-scroll">
-
-            <!-- JUEGO 1 -->
-            <div class="slider-item game-card-container group">
+        <div class="games-slider hide-scroll mb-16">
+             <div class="slider-item game-card-container group">
                 <div class="game-card" id="card-1">
-                    <div class="game-img-box">
-                        <img src="Quiz1.png" onerror="this.src='https://placehold.co/1024x1024/111/F47521?text=Avalond+RPG'" class="game-img">
-                    </div>
-                    <div class="p-4 bg-[#0a0a0a]">
-                        <h3 class="text-lg font-black text-white uppercase italic truncate">Avalond: RPG</h3>
-                        <button onclick="openDetailModal(1)" class="w-full mt-3 bg-gray-800 hover:bg-[#F47521] hover:text-black text-white font-bold py-2 rounded uppercase text-xs tracking-widest transition">
-                            Jugar
-                        </button>
-                    </div>
+                    <div class="game-img-box"><img src="Quiz1.png" onerror="this.src='https://placehold.co/1024x1024/111/F47521?text=Avalond+RPG'" class="game-img"></div>
+                    <div class="p-4 bg-[#0a0a0a]"><h3 class="text-lg font-black text-white uppercase italic truncate">Avalond: RPG</h3><button onclick="openDetailModal(1)" class="w-full mt-3 bg-gray-800 hover:bg-[#F47521] hover:text-black text-white font-bold py-2 rounded uppercase text-xs tracking-widest transition">Jugar</button></div>
                 </div>
             </div>
-
-            <!-- JUEGO 2 -->
             <div class="slider-item game-card-container group">
                 <div class="game-card" id="card-2">
-                    <div class="game-img-box">
-                        <img src="Quiz2.png" onerror="this.src='https://placehold.co/1024x1024/111/F47521?text=Quiz+Trivia'" class="game-img">
-                    </div>
-                    <div class="p-4 bg-[#0a0a0a]">
-                        <h3 class="text-lg font-black text-white uppercase italic truncate">Trivia Otaku</h3>
-                        <button onclick="openDetailModal(2)" class="w-full mt-3 bg-gray-800 hover:bg-[#F47521] hover:text-black text-white font-bold py-2 rounded uppercase text-xs tracking-widest transition">Jugar</button>
-                    </div>
+                    <div class="game-img-box"><img src="Quiz2.png" onerror="this.src='https://placehold.co/1024x1024/111/F47521?text=Quiz+Trivia'" class="game-img"></div>
+                    <div class="p-4 bg-[#0a0a0a]"><h3 class="text-lg font-black text-white uppercase italic truncate">Trivia Otaku</h3><button onclick="openDetailModal(2)" class="w-full mt-3 bg-gray-800 hover:bg-[#F47521] hover:text-black text-white font-bold py-2 rounded uppercase text-xs tracking-widest transition">Jugar</button></div>
                 </div>
             </div>
-
-            <!-- JUEGO 3 -->
             <div class="slider-item game-card-container group">
                 <div class="game-card" id="card-3">
-                    <div class="game-img-box">
-                        <img src="Quiz3.png" onerror="this.src='https://placehold.co/1024x1024/111/F47521?text=Puzzle+X'" class="game-img">
-                    </div>
-                    <div class="p-4 bg-[#0a0a0a]">
-                        <h3 class="text-lg font-black text-white uppercase italic truncate">Puzzle Verse</h3>
-                        <button onclick="openDetailModal(3)" class="w-full mt-3 bg-gray-800 hover:bg-[#F47521] hover:text-black text-white font-bold py-2 rounded uppercase text-xs tracking-widest transition">Jugar</button>
-                    </div>
+                    <div class="game-img-box"><img src="Quiz3.png" onerror="this.src='https://placehold.co/1024x1024/111/F47521?text=Puzzle+X'" class="game-img"></div>
+                    <div class="p-4 bg-[#0a0a0a]"><h3 class="text-lg font-black text-white uppercase italic truncate">Puzzle Verse</h3><button onclick="openDetailModal(3)" class="w-full mt-3 bg-gray-800 hover:bg-[#F47521] hover:text-black text-white font-bold py-2 rounded uppercase text-xs tracking-widest transition">Jugar</button></div>
                 </div>
             </div>
-
-            <!-- JUEGO 4 -->
             <div class="slider-item game-card-container group">
                 <div class="game-card" id="card-4">
-                    <div class="game-img-box">
-                        <img src="Quiz4.png" onerror="this.src='https://placehold.co/1024x1024/111/F47521?text=Runner+2077'" class="game-img">
-                    </div>
-                    <div class="p-4 bg-[#0a0a0a]">
-                        <h3 class="text-lg font-black text-white uppercase italic truncate">Cyber Runner</h3>
-                        <button onclick="openDetailModal(4)" class="w-full mt-3 bg-gray-800 hover:bg-[#F47521] hover:text-black text-white font-bold py-2 rounded uppercase text-xs tracking-widest transition">Jugar</button>
-                    </div>
+                    <div class="game-img-box"><img src="Quiz4.png" onerror="this.src='https://placehold.co/1024x1024/111/F47521?text=Runner+2077'" class="game-img"></div>
+                    <div class="p-4 bg-[#0a0a0a]"><h3 class="text-lg font-black text-white uppercase italic truncate">Cyber Runner</h3><button onclick="openDetailModal(4)" class="w-full mt-3 bg-gray-800 hover:bg-[#F47521] hover:text-black text-white font-bold py-2 rounded uppercase text-xs tracking-widest transition">Jugar</button></div>
                 </div>
             </div>
-
-            <!-- JUEGO 5 -->
             <div class="slider-item game-card-container group">
                 <div class="game-card" id="card-5">
-                    <div class="game-img-box">
-                        <img src="Quiz5.png" onerror="this.src='https://placehold.co/1024x1024/111/F47521?text=Card+Battle'" class="game-img">
-                    </div>
-                    <div class="p-4 bg-[#0a0a0a]">
-                        <h3 class="text-lg font-black text-white uppercase italic truncate">Card Battle</h3>
-                        <button onclick="openDetailModal(5)" class="w-full mt-3 bg-gray-800 hover:bg-[#F47521] hover:text-black text-white font-bold py-2 rounded uppercase text-xs tracking-widest transition">Jugar</button>
-                    </div>
+                    <div class="game-img-box"><img src="Quiz5.png" onerror="this.src='https://placehold.co/1024x1024/111/F47521?text=Card+Battle'" class="game-img"></div>
+                    <div class="p-4 bg-[#0a0a0a]"><h3 class="text-lg font-black text-white uppercase italic truncate">Card Battle</h3><button onclick="openDetailModal(5)" class="w-full mt-3 bg-gray-800 hover:bg-[#F47521] hover:text-black text-white font-bold py-2 rounded uppercase text-xs tracking-widest transition">Jugar</button></div>
                 </div>
             </div>
+        </div>
 
+        <!-- ======================= -->
+        <!-- SECCIÓN: RULETA DE LA SUERTE (CANVAS) -->
+        <!-- ======================= -->
+        <div class="border-t border-gray-800 pt-12 mb-12">
+            <div class="flex items-center justify-center gap-3 mb-8">
+                <div class="w-2 h-10 bg-[#F47521] shadow-[0_0_15px_#F47521]"></div>
+                <h2 class="text-3xl font-black italic uppercase tracking-tighter text-white">
+                    Ruleta <span class="text-[#F47521]">Daily</span>
+                </h2>
+            </div>
+
+            <div class="bg-[#111] border border-gray-800 rounded-xl p-8 max-w-lg mx-auto text-center shadow-2xl relative overflow-hidden">
+                <!-- Brillo de fondo -->
+                <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#F47521]/5 to-transparent pointer-events-none"></div>
+
+                <!-- RULETA CANVAS -->
+                <div id="wheel-wrapper" class="mb-8 mt-4">
+                    <div class="wheel-pointer"></div>
+                    <div class="wheel-center-knob"><i class="fa-solid fa-gift"></i></div>
+                    <canvas id="wheelCanvas" width="320" height="320"></canvas>
+                </div>
+
+                <!-- CONTROLES -->
+                <div id="wheel-controls">
+                    <p class="text-gray-400 text-sm mb-4">Prueba tu suerte diaria. <span class="text-[#F47521]">0.1%</span> probabilidad de premio mayor.</p>
+                    
+                    <button id="btn-power-up" onclick="powerUpWheel()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:scale-105 transition transform text-white font-black py-3 rounded uppercase tracking-widest shadow-lg mb-2">
+                        <i class="fa-solid fa-bolt text-yellow-300"></i> Potenciar Ruleta
+                    </button>
+                    
+                    <button id="btn-spin" onclick="spinWheel()" class="hidden w-full bg-gradient-to-r from-[#F47521] to-red-600 hover:scale-105 transition transform text-white font-black py-3 rounded uppercase tracking-widest shadow-lg shadow-orange-500/20">
+                        Girar Ahora
+                    </button>
+
+                    <div id="cooldown-msg" class="hidden mt-4 p-3 bg-black/50 border border-red-900 rounded text-red-400 font-mono text-sm font-bold flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-clock fa-spin"></i> Recargando: <span id="timer" class="text-white">00:00</span>
+                    </div>
+                </div>
+
+                <!-- TABLA DE PROBABILIDADES (FAKED) -->
+                <div class="odds-table-container">
+                    <div class="bg-[#1a1a1a] py-3 px-4 border-b border-[#333] flex justify-between items-center">
+                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Tabla de Drops</span>
+                        <i class="fa-solid fa-circle-info text-gray-600"></i>
+                    </div>
+                    <table class="w-full text-xs text-left">
+                        <tbody class="text-gray-300">
+                            <!-- PREMIO 1: DINERO 5 USD -->
+                            <tr class="odds-row border-b border-[#222]">
+                                <td class="py-3 px-4 flex items-center gap-2 text-green-500 font-bold">
+                                    <i class="fa-solid fa-money-bill-wave"></i> 5.00 USD
+                                </td>
+                                <td class="py-3 px-4 text-right font-mono text-green-500">5.0%</td>
+                            </tr>
+                            <!-- PREMIO 2: DINERO 1 USD -->
+                            <tr class="odds-row border-b border-[#222]">
+                                <td class="py-3 px-4 flex items-center gap-2 text-green-400">
+                                    <i class="fa-solid fa-coins"></i> 1.00 USD
+                                </td>
+                                <td class="py-3 px-4 text-right font-mono text-green-400">15.0%</td>
+                            </tr>
+                            <!-- PREMIO 3: PREMIUM PERMANENTE -->
+                            <tr class="odds-row border-b border-[#222]">
+                                <td class="py-3 px-4 flex items-center gap-2 text-[#FFD700] font-bold glow-text">
+                                    <i class="fa-solid fa-crown"></i> Premium Permanente
+                                </td>
+                                <td class="py-3 px-4 text-right font-mono text-[#FFD700]">0.5%</td>
+                            </tr>
+                            <!-- PREMIO 4: PREMIUM TEMPORAL -->
+                            <tr class="odds-row border-b border-[#222]">
+                                <td class="py-3 px-4 flex items-center gap-2 text-purple-400">
+                                    <i class="fa-solid fa-hourglass-half"></i> Premium 10h / 1h
+                                </td>
+                                <td class="py-3 px-4 text-right font-mono">10.0%</td>
+                            </tr>
+                             <!-- PREMIO 5: ITEMS RAROS -->
+                             <tr class="odds-row border-b border-[#222]">
+                                <td class="py-3 px-4 flex items-center gap-2 text-blue-400">
+                                    <i class="fa-solid fa-shirt"></i> Skins / Títulos
+                                </td>
+                                <td class="py-3 px-4 text-right font-mono">20.0%</td>
+                            </tr>
+                             <!-- PREMIO 6: NADA -->
+                             <tr class="odds-row">
+                                <td class="py-3 px-4 flex items-center gap-2 text-red-500 font-bold">
+                                    <i class="fa-solid fa-face-frown"></i> Suerte para la próxima
+                                </td>
+                                <td class="py-3 px-4 text-right font-mono">49.5%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- --- ESPACIO PUBLICITARIO 1 (BANNER HORIZONTAL) --- -->
+        <div class="ad-slot w-full mt-12 rounded-lg">
+             <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-4804945170892289"
+                 data-ad-slot="XXXXXXXXXX" 
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"
+                 data-page-url="http://comicverse-cloud.github.io"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
         </div>
     </div>
 
-    <!-- MODAL DE DETALLES (PASO PREVIO) -->
+    <!-- MODAL DE DETALLES JUEGOS -->
     <div id="detail-modal" class="modal-overlay">
         <div class="modal-box">
             <button onclick="closeDetailModal()" class="absolute top-4 right-4 text-gray-500 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            
             <div class="text-center mb-6">
-                <div class="w-24 h-24 mx-auto bg-gray-800 rounded-xl mb-4 overflow-hidden border-2 border-[#F47521] shadow-lg">
-                    <img id="modal-img" src="" class="w-full h-full object-cover">
-                </div>
+                <div class="w-24 h-24 mx-auto bg-gray-800 rounded-xl mb-4 overflow-hidden border-2 border-[#F47521] shadow-lg"><img id="modal-img" src="" class="w-full h-full object-cover"></div>
                 <h2 id="modal-title" class="text-2xl font-black text-white uppercase italic">NOMBRE JUEGO</h2>
                 <span class="text-xs text-gray-500 font-mono uppercase tracking-widest">Arcade 2D</span>
             </div>
-            
-            <p id="modal-desc" class="text-gray-300 text-sm mb-8 text-center leading-relaxed">
-                Descripción del juego...
-            </p>
-            
-            <button id="modal-play-btn" onclick="unlockAndPlay()" class="w-full bg-gradient-to-r from-[#F47521] to-red-600 text-white font-black uppercase py-4 rounded-lg shadow-lg hover:scale-105 transition-transform flex items-center justify-center gap-2">
-                <i class="fa-solid fa-play"></i> INICIAR JUEGO
-            </button>
-            <p class="text-[10px] text-gray-500 text-center mt-3 flex items-center justify-center gap-1">
-                <i class="fa-solid fa-ad"></i> Anuncio al iniciar
-            </p>
+            <p id="modal-desc" class="text-gray-300 text-sm mb-8 text-center leading-relaxed">Descripción...</p>
+            <button id="modal-play-btn" onclick="unlockAndPlay()" class="w-full bg-gradient-to-r from-[#F47521] to-red-600 text-white font-black uppercase py-4 rounded-lg shadow-lg hover:scale-105 transition-transform flex items-center justify-center gap-2"><i class="fa-solid fa-play"></i> INICIAR JUEGO</button>
+            <p class="text-[10px] text-gray-500 text-center mt-3 flex items-center justify-center gap-1"><i class="fa-solid fa-ad"></i> Anuncio corto al iniciar</p>
         </div>
     </div>
 
-    <!-- VISOR DE JUEGO (ESTRUCTURA DE ANUNCIOS CORRECTA) -->
+    <!-- VISOR DE JUEGO -->
     <div id="game-viewer" class="game-viewer-overlay">
-        
-        <!-- 1. BANNER NORMAL (ARRIBA) -->
         <div class="ad-top-container">
-            <!-- SCRIPT BANNER NORMAL 728x90 (Responsive en Iframe) -->
             <script type="text/javascript">
-                atOptions = {
-                    'key' : '5ab505225fc2b6723b2e01eb26a1cfb2',
-                    'format' : 'iframe',
-                    'height' : 90,
-                    'width' : 728,
-                    'params' : {}
-                };
+                atOptions = { 'key' : '5ab505225fc2b6723b2e01eb26a1cfb2', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
             </script>
             <script type="text/javascript" src="https://www.highperformanceformat.com/5ab505225fc2b6723b2e01eb26a1cfb2/invoke.js"></script>
         </div>
-
-        <!-- 2. JUEGO (CENTRO - FLEXIBLE) -->
         <div class="game-frame-wrapper">
             <div class="game-frame-container">
-                <!-- Botón Cerrar dentro del panel del juego -->
-                <button onclick="closeGame()" class="close-game-btn">
-                    SALIR <i class="fa-solid fa-right-from-bracket"></i>
-                </button>
-                
+                <button onclick="closeGame()" class="close-game-btn">SALIR <i class="fa-solid fa-right-from-bracket"></i></button>
+                <div class="logo-overlay"><img src="https://via.placeholder.com/80x40/transparent/F47521?text=COMICVERSE" alt="Logo"></div>
                 <iframe id="game-iframe" src="" class="game-iframe" allow="fullscreen"></iframe>
             </div>
         </div>
-
-        <!-- 3. BANNER NATIVO (ABAJO - ESPACIO INFINITO) -->
         <div class="ad-bottom-container">
-            <!-- SCRIPT BANNER NATIVO (4:1 RATIO PREFERIDO) -->
             <script async="async" data-cfasync="false" src="https://pl28307525.effectivegatecpm.com/ec1123a13f7bf7f7810ca9fcdef627bc/invoke.js"></script>
             <div id="container-ec1123a13f7bf7f7810ca9fcdef627bc"></div>
         </div>
-
     </div>
 
-    <script>
-        // URL DEL ANUNCIO (Interstitial)
-        const adUrl = "https://www.effectivegatecpm.com/m1ys4txk?key=24956a22bda5dca3b4086262eb4b5423";
+    <!-- MODAL DE RESULTADO RULETA -->
+    <div id="prize-modal" class="modal-overlay">
+        <div class="modal-box border-2 border-[#F47521] text-center bg-[#0a0a0a]">
+            <div id="prize-icon" class="text-6xl mb-4 animate-bounce">🎁</div>
+            <h3 class="text-2xl font-black text-white uppercase mb-2">Resultado</h3>
+            <p id="prize-text" class="text-xl text-[#F47521] font-bold mb-6">...</p>
+            <button onclick="closePrizeModal()" class="w-full bg-gray-800 hover:bg-white hover:text-black text-white font-bold py-3 rounded uppercase">Aceptar</button>
+        </div>
+    </div>
 
-        // DATOS DE LOS JUEGOS
-        const gamesData = {
-            1: {
-                title: "Avalond: RPG",
-                desc: "Explora el mundo mágico de Avalond en este RPG de aventuras 2D.",
-                img: "Quiz1.png",
-                link: "https://pixworld.io/avalond" 
-            },
-            2: {
-                title: "Trivia Otaku",
-                desc: "Demuestra cuánto sabes de anime y manga.",
-                img: "Quiz2.png",
-                link: "https://itch.io/embed-upload/123456?color=333333" 
-            },
-            3: {
-                title: "Puzzle Verse",
-                desc: "Arma los rompecabezas de tus portadas favoritas.",
-                img: "Quiz3.png",
-                link: "https://itch.io/embed-upload/654321?color=333333" 
-            },
-            4: {
-                title: "Cyber Runner",
-                desc: "Corre por los tejados de Neo-Tokyo.",
-                img: "Quiz4.png",
-                link: "https://itch.io/embed-upload/987654?color=333333" 
-            },
-            5: {
-                title: "Card Battle",
-                desc: "Estrategia de cartas con los personajes de ComicVerse.",
-                img: "Quiz5.png",
-                link: "https://itch.io/embed-upload/456789?color=333333" 
-            }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+        // FIREBASE INIT
+        const firebaseConfig = {
+            apiKey: "AIzaSyAso_n-upMqt8cXFFA8K_rR9UMB6REz_ak",
+            authDomain: "rave-comunidad.firebaseapp.com",
+            projectId: "rave-comunidad",
+            storageBucket: "rave-comunidad.firebasestorage.app",
+            messagingSenderId: "343374532130",
+            appId: "1:343374532130:web:714e56d15032cd096f847b"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- ID DISPOSITIVO (PERSISTENCIA) ---
+        let deviceId = localStorage.getItem('device_id');
+        if (!deviceId) {
+            deviceId = 'dev_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('device_id', deviceId);
+        }
+
+        // --- FUNCIONES RULETA (FIREBASE COOLDOWN) ---
+        window.powerUpWheel = function() {
+            window.open("https://sonsstoop.com/m1ys4txk?key=24956a22bda5dca3b4086262eb4b5423", '_blank');
+            document.getElementById('btn-power-up').classList.add('hidden');
+            document.getElementById('btn-spin').classList.remove('hidden');
         };
 
+        window.spinWheel = async function() {
+            // Check Firebase first (Double check)
+            const docRef = doc(db, "roulette_spins", deviceId);
+            try {
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const lastTime = docSnap.data().lastSpin;
+                    if (Date.now() - lastTime < 120000) {
+                        alert("¡Cooldown activo! No hagas trampa.");
+                        startCooldown(120000 - (Date.now() - lastTime));
+                        return;
+                    }
+                }
+            } catch(e) { console.log("Offline check skipped"); }
+
+            document.getElementById('btn-spin').disabled = true;
+            document.getElementById('btn-spin').classList.add('opacity-50');
+
+            // --- LÓGICA RIGGED (REAL) ---
+            // 90% Suerte, 9.9% Basura, 0.1% Premium, 0% Dinero
+            const failIndices = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18];
+            const premiumIndices = [1, 5, 11]; 
+            const othersIndices = [7, 13, 15, 17, 19]; // Removed money indices (3, 9)
+
+            const rand = Math.random() * 100;
+            let resultIndex;
+
+            if (rand < 90) { resultIndex = failIndices[Math.floor(Math.random() * failIndices.length)]; } 
+            else if (rand < 99.9) { resultIndex = othersIndices[Math.floor(Math.random() * othersIndices.length)]; } 
+            else { if (Math.random() < 0.1) resultIndex = 1; else resultIndex = premiumIndices[Math.floor(Math.random() * premiumIndices.length)]; }
+
+            // Animación
+            const segmentAngleDeg = 360 / 20;
+            const extraSpins = 360 * 8;
+            const baseOffset = -90 - (segmentAngleDeg / 2); 
+            const targetRotation = extraSpins + baseOffset - (resultIndex * segmentAngleDeg);
+
+            const wheelEl = document.getElementById('wheelCanvas');
+            wheelEl.style.transition = "transform 5s cubic-bezier(0.1, 0.9, 0.2, 1)";
+            wheelEl.style.transform = `rotate(${targetRotation}deg)`;
+
+            setTimeout(async () => {
+                // Save to Firebase immediately
+                try {
+                    await setDoc(docRef, { lastSpin: Date.now() });
+                } catch(e) { console.error("Firebase save error", e); }
+
+                const segments = [
+                    "Suerte", "Prem Perm", "Suerte", "5 USD", "Suerte", "Prem 10h", "Suerte", "Admin Key", "Suerte", "1 USD",
+                    "Suerte", "Prem 1h", "Suerte", "Skins", "Suerte", "Top Secret", "Suerte", "Caps", "Suerte", "Titulos"
+                ];
+                const prize = segments[resultIndex];
+                
+                let icon = "😢"; let msg = "Suerte para la próxima."; let color = "text-gray-400";
+                if (prize.includes("Suerte")) { icon = "💩"; msg = "¡Caja vacía! Suerte para la próxima."; } 
+                else { icon = "🎉"; msg = `¡FELICIDADES! Ganaste: ${prize} (Toma Captura)`; color = "text-[#F47521]"; }
+
+                document.getElementById('prize-icon').innerText = icon;
+                document.getElementById('prize-text').innerText = msg;
+                document.getElementById('prize-text').className = `text-xl font-bold mb-6 ${color}`;
+                document.getElementById('prize-modal').classList.add('active');
+
+                startCooldown(120000);
+                
+                document.getElementById('btn-spin').classList.add('hidden');
+                document.getElementById('btn-spin').disabled = false;
+                document.getElementById('btn-spin').classList.remove('opacity-50');
+                
+                setTimeout(() => { wheelEl.style.transition = 'none'; wheelEl.style.transform = `rotate(${targetRotation % 360}deg)`; }, 1000);
+            }, 5000);
+        };
+
+        // --- RESTO DEL CÓDIGO (JUEGOS, COOLDOWN, ETC) ---
+        // (Se mantiene igual, solo integrado en el módulo)
+        
+        window.startCooldown = function(duration) {
+            const msg = document.getElementById('cooldown-msg');
+            const timerEl = document.getElementById('timer');
+            msg.classList.remove('hidden');
+            document.getElementById('btn-power-up').classList.add('hidden');
+            document.getElementById('btn-spin').classList.add('hidden');
+            
+            let timeLeft = Math.ceil(duration / 1000);
+            if(window.cooldownInterval) clearInterval(window.cooldownInterval);
+            
+            window.cooldownInterval = setInterval(() => {
+                const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+                const s = (timeLeft % 60).toString().padStart(2, '0');
+                timerEl.innerText = `${m}:${s}`;
+                if (timeLeft <= 0) {
+                    clearInterval(window.cooldownInterval);
+                    msg.classList.add('hidden');
+                    document.getElementById('btn-power-up').classList.remove('hidden');
+                }
+                timeLeft--;
+            }, 1000);
+        };
+
+        // Check Cooldown on Load (Firebase)
+        (async () => {
+            const docRef = doc(db, "roulette_spins", deviceId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const lastTime = docSnap.data().lastSpin;
+                const elapsed = Date.now() - lastTime;
+                if (elapsed < 120000) {
+                    startCooldown(120000 - elapsed);
+                }
+            }
+        })();
+
+        // Funciones Globales para UI (Juegos)
+        const adUrlGame = "https://www.effectivegatecpm.com/m1ys4txk?key=24956a22bda5dca3b4086262eb4b5423";
+        const gamesData = {
+            1: { title: "Avalond: RPG", desc: "Explora el mundo mágico de Avalond.", img: "Quiz1.png", link: "https://pixworld.io/avalond" },
+            2: { title: "Trivia Otaku", desc: "Demuestra cuánto sabes.", img: "Quiz2.png", link: "https://itch.io/embed-upload/123456?color=333333" },
+            3: { title: "Puzzle Verse", desc: "Arma los rompecabezas.", img: "Quiz3.png", link: "https://itch.io/embed-upload/654321?color=333333" },
+            4: { title: "Cyber Runner", desc: "Corre por los tejados de Neo-Tokyo.", img: "Quiz4.png", link: "https://itch.io/embed-upload/987654?color=333333" },
+            5: { title: "Card Battle", desc: "Estrategia de cartas.", img: "Quiz5.png", link: "https://itch.io/embed-upload/456789?color=333333" }
+        };
         let currentGameId = null;
 
-        function openDetailModal(id) {
-            currentGameId = id;
-            const data = gamesData[id];
-            
-            document.getElementById('modal-title').innerText = data.title;
-            document.getElementById('modal-desc').innerText = data.desc;
-            document.getElementById('modal-img').src = data.img;
-            document.getElementById('modal-img').onerror = function(){ this.src='https://placehold.co/1024x1024/111/F47521?text=Game'; };
-            
-            document.getElementById('detail-modal').classList.add('active');
-        }
+        window.openDetailModal = (id) => { currentGameId = id; const d = gamesData[id]; document.getElementById('modal-title').innerText = d.title; document.getElementById('modal-desc').innerText = d.desc; document.getElementById('modal-img').src = d.img; document.getElementById('detail-modal').classList.add('active'); };
+        window.closeDetailModal = () => document.getElementById('detail-modal').classList.remove('active');
+        window.unlockAndPlay = () => { if(!currentGameId) return; window.open(adUrlGame, '_blank'); window.closeDetailModal(); window.openGameViewer(currentGameId); };
+        window.openGameViewer = (id) => { const v = document.getElementById('game-viewer'); const i = document.getElementById('game-iframe'); i.src = gamesData[id].link; v.classList.add('active'); document.body.style.overflow = 'hidden'; };
+        window.closeGame = () => { const v = document.getElementById('game-viewer'); const i = document.getElementById('game-iframe'); i.src = ""; v.classList.remove('active'); document.body.style.overflow = 'auto'; };
+        window.closePrizeModal = () => document.getElementById('prize-modal').classList.remove('active');
 
-        function closeDetailModal() {
-            document.getElementById('detail-modal').classList.remove('active');
+        // Draw Wheel Logic
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+        const segCount = 20; const arc = Math.PI * 2 / segCount;
+        function drawWheel() {
+            const radius = 160; const centerX = 160; const centerY = 160;
+            ctx.clearRect(0, 0, 320, 320);
+            for(let i = 0; i < segCount; i++) {
+                const angle = i * arc;
+                ctx.beginPath(); ctx.arc(centerX, centerY, radius - 5, angle, angle + arc); ctx.arc(centerX, centerY, 0, angle + arc, angle);
+                ctx.fillStyle = (i % 2 === 0) ? '#111' : '#222'; ctx.fill(); ctx.stroke();
+                ctx.strokeStyle = "#333"; ctx.lineWidth = 1; ctx.stroke();
+                ctx.save(); ctx.translate(centerX + Math.cos(angle + arc / 2) * (radius - 50), centerY + Math.sin(angle + arc / 2) * (radius - 50));
+                ctx.rotate(angle + arc / 2 + Math.PI / 2); ctx.fillStyle = "#FFD700"; ctx.font = '30px Arial'; ctx.fillText("🎁", -15, 10); ctx.restore();
+            }
+            ctx.beginPath(); ctx.arc(centerX, centerY, radius - 2, 0, Math.PI * 2); ctx.lineWidth = 4; ctx.strokeStyle = '#F47521'; ctx.stroke();
         }
+        drawWheel();
 
-        function unlockAndPlay() {
-            if(!currentGameId) return;
-            window.open(adUrl, '_blank');
-            closeDetailModal();
-            openGameViewer(currentGameId);
-        }
-
-        function openGameViewer(id) {
-            const viewer = document.getElementById('game-viewer');
-            const iframe = document.getElementById('game-iframe');
-            
-            iframe.src = gamesData[id].link;
-            viewer.classList.add('active');
-            document.body.style.overflow = 'hidden'; 
-        }
-
-        function closeGame() {
-            const viewer = document.getElementById('game-viewer');
-            const iframe = document.getElementById('game-iframe');
-            
-            iframe.src = ""; 
-            viewer.classList.remove('active');
-            document.body.style.overflow = 'auto'; 
-        }
     </script>
 </body>
 </html>
