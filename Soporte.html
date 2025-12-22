@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soporte - ComicVerse</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --orange-cr: #F47521; 
+            --dark-bg: #000000;
+            --glass: rgba(20, 20, 20, 0.8);
+        }
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: var(--orange-cr); border-radius: 4px; }
+
+        /* --- Inputs y Formularios --- */
+        .input-dark {
+            background: #0a0a0a; border: 1px solid #333; color: white; padding: 12px; width: 100%;
+            border-radius: 8px; outline: none; transition: 0.3s;
+        }
+        .input-dark:focus { border-color: var(--orange-cr); box-shadow: 0 0 15px rgba(244,117,33,0.2); }
+
+        /* --- Tarjetas FAQ --- */
+        .faq-card {
+            background: #111; border: 1px solid #222; border-left: 4px solid #333;
+            padding: 20px; border-radius: 8px; transition: 0.3s; cursor: default;
+        }
+        .faq-card:hover { border-color: var(--orange-cr); background: #151515; transform: translateX(5px); }
+
+        /* --- Panel Admin --- */
+        .admin-ticket {
+            background: #1a0505; border: 1px solid #555; padding: 15px; border-radius: 8px;
+            position: relative; transition: 0.3s;
+        }
+        .admin-ticket:hover { border-color: #ef4444; }
+
+        /* --- Modales --- */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 60; }
+        .hidden-section { display: none !important; }
+        
+        .animate-enter { animation: fadeInUp 0.5s ease-out; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="pb-20 relative min-h-screen">
+
+    <div class="p-4 md:p-8 max-w-5xl mx-auto animate-enter">
+        
+        <!-- HEADER -->
+        <div class="flex items-center gap-3 mb-8 border-b border-gray-800 pb-6">
+            <div class="w-2 h-12 bg-gradient-to-b from-[#F47521] to-yellow-500 shadow-[0_0_20px_#F47521]"></div>
+            <div>
+                <h1 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white drop-shadow-xl">
+                    Centro de <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F47521] to-yellow-400">Soporte</span>
+                </h1>
+                <p class="text-gray-500 text-sm mt-1">Estamos aquí para ayudarte. Reporta errores o dudas.</p>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 1: CREAR TICKET -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+            
+            <!-- Formulario -->
+            <div class="lg:col-span-2 bg-[#111] p-8 rounded-xl border border-white/10 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-20"><i class="fa-solid fa-headset text-8xl text-[#F47521]"></i></div>
+                
+                <h3 class="text-xl font-bold text-white mb-6 uppercase flex items-center gap-2 relative z-10">
+                    <i class="fa-solid fa-ticket text-[#F47521]"></i> Nuevo Ticket
+                </h3>
+
+                <form id="ticket-form" class="space-y-5 relative z-10">
+                    <div>
+                        <label class="block text-xs text-gray-500 uppercase font-bold mb-2">Categoría del Problema</label>
+                        <select id="ticket-category" class="input-dark cursor-pointer">
+                            <option value="Bug/Error">Reportar Bug / Error</option>
+                            <option value="Cuenta">Problemas de Cuenta</option>
+                            <option value="Contenido">Contenido Caído</option>
+                            <option value="Premium">Problemas con Premium</option>
+                            <option value="Sugerencia">Sugerencia</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs text-gray-500 uppercase font-bold mb-2">Descripción (Máx 200 car.)</label>
+                        <textarea id="ticket-msg" class="input-dark h-32 resize-none" placeholder="Describe tu problema brevemente..." maxlength="200" required></textarea>
+                        <div class="text-right text-[10px] text-gray-600 mt-1"><span id="char-count">0</span>/200</div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-gradient-to-r from-[#F47521] to-red-600 hover:from-white hover:to-gray-200 hover:text-black text-white font-black uppercase py-3 rounded-lg transition shadow-lg transform hover:scale-[1.01]">
+                        Enviar Reporte
+                    </button>
+                </form>
+            </div>
+
+            <!-- Panel Lateral Info -->
+            <div class="lg:col-span-1 space-y-4">
+                <div class="bg-blue-900/20 border border-blue-500/30 p-6 rounded-xl">
+                    <h4 class="text-blue-400 font-bold uppercase text-sm mb-2"><i class="fa-solid fa-clock"></i> Horario de Atención</h4>
+                    <p class="text-gray-400 text-sm">El equipo de moderación revisa los tickets las 24 horas. El tiempo de respuesta promedio es de <span class="text-white font-bold">2 horas</span>.</p>
+                </div>
+                
+                <!-- Acceso Admin -->
+                <div class="bg-black border border-gray-800 p-6 rounded-xl flex flex-col items-center text-center">
+                    <i class="fa-solid fa-user-shield text-3xl text-gray-600 mb-2"></i>
+                    <p class="text-gray-500 text-xs mb-4">Área restringida para moderadores.</p>
+                    <button onclick="openAdminModal()" class="text-xs bg-gray-800 hover:bg-white hover:text-black text-white px-4 py-2 rounded uppercase font-bold transition">
+                        Acceso Staff
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: PANEL ADMIN (OCULTO) -->
+        <div id="admin-panel-container" class="hidden-section mb-16 border-t-2 border-red-900 pt-8 bg-[#0a0000] p-6 rounded-xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-black text-red-500 uppercase"><i class="fa-solid fa-lock-open"></i> Panel de Moderación</h2>
+                <button onclick="closeAdminPanel()" class="text-gray-500 hover:text-white"><i class="fa-solid fa-eye-slash"></i> Ocultar</button>
+            </div>
+            
+            <div id="tickets-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto custom-scroll pr-2">
+                <!-- Los tickets se cargan aquí -->
+                <div class="text-center text-gray-600 w-full col-span-2">Cargando tickets...</div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: FAQ (PREGUNTAS FRECUENTES) -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-black text-white uppercase mb-6 flex items-center gap-2">
+                <i class="fa-solid fa-circle-question text-[#F47521]"></i> F.A.Q. <span class="text-gray-600 text-lg">// Preguntas Frecuentes</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="faq-card">
+                    <h4 class="text-[#F47521] font-bold mb-2">¿Cómo subo mi cómic?</h4>
+                    <p class="text-gray-400 text-sm">Ve a la sección "Cómics Fans" y usa el botón "Postular Idea". Si tu idea recibe suficientes votos en el ranking, serás contactado para subir el contenido completo.</p>
+                </div>
+                <div class="faq-card">
+                    <h4 class="text-[#F47521] font-bold mb-2">¿Es gratis usar la IA?</h4>
+                    <p class="text-gray-400 text-sm">Sí, ComicBot es gratuito y utiliza una API pública. Puedes pedirle recomendaciones o generar imágenes usando el comando "Crea esta imagen".</p>
+                </div>
+                <div class="faq-card">
+                    <h4 class="text-[#F47521] font-bold mb-2">¿Cómo consigo Premium?</h4>
+                    <p class="text-gray-400 text-sm">Puedes ganar Premium Permanente en la "Ruleta Diaria" (0.1% probabilidad) o contactando a soporte para donaciones directas al servidor.</p>
+                </div>
+                <div class="faq-card">
+                    <h4 class="text-[#F47521] font-bold mb-2">Mi cuenta no guarda los datos.</h4>
+                    <p class="text-gray-400 text-sm">Asegúrate de haber iniciado sesión en la sección "Usuario". Si usas modo incógnito, los datos locales pueden perderse.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 4: DMCA -->
+        <div class="border-t border-gray-800 pt-8 text-center md:text-left">
+            <h2 class="text-xl font-black text-gray-300 uppercase mb-4">DMCA & Copyright</h2>
+            <div class="text-xs text-gray-500 space-y-2 leading-relaxed font-mono bg-[#050505] p-6 rounded border border-gray-800">
+                <p>ComicVerse respeta la propiedad intelectual de terceros. Esta plataforma opera como un medio de indexación y compartición de contenido generado por usuarios y enlaces de terceros.</p>
+                <p>Si usted es el propietario de los derechos de autor de algún contenido que aparece en nuestro sitio web y no desea que esté disponible, por favor notifíquenos a través del formulario de soporte seleccionando la categoría "Contenido" o enviando un correo a <strong>dmca@comicverse.com</strong>.</p>
+                <p>Todas las imágenes y marcas registradas mostradas son propiedad de sus respectivos dueños. ComicVerse no reclama propiedad sobre el contenido de terceros indexado.</p>
+                <p class="mt-4 pt-4 border-t border-gray-800 text-[#F47521]">© 2026 ComicVerse Project. Todos los derechos reservados.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL ADMIN LOGIN -->
+    <div id="admin-modal" class="hidden-section modal-overlay">
+        <div class="bg-[#111] border-2 border-red-600 p-8 rounded-xl w-full max-w-sm text-center shadow-[0_0_50px_rgba(220,38,38,0.3)]">
+            <i class="fa-solid fa-lock text-4xl text-red-600 mb-4"></i>
+            <h3 class="text-xl font-black text-white uppercase mb-4">Acceso Moderador</h3>
+            <input type="password" id="admin-key-input" class="input-dark text-center tracking-[0.5em] text-red-500 font-bold mb-6 border-red-900 focus:border-red-600" placeholder="••••••••">
+            <div class="flex gap-2">
+                <button onclick="verifyAdmin()" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold py-2 rounded transition">ENTRAR</button>
+                <button onclick="closeAdminModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 rounded transition">CANCELAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL AUTH REQUIRED -->
+    <div id="auth-modal" class="hidden-section modal-overlay">
+        <div class="bg-[#111] border border-[#F47521] p-6 rounded-xl w-full max-w-sm text-center">
+            <h3 class="text-xl font-bold text-white mb-2">¡Alto ahí!</h3>
+            <p class="text-gray-400 text-sm mb-6">Necesitas estar conectado para enviar tickets.</p>
+            <div class="flex gap-2">
+                <button onclick="irALogin()" class="flex-1 bg-[#F47521] text-black font-bold py-2 rounded">Ir a Login</button>
+                <button onclick="document.getElementById('auth-modal').classList.add('hidden-section')" class="flex-1 bg-gray-800 text-white font-bold py-2 rounded">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGICA -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, addDoc, deleteDoc, collection, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBf9ATqgErKQKpzKpFXsUu4BHmFcNSLzOE",
+            authDomain: "comic-a54bf.firebaseapp.com",
+            projectId: "comic-a54bf",
+            storageBucket: "comic-a54bf.firebasestorage.app",
+            messagingSenderId: "653412030846",
+            appId: "1:653412030846:web:86f30b301d3c8c41e1fb2f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let currentUser = null;
+
+        // --- AUTH CHECK ---
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+        });
+
+        // --- UI HELPERS ---
+        const charCount = document.getElementById('char-count');
+        const msgInput = document.getElementById('ticket-msg');
+        
+        msgInput.addEventListener('input', () => {
+            charCount.innerText = msgInput.value.length;
+        });
+
+        window.irALogin = () => {
+             if(window.parent && window.parent.cargarPagina) window.parent.cargarPagina('Usuario.html', null);
+             else window.location.href = 'Usuario.html';
+        };
+
+        // --- CREAR TICKET ---
+        document.getElementById('ticket-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                document.getElementById('auth-modal').classList.remove('hidden-section');
+                return;
+            }
+
+            const category = document.getElementById('ticket-category').value;
+            const message = document.getElementById('ticket-msg').value;
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+
+            btn.disabled = true;
+            btn.innerText = "Enviando...";
+
+            try {
+                // Obtener nombre actual
+                let username = "Usuario";
+                const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+                if(userDoc.exists()) username = userDoc.data().username || currentUser.displayName;
+
+                await addDoc(collection(db, "support_tickets"), {
+                    userId: currentUser.uid,
+                    username: username,
+                    email: currentUser.email,
+                    category: category,
+                    message: message,
+                    status: 'open',
+                    createdAt: serverTimestamp()
+                });
+
+                alert("Ticket enviado correctamente. Un moderador lo revisará.");
+                e.target.reset();
+                charCount.innerText = "0";
+
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Hubo un error al enviar el ticket.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }
+        });
+
+        // --- ADMIN PANEL ---
+        window.openAdminModal = () => {
+            document.getElementById('admin-modal').classList.remove('hidden-section');
+            document.getElementById('admin-key-input').value = "";
+        };
+        
+        window.closeAdminModal = () => document.getElementById('admin-modal').classList.add('hidden-section');
+        window.closeAdminPanel = () => document.getElementById('admin-panel-container').classList.add('hidden-section');
+
+        window.verifyAdmin = () => {
+            const key = document.getElementById('admin-key-input').value;
+            if (key === "#Lau3700#") {
+                closeAdminModal();
+                document.getElementById('admin-panel-container').classList.remove('hidden-section');
+                loadTickets();
+            } else {
+                alert("Clave incorrecta");
+            }
+        };
+
+        let unsubscribeTickets = null;
+
+        function loadTickets() {
+            const container = document.getElementById('tickets-list');
+            if(unsubscribeTickets) unsubscribeTickets();
+
+            const q = query(collection(db, "support_tickets"), orderBy("createdAt", "desc"));
+            
+            unsubscribeTickets = onSnapshot(q, (snapshot) => {
+                container.innerHTML = "";
+                if(snapshot.empty) {
+                    container.innerHTML = '<div class="text-gray-500 w-full col-span-2 text-center">No hay tickets pendientes.</div>';
+                    return;
+                }
+
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const date = data.createdAt ? new Date(data.createdAt.toDate()).toLocaleString() : 'Reciente';
+                    
+                    const html = `
+                        <div class="admin-ticket group">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <span class="text-xs font-bold text-[#F47521] uppercase">${data.category}</span>
+                                    <h4 class="text-white font-bold text-sm">${data.username}</h4>
+                                    <p class="text-[10px] text-gray-500">${data.email} • ${date}</p>
+                                </div>
+                                <button onclick="deleteTicket('${docSnap.id}')" class="text-red-500 hover:text-white bg-red-900/20 hover:bg-red-600 p-2 rounded transition">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                            <p class="text-gray-300 text-xs bg-black/40 p-2 rounded border border-white/5 break-words">
+                                ${data.message}
+                            </p>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', html);
+                });
+            });
+        }
+
+        window.deleteTicket = async (id) => {
+            if(confirm("¿Marcar ticket como resuelto y eliminar?")) {
+                try {
+                    await deleteDoc(doc(db, "support_tickets", id));
+                } catch(e) { console.error(e); }
+            }
+        };
+
+    </script>
+</body>
+</html>
