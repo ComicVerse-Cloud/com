@@ -50,22 +50,47 @@
         .modal-box { background: #151515; border: 1px solid #333; border-radius: 12px; padding: 2rem; width: 90%; max-width: 500px; position: relative; transform: scale(0.9); transition: 0.3s; box-shadow: 0 0 50px rgba(244,117,33,0.1); }
         .modal-overlay.active .modal-box { transform: scale(1); }
 
-        /* --- Game Viewer (Iframe Optimizad) --- */
+        /* --- Game Viewer (Estructura Publicitaria Nueva) --- */
         .game-viewer-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 100;
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            opacity: 0; pointer-events: none; transition: 0.3s; padding-top: 10px;
+            position: fixed; inset: 0; background: #000; z-index: 100;
+            display: flex; flex-direction: column; 
+            opacity: 0; pointer-events: none; transition: 0.3s;
+            overflow-y: auto; /* Permite scroll para ver el anuncio de abajo si es necesario */
         }
         .game-viewer-overlay.active { opacity: 1; pointer-events: auto; }
         
-        .game-frame-container {
-            width: 98vw; max-width: 1216px; height: calc(100dvh - 200px); 
-            background: #000; border: 2px solid var(--orange-cr);
-            border-radius: 12px; position: relative; overflow: hidden;
-            box-shadow: 0 0 60px rgba(244,117,33,0.3); margin-bottom: 10px; flex-shrink: 1;
+        /* 1. ANUNCIO SUPERIOR (Banner Normal) */
+        .ad-top-container {
+            width: 100%; min-height: 100px;
+            background: #080808; border-bottom: 1px solid #333;
+            display: flex; justify-content: center; align-items: center;
+            padding: 5px 0; flex-shrink: 0; z-index: 10;
         }
+
+        /* 2. JUEGO (CENTRO - FLEXIBLE) */
+        .game-frame-wrapper {
+            flex-grow: 1; width: 100%;
+            display: flex; justify-content: center; align-items: center;
+            padding: 10px; position: relative;
+            min-height: 300px; /* Altura mínima garantizada para el juego */
+        }
+        
+        .game-frame-container {
+            width: 100%; max-width: 1216px; 
+            /* Se adapta al espacio disponible entre los dos anuncios */
+            height: 100%; 
+            /* Intentar mantener proporción cuadrada si hay espacio */
+            aspect-ratio: 1 / 1;
+            max-height: 80vh; /* Límite seguro */
+            
+            background: #000; border: 2px solid var(--orange-cr);
+            border-radius: 8px; position: relative; overflow: hidden;
+            box-shadow: 0 0 60px rgba(244,117,33,0.3);
+        }
+        
         .game-iframe { width: 100%; height: 100%; border: none; }
         
+        /* Botón Salir (Dentro del Panel) */
         .close-game-btn {
             position: absolute; top: 15px; right: 15px;
             background: #F47521; color: black; padding: 8px 24px; border-radius: 50px;
@@ -74,10 +99,21 @@
             display: flex; align-items: center; gap: 8px; z-index: 50; cursor: pointer; transition: all 0.3s ease;
         }
         .close-game-btn:hover { transform: scale(1.05); background: white; color: #F47521; border-color: #F47521; }
-        .logo-overlay { position: absolute; top: 15px; left: 15px; width: 100px; height: auto; z-index: 40; pointer-events: none; opacity: 0.9; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); }
         
-        /* --- Anuncios --- */
-        .ad-slot { background-color: #050505; display: block; width: 100%; overflow: hidden; margin: 20px 0; min-height: 100px; border: 1px solid #222; text-align: center; }
+        .logo-overlay { 
+            position: absolute; top: 15px; left: 15px; width: 100px; height: auto; 
+            z-index: 40; pointer-events: none; opacity: 0.9; 
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); 
+        }
+        
+        /* 3. ANUNCIO INFERIOR (Nativo) */
+        .ad-bottom-container {
+            width: 100%;
+            background: #080808; border-top: 1px solid #333;
+            display: flex; justify-content: center; align-items: flex-start;
+            padding: 20px 0; flex-shrink: 0;
+            min-height: 200px; /* Espacio reservado generoso para el nativo */
+        }
 
         /* --- Slider Horizontal --- */
         .games-slider { display: flex; gap: 24px; overflow-x: auto; padding: 20px 0; scroll-snap-type: x mandatory; }
@@ -85,32 +121,20 @@
 
         /* --- CANVAS RULETA --- */
         #wheel-wrapper {
-            position: relative;
-            width: 320px; height: 320px;
-            margin: 0 auto;
-            border-radius: 50%;
-            box-shadow: 0 0 50px rgba(244, 117, 33, 0.2), inset 0 0 50px rgba(0,0,0,0.8);
-            background: #111;
-            border: 4px solid #333;
+            position: relative; width: 320px; height: 320px; margin: 0 auto;
+            border-radius: 50%; box-shadow: 0 0 50px rgba(244, 117, 33, 0.2), inset 0 0 50px rgba(0,0,0,0.8);
+            background: #111; border: 4px solid #333;
         }
-        #wheel-canvas {
-            width: 100%; height: 100%;
-            transition: transform 5s cubic-bezier(0.1, 0.8, 0.1, 1);
-        }
+        #wheel-canvas { width: 100%; height: 100%; transition: transform 5s cubic-bezier(0.1, 0.8, 0.1, 1); }
         .wheel-pointer {
-            position: absolute;
-            top: -10px; left: 50%; transform: translateX(-50%);
-            width: 0; height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 30px solid #fff;
-            z-index: 20; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.8));
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent;
+            border-top: 30px solid #fff; z-index: 20; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.8));
         }
         .wheel-center-knob {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 60px; height: 60px; background: radial-gradient(circle, #F47521, #d65a00);
-            border: 4px solid #fff; border-radius: 50%;
-            z-index: 15; box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            border: 4px solid #fff; border-radius: 50%; z-index: 15; box-shadow: 0 0 20px rgba(0,0,0,0.8);
             display: flex; align-items: center; justify-content: center;
         }
         .wheel-center-knob i { color: white; font-size: 1.5rem; }
@@ -127,92 +151,25 @@
         .odds-row:hover { background: rgba(255,255,255,0.05); }
         .glow-text { text-shadow: 0 0 5px currentColor; }
 
-        /* --- MODAL ADBLOCK --- */
-        #adblock-modal {
-            position: fixed; inset: 0; z-index: 9999; background: black;
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; padding: 20px;
+        /* --- Espacios Publicitarios Generales (Fuera del juego) --- */
+        .ad-slot-general { 
+            background-color: #050505; display: block; width: 100%; 
+            overflow: hidden; margin: 20px 0; min-height: 100px; 
+            border: 1px solid #222; text-align: center; 
         }
-        #adblock-modal.active { display: flex; }
-        .adblock-box {
-            background: #111; border: 2px solid #F47521; border-radius: 16px; padding: 30px;
-            max-width: 500px; box-shadow: 0 0 100px rgba(244,117,33,0.3); animation: shake 0.5s;
-        }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
     </style>
 </head>
 <body class="relative min-h-screen pb-20">
 
-    <!-- DETECTOR DE ADBLOCK REAL (CORREGIDO) -->
-    <div id="adblock-modal">
-        <div class="adblock-box">
-            <i class="fa-solid fa-hand-paper text-6xl text-[#F47521] mb-6"></i>
-            <h2 class="text-3xl font-black text-white uppercase mb-4">¡ALTO AHÍ PEQUEÑO!</h2>
-            <p class="text-gray-300 text-lg mb-6 leading-relaxed">
-                La página da contenido gratis, los anuncios son mi monetización por mi arduo trabajo. <br>
-                <span class="font-bold text-[#F47521]">Respeta la comunidad.</span>
-            </p>
-            <div class="bg-black/50 p-4 rounded border border-red-900 mb-6">
-                <p class="text-red-500 font-bold text-sm uppercase tracking-widest mb-2">Cómo desactivarlo:</p>
-                <ul class="text-red-400 text-xs text-left list-disc pl-5 space-y-1">
-                    <li>Haz clic en el icono de tu bloqueador (Extensiones).</li>
-                    <li>Selecciona "Pausar en este sitio" o "No actuar en esta página".</li>
-                    <li>Recarga la página (F5).</li>
-                </ul>
-            </div>
-            <button onclick="location.reload()" class="bg-[#F47521] hover:bg-white hover:text-black text-black font-black uppercase py-3 px-8 rounded shadow-lg transition transform hover:scale-105">
-                YA LO DESACTIVÉ (RECARGAR)
-            </button>
-        </div>
-    </div>
-
-    <!-- SCRIPT DE DETECCIÓN INTELIGENTE -->
-    <script>
-        window.addEventListener('load', function() {
-            // Esperar 2 segundos para asegurar que la página cargó y los anuncios intentaron mostrarse
-            setTimeout(function() {
-                var adBait = document.createElement("div");
-                // Clases comunes que los AdBlockers buscan y bloquean
-                adBait.setAttribute("class", "pub_300x250 text-ad textAd adsbox banner_ads");
-                // Estilo para que no moleste visualmente pero sea detectable si se colapsa
-                adBait.setAttribute("style", "width: 10px !important; height: 10px !important; position: absolute !important; left: -10000px !important; top: -1000px !important; background: #fff;");
-                adBait.innerHTML = "&nbsp;";
-                document.body.appendChild(adBait);
-                
-                // Pequeño delay adicional para dar tiempo al bloqueador de actuar sobre el nuevo elemento
-                setTimeout(function() {
-                    var isBlocked = false;
-                    
-                    // Si el bloqueador colapsó el elemento o lo ocultó
-                    if (adBait.offsetHeight === 0 || adBait.offsetWidth === 0 || adBait.clientHeight === 0) {
-                        isBlocked = true;
-                    }
-                    
-                    var styles = window.getComputedStyle(adBait);
-                    if (styles && (styles.display === 'none' || styles.visibility === 'hidden')) {
-                        isBlocked = true;
-                    }
-
-                    if (isBlocked) {
-                        document.getElementById('adblock-modal').classList.add('active');
-                        document.body.style.overflow = 'hidden';
-                    }
-                    
-                    adBait.remove(); // Limpiar el cebo
-                }, 150); 
-            }, 2000); 
-        });
-    </script>
-
     <div class="p-4 md:p-8 max-w-7xl mx-auto">
         
-        <!-- HEADER (Personalización Naranja/Amarillo) -->
+        <!-- HEADER -->
         <div class="flex items-center gap-3 mb-6 border-b border-gray-800 pb-6">
-            <div class="w-2 h-12 bg-gradient-to-b from-[#F47521] to-yellow-500 shadow-[0_0_20px_#F47521]"></div>
+            <div class="w-2 h-12 bg-gradient-to-b from-[#F47521] to-purple-600 shadow-[0_0_20px_#F47521]"></div>
             <div>
                 <h1 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white drop-shadow-xl">
-                    Quizs & <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F47521] to-yellow-500">Juegos</span>
+                    Quizs & <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#F47521] to-purple-500">Juegos</span>
                 </h1>
                 <p class="text-gray-500 text-sm mt-1">
                     Diversión arcade y retos de conocimiento.
@@ -278,7 +235,7 @@
 
                 <!-- CONTROLES -->
                 <div id="wheel-controls">
-                    <p class="text-gray-400 text-sm mb-4">Prueba tu suerte diaria. <span class="text-[#F47521]">0.33%</span> probabilidad de premio mayor.</p>
+                    <p class="text-gray-400 text-sm mb-4">Prueba tu suerte diaria. <span class="text-[#F47521]">0.1%</span> probabilidad de premio mayor.</p>
                     
                     <button id="btn-power-up" onclick="powerUpWheel()" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:scale-105 transition transform text-white font-black py-3 rounded uppercase tracking-widest shadow-lg mb-2">
                         <i class="fa-solid fa-bolt text-yellow-300"></i> Potenciar Ruleta
@@ -296,40 +253,16 @@
 
                 <!-- TABLA DE PROBABILIDADES (FAKED) -->
                 <div class="odds-table-container">
-                    <div class="bg-[#1a1a1a] py-3 px-4 border-b border-[#333] flex justify-between items-center">
-                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Tabla de Drops</span>
-                        <i class="fa-solid fa-circle-info text-gray-600"></i>
-                    </div>
+                    <div class="bg-[#1a1a1a] py-3 px-4 border-b border-[#333] flex justify-between items-center"><span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Tabla de Drops</span><i class="fa-solid fa-circle-info text-gray-600"></i></div>
                     <table class="w-full text-xs text-left">
                         <tbody class="text-gray-300">
-                             <tr class="odds-row border-b border-[#222]">
-                                <td class="py-3 px-4 flex items-center gap-2 text-green-500 font-bold"><i class="fa-solid fa-money-bill-wave"></i> 5.00 USD</td>
-                                <td class="py-3 px-4 text-right font-mono text-green-500">5.0%</td>
-                            </tr>
-                            <tr class="odds-row border-b border-[#222]">
-                                <td class="py-3 px-4 flex items-center gap-2 text-green-400"><i class="fa-solid fa-coins"></i> 1.00 USD</td>
-                                <td class="py-3 px-4 text-right font-mono text-green-400">15.0%</td>
-                            </tr>
-                            <tr class="odds-row border-b border-[#222]">
-                                <td class="py-3 px-4 flex items-center gap-2 text-[#FFD700] font-bold glow-text"><i class="fa-solid fa-crown"></i> Premium Permanente</td>
-                                <td class="py-3 px-4 text-right font-mono text-[#FFD700]">0.5%</td>
-                            </tr>
-                            <tr class="odds-row border-b border-[#222]">
-                                <td class="py-3 px-4 flex items-center gap-2 text-purple-400"><i class="fa-solid fa-hourglass-half"></i> Premium 10h / 1h</td>
-                                <td class="py-3 px-4 text-right font-mono">10.0%</td>
-                            </tr>
-                             <tr class="odds-row border-b border-[#222]">
-                                <td class="py-3 px-4 flex items-center gap-2 text-blue-400"><i class="fa-solid fa-shirt"></i> Skins / Títulos / Caps</td>
-                                <td class="py-3 px-4 text-right font-mono">20.0%</td>
-                            </tr>
-                             <tr class="odds-row border-b border-[#222]">
-                                <td class="py-3 px-4 flex items-center gap-2 text-pink-400"><i class="fa-solid fa-lock-open"></i> Pack 5 Caps</td>
-                                <td class="py-3 px-4 text-right font-mono">15.0%</td>
-                            </tr>
-                             <tr class="odds-row">
-                                <td class="py-3 px-4 flex items-center gap-2 text-red-500 font-bold"><i class="fa-solid fa-face-frown"></i> Suerte para la próxima</td>
-                                <td class="py-3 px-4 text-right font-mono">85.0%</td>
-                            </tr>
+                             <tr class="odds-row border-b border-[#222]"><td class="py-3 px-4 flex items-center gap-2 text-green-500 font-bold"><i class="fa-solid fa-money-bill-wave"></i> 5.00 USD</td><td class="py-3 px-4 text-right font-mono text-green-500">5.0%</td></tr>
+                            <tr class="odds-row border-b border-[#222]"><td class="py-3 px-4 flex items-center gap-2 text-green-400"><i class="fa-solid fa-coins"></i> 1.00 USD</td><td class="py-3 px-4 text-right font-mono text-green-400">15.0%</td></tr>
+                            <tr class="odds-row border-b border-[#222]"><td class="py-3 px-4 flex items-center gap-2 text-[#FFD700] font-bold glow-text"><i class="fa-solid fa-crown"></i> Premium Permanente</td><td class="py-3 px-4 text-right font-mono text-[#FFD700]">0.5%</td></tr>
+                            <tr class="odds-row border-b border-[#222]"><td class="py-3 px-4 flex items-center gap-2 text-purple-400"><i class="fa-solid fa-hourglass-half"></i> Premium 10h / 1h</td><td class="py-3 px-4 text-right font-mono">10.0%</td></tr>
+                             <tr class="odds-row border-b border-[#222]"><td class="py-3 px-4 flex items-center gap-2 text-blue-400"><i class="fa-solid fa-shirt"></i> Skins / Títulos / Caps</td><td class="py-3 px-4 text-right font-mono">20.0%</td></tr>
+                             <tr class="odds-row border-b border-[#222]"><td class="py-3 px-4 flex items-center gap-2 text-pink-400"><i class="fa-solid fa-lock-open"></i> Pack 5 Caps</td><td class="py-3 px-4 text-right font-mono">15.0%</td></tr>
+                             <tr class="odds-row"><td class="py-3 px-4 flex items-center gap-2 text-red-500 font-bold"><i class="fa-solid fa-face-frown"></i> Suerte para la próxima</td><td class="py-3 px-4 text-right font-mono">85.0%</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -337,17 +270,10 @@
         </div>
 
         <!-- --- ESPACIO PUBLICITARIO 1 (BANNER HORIZONTAL) --- -->
+        <!-- Usamos el banner nativo también aquí como principal al final de la lista -->
         <div class="ad-slot w-full mt-12 rounded-lg">
-             <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-4804945170892289"
-                 data-ad-slot="XXXXXXXXXX" 
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"
-                 data-page-url="http://comicverse-cloud.github.io"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+             <script async="async" data-cfasync="false" src="https://sonsstoop.com/ec1123a13f7bf7f7810ca9fcdef627bc/invoke.js"></script>
+             <div id="container-ec1123a13f7bf7f7810ca9fcdef627bc"></div>
         </div>
     </div>
 
@@ -366,14 +292,24 @@
         </div>
     </div>
 
-    <!-- VISOR DE JUEGO -->
+    <!-- VISOR DE JUEGO (ESTRUCTURA DE ANUNCIOS: ARRIBA - JUEGO - ABAJO) -->
     <div id="game-viewer" class="game-viewer-overlay">
+        
+        <!-- 1. BANNER NORMAL (ARRIBA) -->
         <div class="ad-top-container">
             <script type="text/javascript">
-                atOptions = { 'key' : '5ab505225fc2b6723b2e01eb26a1cfb2', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+                atOptions = {
+                    'key' : '5ab505225fc2b6723b2e01eb26a1cfb2',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                };
             </script>
             <script type="text/javascript" src="https://www.highperformanceformat.com/5ab505225fc2b6723b2e01eb26a1cfb2/invoke.js"></script>
         </div>
+
+        <!-- 2. JUEGO (CENTRO) -->
         <div class="game-frame-wrapper">
             <div class="game-frame-container">
                 <button onclick="closeGame()" class="close-game-btn">SALIR <i class="fa-solid fa-right-from-bracket"></i></button>
@@ -381,8 +317,10 @@
                 <iframe id="game-iframe" src="" class="game-iframe" allow="fullscreen"></iframe>
             </div>
         </div>
+
+        <!-- 3. BANNER NATIVO (ABAJO - ESPACIO INFINITO) -->
         <div class="ad-bottom-container">
-            <script async="async" data-cfasync="false" src="https://pl28307525.effectivegatecpm.com/ec1123a13f7bf7f7810ca9fcdef627bc/invoke.js"></script>
+            <script async="async" data-cfasync="false" src="https://sonsstoop.com/ec1123a13f7bf7f7810ca9fcdef627bc/invoke.js"></script>
             <div id="container-ec1123a13f7bf7f7810ca9fcdef627bc"></div>
         </div>
     </div>
@@ -414,14 +352,12 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- ID DISPOSITIVO (PERSISTENCIA) ---
         let deviceId = localStorage.getItem('device_id');
         if (!deviceId) {
             deviceId = 'dev_' + Math.random().toString(36).substr(2, 9);
             localStorage.setItem('device_id', deviceId);
         }
 
-        // --- FUNCIONES RULETA (FIREBASE COOLDOWN) ---
         window.powerUpWheel = function() {
             window.open("https://sonsstoop.com/m1ys4txk?key=24956a22bda5dca3b4086262eb4b5423", '_blank');
             document.getElementById('btn-power-up').classList.add('hidden');
@@ -445,11 +381,9 @@
             document.getElementById('btn-spin').disabled = true;
             document.getElementById('btn-spin').classList.add('opacity-50');
 
-            // --- LÓGICA RIGGED (REAL) ---
             const failIndices = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18];
             const premiumIndices = [1, 5, 11]; 
-            const othersIndices = [7, 13, 15, 17, 19];
-
+            const othersIndices = [7, 13, 15, 17, 19]; 
             const rand = Math.random() * 100;
             let resultIndex;
 
@@ -468,67 +402,38 @@
 
             setTimeout(async () => {
                 try { await setDoc(docRef, { lastSpin: Date.now() }); } catch(e) { console.error(e); }
-
-                const segments = [
-                    "Suerte", "Prem Perm", "Suerte", "5 USD", "Suerte", "Prem 10h", "Suerte", "Pack 5 Caps", "Suerte", "1 USD",
-                    "Suerte", "Prem 1h", "Suerte", "Skins", "Suerte", "Top Secret", "Suerte", "Caps", "Suerte", "Titulos"
-                ];
+                const segments = ["Suerte", "Prem Perm", "Suerte", "5 USD", "Suerte", "Prem 10h", "Suerte", "Pack 5 Caps", "Suerte", "1 USD", "Suerte", "Prem 1h", "Suerte", "Skins", "Suerte", "Top Secret", "Suerte", "Caps", "Suerte", "Titulos"];
                 const prize = segments[resultIndex];
-                
                 let icon = "😢"; let msg = "Suerte para la próxima."; let color = "text-gray-400";
                 const claimBtn = document.getElementById('claim-btn');
                 const closeBtn = document.getElementById('close-prize-btn');
-
-                if (prize.includes("Suerte")) { 
-                    icon = "💩"; msg = "¡Caja vacía! Suerte para la próxima."; 
-                    claimBtn.classList.add('hidden'); 
-                    closeBtn.classList.remove('hidden');
-                } else { 
-                    icon = "🎉"; msg = `¡FELICIDADES! Ganaste: ${prize}`; color = "text-[#F47521]"; 
-                    claimBtn.classList.remove('hidden'); 
-                    closeBtn.classList.add('hidden');
-                    
-                    const subject = encodeURIComponent(`RECLAMO PREMIO: ${prize}`);
-                    const body = encodeURIComponent(`Hola soporte,\n\nHe ganado el premio "${prize}" en la Ruleta Diaria.\n\nID Dispositivo: ${deviceId}\nFecha: ${new Date().toLocaleString()}\n\nEspero mi recompensa.`);
-                    claimBtn.href = `mailto:ComicVerseSupport@gmail.com?subject=${subject}&body=${body}`;
-                }
-
+                if (prize.includes("Suerte")) { icon = "💩"; msg = "¡Caja vacía! Suerte para la próxima."; claimBtn.classList.add('hidden'); closeBtn.classList.remove('hidden'); } 
+                else { icon = "🎉"; msg = `¡FELICIDADES! Ganaste: ${prize}`; color = "text-[#F47521]"; claimBtn.classList.remove('hidden'); closeBtn.classList.add('hidden'); const subject = encodeURIComponent(`RECLAMO PREMIO: ${prize}`); const body = encodeURIComponent(`Hola soporte,\n\nHe ganado el premio "${prize}" en la Ruleta Diaria.\n\nID Dispositivo: ${deviceId}\nFecha: ${new Date().toLocaleString()}\n\nEspero mi recompensa.`); claimBtn.href = `mailto:ComicVerseSupport@gmail.com?subject=${subject}&body=${body}`; }
                 document.getElementById('prize-icon').innerText = icon;
                 document.getElementById('prize-text').innerText = msg;
                 document.getElementById('prize-text').className = `text-xl font-bold mb-6 ${color}`;
                 document.getElementById('prize-modal').classList.add('active');
-
                 startCooldown(120000);
-                
                 document.getElementById('btn-spin').classList.add('hidden');
                 document.getElementById('btn-spin').disabled = false;
                 document.getElementById('btn-spin').classList.remove('opacity-50');
-                
                 setTimeout(() => { wheelEl.style.transition = 'none'; wheelEl.style.transform = `rotate(${targetRotation % 360}deg)`; }, 1000);
             }, 5000);
         };
 
-        // --- RESTO DE FUNCIONES ---
-        
         window.startCooldown = function(duration) {
             const msg = document.getElementById('cooldown-msg');
             const timerEl = document.getElementById('timer');
             msg.classList.remove('hidden');
             document.getElementById('btn-power-up').classList.add('hidden');
             document.getElementById('btn-spin').classList.add('hidden');
-            
             let timeLeft = Math.ceil(duration / 1000);
             if(window.cooldownInterval) clearInterval(window.cooldownInterval);
-            
             window.cooldownInterval = setInterval(() => {
                 const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
                 const s = (timeLeft % 60).toString().padStart(2, '0');
                 timerEl.innerText = `${m}:${s}`;
-                if (timeLeft <= 0) {
-                    clearInterval(window.cooldownInterval);
-                    msg.classList.add('hidden');
-                    document.getElementById('btn-power-up').classList.remove('hidden');
-                }
+                if (timeLeft <= 0) { clearInterval(window.cooldownInterval); msg.classList.add('hidden'); document.getElementById('btn-power-up').classList.remove('hidden'); }
                 timeLeft--;
             }, 1000);
         };
@@ -539,23 +444,14 @@
             if (docSnap.exists()) {
                 const lastTime = docSnap.data().lastSpin;
                 const elapsed = Date.now() - lastTime;
-                if (elapsed < 120000) {
-                    startCooldown(120000 - elapsed);
-                }
+                if (elapsed < 120000) { startCooldown(120000 - elapsed); }
             }
         })();
 
-        // Funciones Globales para UI (Juegos)
-        const adUrlGame = "https://sonsstoop.com/m1ys4txk?key=24956a22bda5dca3b4086262eb4b5423";
-        const gamesData = {
-            1: { title: "Avalond: RPG", desc: "Explora el mundo mágico de Avalond.", img: "Quiz1.png", link: "https://pixworld.io/avalond" },
-            2: { title: "Trivia Otaku", desc: "Demuestra cuánto sabes.", img: "Quiz2.png", link: "https://itch.io/embed-upload/123456?color=333333" },
-            3: { title: "Puzzle Verse", desc: "Arma los rompecabezas.", img: "Quiz3.png", link: "https://itch.io/embed-upload/654321?color=333333" },
-            4: { title: "Cyber Runner", desc: "Corre por los tejados de Neo-Tokyo.", img: "Quiz4.png", link: "https://itch.io/embed-upload/987654?color=333333" },
-            5: { title: "Card Battle", desc: "Estrategia de cartas.", img: "Quiz5.png", link: "https://itch.io/embed-upload/456789?color=333333" }
-        };
+        // Funciones UI Globales
+        const adUrlGame = "https://www.effectivegatecpm.com/m1ys4txk?key=24956a22bda5dca3b4086262eb4b5423";
+        const gamesData = { 1: { title: "Avalond: RPG", desc: "Explora el mundo mágico de Avalond.", img: "Quiz1.png", link: "https://pixworld.io/avalond" }, 2: { title: "Trivia Otaku", desc: "Demuestra cuánto sabes.", img: "Quiz2.png", link: "https://itch.io/embed-upload/123456?color=333333" }, 3: { title: "Puzzle Verse", desc: "Arma los rompecabezas.", img: "Quiz3.png", link: "https://itch.io/embed-upload/654321?color=333333" }, 4: { title: "Cyber Runner", desc: "Corre por los tejados de Neo-Tokyo.", img: "Quiz4.png", link: "https://itch.io/embed-upload/987654?color=333333" }, 5: { title: "Card Battle", desc: "Estrategia de cartas.", img: "Quiz5.png", link: "https://itch.io/embed-upload/456789?color=333333" } };
         let currentGameId = null;
-
         window.openDetailModal = (id) => { currentGameId = id; const d = gamesData[id]; document.getElementById('modal-title').innerText = d.title; document.getElementById('modal-desc').innerText = d.desc; document.getElementById('modal-img').src = d.img; document.getElementById('detail-modal').classList.add('active'); };
         window.closeDetailModal = () => document.getElementById('detail-modal').classList.remove('active');
         window.unlockAndPlay = () => { if(!currentGameId) return; window.open(adUrlGame, '_blank'); window.closeDetailModal(); window.openGameViewer(currentGameId); };
@@ -563,7 +459,7 @@
         window.closeGame = () => { const v = document.getElementById('game-viewer'); const i = document.getElementById('game-iframe'); i.src = ""; v.classList.remove('active'); document.body.style.overflow = 'auto'; };
         window.closePrizeModal = () => document.getElementById('prize-modal').classList.remove('active');
 
-        // Draw Wheel Logic
+        // Draw Wheel
         const canvas = document.getElementById('wheelCanvas');
         const ctx = canvas.getContext('2d');
         const segCount = 20; const arc = Math.PI * 2 / segCount;
@@ -581,10 +477,6 @@
             ctx.beginPath(); ctx.arc(centerX, centerY, radius - 2, 0, Math.PI * 2); ctx.lineWidth = 4; ctx.strokeStyle = '#F47521'; ctx.stroke();
         }
         drawWheel();
-
     </script>
-
-    <script src="https://sonsstoop.com/93/e0/df/93e0df4f61a1be1b4c70381a502a2fcd.js"></script>
-    
 </body>
 </html>
